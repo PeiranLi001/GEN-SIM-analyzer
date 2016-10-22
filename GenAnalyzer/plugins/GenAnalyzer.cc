@@ -38,6 +38,9 @@
 #include "DataFormats/METReco/interface/GenMETCollection.h"
 #include "DataFormats/METReco/interface/GenMET.h"
 
+#include "DataFormats/Math/interface/deltaR.h"
+
+#include <vector>
 #include "TMath.h"
 #include "TLorentzVector.h"
 //
@@ -81,67 +84,89 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   //const vector<reco::GenJet>* genJetColl= genAK4JetsHandle.product();
   //const vector<reco::GenMET>* genMETCaloColl= genMetCaloHandle.product();
   const reco::GenJetCollection* genJetColl= &(*genAK4JetsHandle);
-  const reco::GenMETCollection* genMETColl = &(*genMetCaloHandle);
+  //const reco::GenMETCollection* genMETColl = &(*genMetCaloHandle);
 
 
   int nGenParticle=0;
+
   
+  double l_pt=0., l_eta=0., l_phi=0., l_mass=0., l_mother=0.;
+  int l_pdgId=0, l_status=0, l_gmother=0;
+
+  double nu_pt=0., nu_eta=0., nu_phi=0., nu_mass=0.;
+  int nu_pdgId=0, nu_status=0, nu_mother=0, nu_gmother=0;
+
+  TLorentzVector ELE, MU, TAU;
+  TLorentzVector NU;
+  TLorentzVector JET;
+  TLorentzVector VBF1, VBF2, VBFTOT;
+  TLorentzVector Wjet1, Wjet2, WjetTOT;
+
+  std::vector<TLorentzVector> tightEle, vNU, vJET;
+  
+  float tempPt=0., tempWm=100.0;
+
+  //genLeptPt_.clear();
   for(vector<reco::GenParticle>::const_iterator genps_it = genps_coll->begin(); genps_it != genps_coll->end(); genps_it++) 
   {
   	nGenParticle++;
 
 	int id = genps_it->pdgId();
-	int st = genps_it->status();
-	const Candidate * mother = genps_it->mother();
-
-	if(fabs(id)==11 && st==23 && mother->pdgId()==24){
-	//cout << "mass =   " << mother->mass() << endl;  
-	}
 
 	if (Verbose_)
 		cout<<"id = "<<id<<endl;
-	//pdgID_.push_back(id);
 
-	if((abs(genps_it->pdgId())==11 || abs(genps_it->pdgId())==13 || abs(genps_it->pdgId())==15) && (abs(genps_it->mother()->pdgId()) == 24 || (abs(genps_it->mother()->pdgId()) == 15 && abs(genps_it->mother()->mother()->pdgId()) == 24))){
+	if((abs(genps_it->pdgId())==11 || abs(genps_it->pdgId())==13 || abs(genps_it->pdgId())==15) && (abs(genps_it->mother()->pdgId()) == 24 || (abs(genps_it->mother()->pdgId()) == 15 && abs(genps_it->mother()->mother()->pdgId()) == 24)))
+	{
+		if (genps_it->pt() < 30.0) continue;
+		if (fabs(genps_it->eta()) > 2.1) continue;
+		if (genps_it->pt() < tempPt ) continue;
 
-	genLeptPt_.push_back(genps_it->pt());
-	genLeptEta_.push_back(genps_it->eta());
-	genLeptPhi_.push_back(genps_it->phi());
-	genLeptM_.push_back(genps_it->mass());
-	genLeptId_.push_back(genps_it->pdgId());
-	genLeptStatus_.push_back(genps_it->status());
-	genLeptMother_.push_back(genps_it->mother()->pdgId());
-	genLeptGrandMother_.push_back(genps_it->mother()->mother()->pdgId());
+		ELE.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
+		tightEle.push_back(ELE);
 
-	nLept++;
+
+		l_pt      = genps_it->pt();
+		l_eta     = genps_it->eta();
+		l_phi     = genps_it->phi();
+		l_mass    = genps_it->mass();
+		l_pdgId   = genps_it->pdgId();
+		l_status  = genps_it->status();
+		l_mother  = genps_it->mother()->pdgId();
+		l_gmother = genps_it->mother()->mother()->pdgId();
+		
+		tempPt = genps_it->pt();
+
+		nLept++;
+		
+		if (Verbose_)
+			cout<<"n lpe = "<<nLept<<"\tpt = "<<genps_it->pt()<<endl;
 	}
 	ngenLept_ = nLept;
-
-	if((abs(genps_it->pdgId())==12 || abs(genps_it->pdgId())==14 || abs(genps_it->pdgId())==16) && (genps_it->status() == 1))
+	//if((abs(genps_it->pdgId())==12 || abs(genps_it->pdgId())==14 || abs(genps_it->pdgId())==16) && (genps_it->status() == 1))
+	if((abs(genps_it->pdgId())==12 || abs(genps_it->pdgId())==14 || abs(genps_it->pdgId())==16))
 	{
-	
-	       genNuPt_.push_back(genps_it->pt());
-	       genNuEta_.push_back(genps_it->eta());
-	       genNuPhi_.push_back(genps_it->phi());
-	       genNuQ_.push_back(genps_it->charge());
-	       genNustatus_.push_back(genps_it->status());
-	       genNuMother_.push_back(genps_it->mother()->pdgId());
-	       genNuGrandMother_.push_back(genps_it->mother()->mother()->pdgId());
-	       genNuPdgId_.push_back(genps_it->pdgId());
+		if (tempWm < fabs(80.385-(l_mass+genps_it->mass()))) continue;
+
+		NU.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
+		vNU.push_back(ELE);
+
+		tempWm = fabs(80.385-(l_mass+genps_it->mass()));
+
+
+		nu_pt      = genps_it->pt();
+		nu_eta     = genps_it->eta();
+		nu_phi     = genps_it->phi();
+		nu_mass    = genps_it->mass();
+		nu_pdgId   = genps_it->pdgId();
+		nu_status  = genps_it->status();
+		nu_mother  = genps_it->mother()->pdgId();
+		nu_gmother = genps_it->mother()->mother()->pdgId();
+		//genNuQ_.push_back(genps_it->charge());
 	nNu++;
 	}
 	ngenNu_ = nNu;
    }
-
-	
-//  for(vector<reco::GenJet>::const_iterator genps_it = genJetColl->begin(); genps_it != genJetColl->end(); genps_it++) 
-//  {
-// 	nNu++;
-//}
-//  for(vector<reco::GenMET>::const_iterator genps_it = genMETCaloColl->begin(); genps_it != genMETCaloColl->end(); genps_it++) 
-//  {
-// 	nNu++;
-//}
 
    std::vector<const reco::GenJet *> sortedjets;
    sortedjets.reserve(genJetColl->size());
@@ -154,28 +179,129 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    {
    	auto const & gjets = *genPtrjets;
 	//cout << "Jets PT = " << gjets.pt() << "   Jets Eta = " << gjets.eta() << endl;
-	if(gjets.pt() > 30. && fabs(gjets.eta()) < 5.0) {
-		genJetPt_.push_back(gjets.pt());
-		genJetEta_.push_back(gjets.eta());
-		genJetPhi_.push_back(gjets.phi());
-		genJetMass_.push_back(gjets.mass());
-		njets++;
-	}
-	//cout << gjets.mass() << endl;
+	if (nLept != 1) continue;
+	if (gjets.pt() < 30.) continue;
+	if (fabs(gjets.eta()) > 2.4 ) continue;
+	if (deltaR(l_eta,l_phi,gjets.eta(),gjets.phi()) < 0.3) continue;
+
+	JET.SetPtEtaPhiE(gjets.pt(), gjets.eta(), gjets.phi(), gjets.energy());
+	vJET.push_back(JET);
+	njets++;
    }
    ngenJet_ = njets;
-   
-   
-   reco::GenMETCollection::const_iterator i;
-   
-   for(i=genMETColl->begin(); i!=genMETColl->end(); i++)
-   {
-   	genCaloMET_.push_back(i->pt());
-	genCaloMETPhi_.push_back(i->phi());
-   }
 
-   //cout<<"nGenParticle = "<<nGenParticle<<endl;
+
+		if (Verbose_)
+  if (njets >=4)
+	cout << "4 jets*******************************************" << endl;
+   
+  int nVBFjets = 0;
+  float DeltaEta = 0.;
+  unsigned int nVBF1=0,nVBF2=0;
+  int nGoodAK4Wjets = 0;
+  if (njets >=4)
+  {
+   for(unsigned int i = 0; i<vJET.size()-1; i++)
+   {
+   	for(unsigned int j = i+1; j<vJET.size(); j++)
+	{
+		if (Verbose_)
+			cout<<DeltaEta<<"\tDelta eta = "<<abs(vJET[i].Eta()-vJET[j].Eta())<<"\t opp hemi = "<<vJET[i].Eta()*vJET[j].Eta()<<"\tinv Mass = "<< (vJET[i]+vJET[j]).M()<<endl;
+		if (DeltaEta > abs(vJET[i].Eta()-vJET[j].Eta()) || vJET[i].Eta()*vJET[j].Eta()>0 || (vJET[i]+vJET[j]).M()<300) continue;
+		if (abs(vJET[i].Eta()-vJET[j].Eta()) < 3.0) continue;
+		VBF1 = vJET[i];
+		VBF2 = vJET[j];
+		VBFTOT = VBF1 + VBF2 ;
+		DeltaEta = abs(vJET[i].Eta()-vJET[j].Eta());
+		nVBFjets++;
+		nVBF1 = i;
+		nVBF2 = j;
+	}
+   }
+	if (Verbose_)
+   if (nVBFjets != 0)
+   cout<<"jet size = "<<vJET.size()<<"\tnVBF1 = "<<nVBF1<<"\tnVBF2 = "<<nVBF2<<endl;
+
+   if (nVBFjets != 0)
+   {
+   for(unsigned int i = 0; i<vJET.size(); i++)
+   {
+	if (i == nVBF1) continue;
+	if (i == nVBF2) continue;
+	nGoodAK4Wjets++;
+	if  (nGoodAK4Wjets == 1)	
+		Wjet1 = vJET[i];
+	if  (nGoodAK4Wjets == 2)	
+		Wjet2 = vJET[i];
+   }
+   WjetTOT = Wjet1 + Wjet2 ;
+   }   
+   }
+   nVBFJet_ = nVBFjets;
+
+   if (nVBFjets != 0 && nLept==1 && nNu == 1 && nGoodAK4Wjets >= 2)
+   {
+	if (Verbose_)
+	cout<<"Number of leptons = "<<nLept<<endl;
+
+	genLeptPt_ 	= l_pt ;
+	genLeptEta_ 	= l_eta ;
+	genLeptPhi_ 	= l_phi ;
+	genLeptM_ 	= l_mass ;
+	genLeptId_ 	= l_pdgId ;
+	genLeptStatus_ 	= l_status ;
+	genLeptMother_ 	= l_mother ;
+	genLeptGrandMother_ = l_gmother;
+
+	genNuPt_ 	= nu_pt;
+	genNuEta_ 	= nu_eta;
+	genNuPhi_ 	= nu_phi;
+	genNuM_ 	= nu_mass;
+	//genNuQ_ 	= ;
+	genNustatus_ 	= nu_status;
+	genNuMother_ 	= nu_mother;
+	genNuGrandMother_ = nu_gmother;
+	genNuPdgId_ 	= nu_pdgId;	
+
+	vbf_maxpt_j1_pt_ = VBF1.Pt();
+	vbf_maxpt_j1_eta_= VBF1.Eta();
+	vbf_maxpt_j1_phi_= VBF1.Phi();
+	vbf_maxpt_j1_e_  = VBF1.E();
+
+	vbf_maxpt_j2_pt_ = VBF1.Pt();
+	vbf_maxpt_j2_eta_= VBF1.Eta();
+	vbf_maxpt_j2_phi_= VBF1.Phi();
+	vbf_maxpt_j2_e_	 = VBF1.E();
+
+	vbf_maxpt_jj_pt_ = VBFTOT.Pt();
+	vbf_maxpt_jj_eta_= VBFTOT.Eta();
+	vbf_maxpt_jj_phi_= VBFTOT.Phi();
+	vbf_maxpt_jj_m_  = VBFTOT.M();
+	vbf_maxpt_deltaR_= deltaR(VBF1.Eta(),VBF1.Phi(),VBF2.Eta(),VBF2.Phi());
+
+	AK4_jet1_pt_	= Wjet1.Pt();
+	AK4_jet1_eta_	= Wjet1.Eta();
+	AK4_jet1_phi_	= Wjet1.Phi();
+	AK4_jet1_e_	= Wjet1.E();
+
+	AK4_jet2_pt_	= Wjet2.Pt();
+	AK4_jet2_eta_	= Wjet2.Eta();
+	AK4_jet2_phi_	= Wjet2.Phi();
+	AK4_jet2_e_	= Wjet2.E();
+
+	AK4_jetjet_pt_	= WjetTOT.Pt();
+	AK4_jetjet_mass_= WjetTOT.Eta();
+	AK4_jetjet_deltaeta_= fabs(Wjet1.Eta()-Wjet2.Eta());
+	AK4_jetjet_deltaphi_= fabs(Wjet1.Phi()-Wjet2.Phi());
+	AK4_jetjet_deltar_= deltaR(Wjet1.Eta(),Wjet1.Phi(),Wjet2.Eta(),Wjet2.Phi());
+	deltaR_lak4jetjet_= deltaR(WjetTOT.Eta(),WjetTOT.Phi(),l_eta, l_phi);
+	deltaphi_METak4jetjet_= fabs(WjetTOT.Phi() - nu_phi);
+	deltaphi_Vak4jetjet_= fabs(WjetTOT.Phi() - l_phi);
+	mass_lvjj_run2_AK4_= (ELE + NU + WjetTOT + VBFTOT ).M();
+
+
    tree->Fill();
+   }
 }
 
  
@@ -196,7 +322,7 @@ void GenAnalyzer::AddBranch(double* vec, std::string name){
 }
 
 void GenAnalyzer::SetBranches(){
-	AddBranch(&pdgID_,	"pdgID");
+	//AddBranch(&pdgID_,	"pdgID");
 
 	AddBranch(&ngenLept_, "ngenLept");
 	AddBranch(&genLeptPt_, "genLeptPt");
@@ -213,6 +339,7 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&genNuPt_, "genNuPt");
   AddBranch(&genNuEta_,"genNuEta");
   AddBranch(&genNuPhi_,"genNuPhi");
+  AddBranch(&genNuM_,"genNuM");
   AddBranch(&genNuQ_,"genNuQ");
   AddBranch(&genNustatus_,"genNustatus");
   AddBranch(&genNuMother_,"genNuMother");
@@ -223,38 +350,75 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&genJetPhi_, "genJetPhi");
   AddBranch(&genJetMass_, "genJetMass");
   AddBranch(&ngenJet_, "ngenJet");
+  AddBranch(&nVBFJet_, "nVBFJet");
 
   AddBranch(&genCaloMET_, "genCaloMET");
   AddBranch(&genCaloMETPhi_, "genCaloMETPhi");
   AddBranch(&genTrueMET_, "genTrueMET");
   AddBranch(&genTrueMETPhi_, "genTrueMETPhi");
 
+AddBranch(&vbf_maxpt_j1_pt_, "vbf_maxpt_j1_pt");
+AddBranch(&vbf_maxpt_j1_eta_, "vbf_maxpt_j1_eta");
+AddBranch(&vbf_maxpt_j1_phi_, "vbf_maxpt_j1_phi");
+AddBranch(&vbf_maxpt_j1_e_, "vbf_maxpt_j1_e");
+AddBranch(&vbf_maxpt_j1_bDiscriminatorCSV_, "vbf_maxpt_j1_bDiscriminatorCSV");
+AddBranch(&vbf_maxpt_j2_pt_, "vbf_maxpt_j2_pt");
+AddBranch(&vbf_maxpt_j2_eta_, "vbf_maxpt_j2_eta");
+AddBranch(&vbf_maxpt_j2_phi_, "vbf_maxpt_j2_phi");
+AddBranch(&vbf_maxpt_j2_e_, "vbf_maxpt_j2_e");
+AddBranch(&vbf_maxpt_j2_bDiscriminatorCSV_, "vbf_maxpt_j2_bDiscriminatorCSV");
+AddBranch(&vbf_maxpt_jj_pt_, "vbf_maxpt_jj_pt");
+AddBranch(&vbf_maxpt_jj_eta_, "vbf_maxpt_jj_eta");
+AddBranch(&vbf_maxpt_jj_phi_, "vbf_maxpt_jj_phi");
+AddBranch(&vbf_maxpt_jj_m_, "vbf_maxpt_jj_m");
+AddBranch(&vbf_maxpt_deltaR_, "vbf_maxpt_deltaR");
+AddBranch(&AK4_jet1_pt_, "AK4_jet1_pt");
+AddBranch(&AK4_jet1_eta_, "AK4_jet1_eta");
+AddBranch(&AK4_jet1_phi_, "AK4_jet1_phi");
+AddBranch(&AK4_jet1_e_, "AK4_jet1_e");
+AddBranch(&AK4_jet1_bDiscriminatorCSV_, "AK4_jet1_bDiscriminatorCSV");
+AddBranch(&AK4_jet2_pt_, "AK4_jet2_pt");
+AddBranch(&AK4_jet2_eta_, "AK4_jet2_eta");
+AddBranch(&AK4_jet2_phi_, "AK4_jet2_phi");
+AddBranch(&AK4_jet2_e_, "AK4_jet2_e");
+AddBranch(&AK4_jet2_bDiscriminatorCSV_, "AK4_jet2_bDiscriminatorCSV");
+AddBranch(&AK4_jetjet_pt_, "AK4_jetjet_pt");
+AddBranch(&AK4_jetjet_mass_, "AK4_jetjet_mass");
+AddBranch(&AK4_jetjet_deltaeta_, "AK4_jetjet_deltaeta");
+AddBranch(&AK4_jetjet_deltaphi_, "AK4_jetjet_deltaphi");
+AddBranch(&AK4_jetjet_deltar_, "AK4_jetjet_deltar");
+AddBranch(&deltaR_lak4jetjet_, "deltaR_lak4jetjet");
+AddBranch(&deltaphi_METak4jetjet_, "deltaphi_METak4jetjet");
+AddBranch(&deltaphi_Vak4jetjet_, "deltaphi_Vak4jetjet");
+AddBranch(&mass_lvjj_run2_AK4_, "mass_lvjj_run2_AK4");
 
 }
 
 void GenAnalyzer::Clear(){
-	pdgID_.clear();
+	//pdgID_.clear();
 
 	ngenLept_ = -999;
-	genLeptPt_.clear();
-	genLeptEta_.clear();
-	genLeptPhi_.clear();
-	genLeptStatus_.clear();
-	genLeptMother_.clear();
-	genLeptGrandMother_.clear();
-	genLeptId_.clear();
-	genLeptM_.clear();
+	genLeptPt_ = -999.0;
+	genLeptEta_ = -999.0;
+	genLeptPhi_ = -999.0;
+	genLeptStatus_ = -999;
+	genLeptMother_ = -999.0;
+	genLeptGrandMother_ = -999;
+	genLeptId_ = -999;
+	genLeptM_ = -999.0;
 
   ngenNu_ = -999;
-  genNuPt_.clear();
-  genNuEta_.clear();
-  genNuPhi_.clear();
-  genNuQ_.clear();
-  genNustatus_.clear();
-  genNuMother_.clear();
-  genNuGrandMother_.clear();
-  genNuPdgId_.clear();
+  genNuPt_ = -999.0;
+  genNuEta_ = -999.0;
+  genNuPhi_ = -999.0;
+  genNuM_ = -999.0;
+  genNuQ_ = -999.0;
+  genNustatus_ = -999;
+  genNuMother_ = -999;
+  genNuGrandMother_ = -999;
+  genNuPdgId_ = -999;
 
+nVBFJet_ = -999;
 ngenJet_ = -999;
 genJetPt_.clear();
 genJetEta_.clear();
@@ -265,6 +429,43 @@ genCaloMET_.clear();
 genCaloMETPhi_.clear();
 genTrueMET_.clear();
 genTrueMETPhi_.clear();
+
+
+vbf_maxpt_j1_pt_ = -999.0;
+vbf_maxpt_j1_eta_ = -999.0;
+vbf_maxpt_j1_phi_ = -999.0;
+vbf_maxpt_j1_e_ = -999.0;
+vbf_maxpt_j1_bDiscriminatorCSV_ = -999.0;
+vbf_maxpt_j2_pt_ = -999.0;
+vbf_maxpt_j2_eta_ = -999.0;
+vbf_maxpt_j2_phi_ = -999.0;
+vbf_maxpt_j2_e_ = -999.0;
+vbf_maxpt_j2_bDiscriminatorCSV_ = -999.0;
+vbf_maxpt_jj_pt_ = -999.0;
+vbf_maxpt_jj_pt_ = -999.0;
+vbf_maxpt_jj_eta_ = -999.0;
+vbf_maxpt_jj_phi_ = -999.0;
+vbf_maxpt_jj_m_ = -999.0;
+vbf_maxpt_deltaR_ = -999.0;
+AK4_jet1_pt_ = -999.0;
+AK4_jet1_eta_ = -999.0;
+AK4_jet1_phi_ = -999.0;
+AK4_jet1_e_ = -999.0;
+AK4_jet1_bDiscriminatorCSV_ = -999.0;
+AK4_jet2_pt_ = -999.0;
+AK4_jet2_eta_ = -999.0;
+AK4_jet2_phi_ = -999.0;
+AK4_jet2_e_ = -999.0;
+AK4_jet2_bDiscriminatorCSV_ = -999.0;
+AK4_jetjet_pt_ = -999.0;
+AK4_jetjet_mass_ = -999.0;
+AK4_jetjet_deltaeta_ = -999.0;
+AK4_jetjet_deltaphi_ = -999.0;
+AK4_jetjet_deltar_ = -999.0;
+deltaR_lak4jetjet_ = -999.0;
+deltaphi_METak4jetjet_ = -999.0;
+deltaphi_Vak4jetjet_ = -999.0;
+mass_lvjj_run2_AK4_ = -999.0;
 }
 
 // ------------ method called once each job just before starting event loop  ------------
