@@ -69,6 +69,7 @@ class GenAnalyzer : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
       virtual void AddBranch(std::vector<int>*, std::string name);
       virtual void AddBranch(int* vec, std::string name);
       virtual void AddBranch(double* vec, std::string name);
+      virtual void computeAngles(TLorentzVector thep4H, TLorentzVector thep4Z1, TLorentzVector thep4M11, TLorentzVector thep4M12, TLorentzVector thep4Z2, TLorentzVector thep4M21, TLorentzVector thep4M22, double& costheta1, double& costheta2, double& Phi, double& costhetastar, double& Phi1);
 
       edm::EDGetTokenT<reco::GenParticleCollection> genParticlesToken;
       edm::EDGetTokenT<LHEEventProduct> LHEEventToken; 
@@ -87,120 +88,66 @@ class GenAnalyzer : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
   std::vector<std::string> LHEWeightIDs_;
   std::vector<double> LHEWeights_;
 
-int nEVENT=0;
-  int ngenLept_;
-  double genLeptPt_;
-  double genLeptEta_;
-  double genLeptPhi_;
-  double genLeptM_;
-  int genLeptId_;
-  int genLeptStatus_;
-  double genLeptMother_;
-  int genLeptGrandMother_;
+int nEVENT=-999;
+
+  int		isMuMinus_ = -999;
+  double 	LHELeptPt_ = -999.0;
+  double 	LHELeptEta_ = -999.0;
+  double 	LHELeptPhi_ = -999.0;
+  double 	LHELeptM_ = -999.0;
+  double 	LHELeptE_ = -999.0;
+
+ double LHENuPt_ = -999.0;
+ double LHENuEta_ = -999.0;
+ double LHENuPhi_ = -999.0;
+ double LHENuM_ = -999.0;
+ double LHENuE_ = -999.0;
+
+ double LHE_Wqrk0_pt_ = -999.0;
+ double LHE_Wqrk0_eta_ = -999.0;
+ double LHE_Wqrk0_phi_ = -999.0;
+ double LHE_Wqrk0_M_ = -999.0;
+ double LHE_Wqrk0_E_ = -999.0;
+ double LHE_Wqrk0_Mt_ = -999.0;
+
+ double LHE_Wqrk1_pt_ = -999.0;
+ double LHE_Wqrk1_eta_ = -999.0;
+ double LHE_Wqrk1_phi_ = -999.0;
+ double LHE_Wqrk1_M_ = -999.0;
+ double LHE_Wqrk1_E_ = -999.0;
+ double LHE_Wqrk1_Mt_ = -999.0;
+
+ double LHE_Iqrk0_pt_ = -999.0; 
+ double LHE_Iqrk0_eta_ = -999.0;
+ double LHE_Iqrk0_phi_ = -999.0;
+ double LHE_Iqrk0_E_ = -999.0;
+ double LHE_Iqrk0_M_ = -999.0;
+ double LHE_Iqrk0_Mt_ = -999.0;
+
+ double LHE_Iqrk1_pt_ = -999.0; 
+ double LHE_Iqrk1_eta_ = -999.0;
+ double LHE_Iqrk1_phi_ = -999.0;
+ double LHE_Iqrk1_E_ = -999.0;
+ double LHE_Iqrk1_M_ = -999.0;
+ double LHE_Iqrk1_Mt_ = -999.0;
+
+ double  LHE_mWW_ = -999.0;
+ double  LHE_mtWW_ = -999.0;
+ double  LHE_mWLep_ = -999.0;
+ double  LHE_mtWLep_ = -999.0;
+ double  LHE_mWHad_ = -999.0;
+ double  LHE_mtWHad_ = -999.0;
+ double  LHE_costheta1_ = -999.0;
+ double  LHE_costheta2_ = -999.0;
+ double  LHE_phi_ = -999.0;
+ double  LHE_costhetastar_ = -999.0;
+ double  LHE_phi1_ = -999.0;
+ double  LHE_dEtajj_ = -999.0;
+ double  LHE_dPhijj_ = -999.0;
+ double  LHE_mjj_ = -999.0;
+ double  LHE_VBSCentrality_ = -999.0;
     
- int ngenNu_;
- double genNuPt_;
- double genNuEta_;
- double genNuPhi_;
- double genNuM_;
- double genNuQ_;
- int genNustatus_;
- int genNuMother_;
- int genNuGrandMother_;
- int genNuPdgId_;
-
- int ngenWJet1__;
- double genWJet1_Pt_;
- double genWJet1_Eta_;
- double genWJet1_Phi_;
- double genWJet1_M_;
- double genWJet1_Q_;
- int genWJet1_status_;
- int genWJet1_Mother_;
- int genWJet1_GrandMother_;
- int genWJet1_PdgId_;
-
- int ngenWJet2__;
- double genWJet2_Pt_;
- double genWJet2_Eta_;
- double genWJet2_Phi_;
- double genWJet2_M_;
- double genWJet2_Q_;
- int genWJet2_status_;
- int genWJet2_Mother_;
- int genWJet2_GrandMother_;
- int genWJet2_PdgId_;
-
- int ngenVBFjet1__;
- double genVBFjet1_Pt_;
- double genVBFjet1_Eta_;
- double genVBFjet1_Phi_;
- double genVBFjet1_M_;
- double genVBFjet1_Q_;
- int genVBFjet1_status_;
- int genVBFjet1_Mother_;
- int genVBFjet1_GrandMother_;
- int genVBFjet1_PdgId_;
-
- int ngenVBFjet2__;
- double genVBFjet2_Pt_;
- double genVBFjet2_Eta_;
- double genVBFjet2_Phi_;
- double genVBFjet2_M_;
- double genVBFjet2_Q_;
- int genVBFjet2_status_;
- int genVBFjet2_Mother_;
- int genVBFjet2_GrandMother_;
- int genVBFjet2_PdgId_;
-
-  int ngenJet_;
-  int nVBFJet_;
-  double vbf_maxpt_j1_pt_;
-  double vbf_maxpt_j1_eta_;
-  double vbf_maxpt_j1_phi_;
-  double vbf_maxpt_j1_e_;
-  double vbf_maxpt_j1_bDiscriminatorCSV_;
-  double vbf_maxpt_j2_pt_;
-  double vbf_maxpt_j2_eta_;
-  double vbf_maxpt_j2_phi_;
-  double vbf_maxpt_j2_e_;
-  double vbf_maxpt_j2_bDiscriminatorCSV_;
-  double vbf_maxpt_jj_pt_;
-  double vbf_maxpt_jj_eta_;
-  double vbf_maxpt_jj_phi_;
-  double vbf_maxpt_jj_m_;
-  double vbf_maxpt_deltaR_;
-  double AK4_jet1_pt_;
-  double AK4_jet1_eta_;
-  double AK4_jet1_phi_;
-  double AK4_jet1_e_;
-  double AK4_jet1_bDiscriminatorCSV_;
-  double AK4_jet2_pt_;
-  double AK4_jet2_eta_;
-  double AK4_jet2_phi_;
-  double AK4_jet2_e_;
-  double AK4_jet2_bDiscriminatorCSV_;
-  double AK4_jetjet_pt_;
-  double AK4_jetjet_mass_;
-  double AK4_jetjet_deltaeta_;
-  double AK4_jetjet_deltaphi_;
-  double AK4_jetjet_deltar_;
-  double deltaR_lak4jetjet_;
-  double deltaphi_METak4jetjet_;
-  double deltaphi_Vak4jetjet_;
-  double mass_lvjj_run2_AK4_;
-
-  std::vector<double> genQuarkStatus_;
-  std::vector<double> genJetPt_;
-  std::vector<double> genJetEta_;
-  std::vector<double> genJetPhi_;
-  std::vector<double> genJetMass_;
-  std::vector<double> genCaloMET_;
-  std::vector<double> genCaloMETPhi_;
-  std::vector<double> genTrueMET_;
-  std::vector<double> genTrueMETPhi_;
-
-};
+ };
 
 //
 //
@@ -219,11 +166,7 @@ GenAnalyzer::GenAnalyzer(const edm::ParameterSet& iConfig)
    //now do what ever initialization is needed
    usesResource("TFileService");
 	//genParticles_(iConfig.getParameter<edm::InputTag>( "genParticle"))
-	genParticlesToken = consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("genParticlesInputTag"));
 	LHEEventToken = consumes<LHEEventProduct>(iConfig.getParameter<edm::InputTag>("LHEEventInputTag"));
-	genAK4jetToken = consumes<reco::GenJetCollection>(iConfig.getParameter<edm::InputTag>("genJetsAK4jetsInputTag"));
-	genMetCaloToken= consumes<reco::GenMETCollection>(iConfig.getParameter<edm::InputTag>("genMetCaloInputTag"));
-	//genMetCaloToken= consumes<reco::GenMETCollection>(iConfig.getParameter<edm::InputTag>("genMetCaloInputTag"));
 
 	Verbose_ = iConfig.getParameter<bool>("Verbose");
 
@@ -266,245 +209,216 @@ void GenAnalyzer::AddBranch(double* vec, std::string name){
         tree->Branch(name.c_str(),vec,(name+"/D").c_str());
 }
 
+
+//////////////////////////////////
+//// P A P E R   4 - V E C T O R   D E F I N I T I O N   O F   P H I   A N D   P H I 1
+//////////////////////////////////
+void GenAnalyzer::computeAngles(TLorentzVector thep4H, TLorentzVector thep4Z1, TLorentzVector thep4M11, TLorentzVector thep4M12, TLorentzVector thep4Z2, TLorentzVector thep4M21, TLorentzVector thep4M22, double& costheta1, double& costheta2, double& Phi, double& costhetastar, double& Phi1){
+    
+    ///////////////////////////////////////////////
+    // check for z1/z2 convention, redefine all 4 vectors with convention
+    ///////////////////////////////////////////////	
+    TLorentzVector p4H, p4Z1, p4M11, p4M12, p4Z2, p4M21, p4M22;
+    p4H = thep4H;
+    
+    p4Z1 = thep4Z1; p4M11 = thep4M11; p4M12 = thep4M12;
+    p4Z2 = thep4Z2; p4M21 = thep4M21; p4M22 = thep4M22;
+    //// costhetastar
+	TVector3 boostX = -(thep4H.BoostVector());
+	TLorentzVector thep4Z1inXFrame( p4Z1 );
+	TLorentzVector thep4Z2inXFrame( p4Z2 );	
+	thep4Z1inXFrame.Boost( boostX );
+	thep4Z2inXFrame.Boost( boostX );
+	TVector3 theZ1X_p3 = TVector3( thep4Z1inXFrame.X(), thep4Z1inXFrame.Y(), thep4Z1inXFrame.Z() );
+	TVector3 theZ2X_p3 = TVector3( thep4Z2inXFrame.X(), thep4Z2inXFrame.Y(), thep4Z2inXFrame.Z() );    
+    costhetastar = theZ1X_p3.CosTheta();
+    
+    //// --------------------------- costheta1
+    TVector3 boostV1 = -(thep4Z1.BoostVector());
+    TLorentzVector p4M11_BV1( p4M11 );
+	TLorentzVector p4M12_BV1( p4M12 );	
+    TLorentzVector p4M21_BV1( p4M21 );
+	TLorentzVector p4M22_BV1( p4M22 );
+    p4M11_BV1.Boost( boostV1 );
+	p4M12_BV1.Boost( boostV1 );
+	p4M21_BV1.Boost( boostV1 );
+	p4M22_BV1.Boost( boostV1 );
+    
+    TLorentzVector p4V2_BV1 = p4M21_BV1 + p4M22_BV1;
+    //// costheta1
+    costheta1 = -p4V2_BV1.Vect().Dot( p4M11_BV1.Vect() )/p4V2_BV1.Vect().Mag()/p4M11_BV1.Vect().Mag();
+    
+    //// --------------------------- costheta2
+    TVector3 boostV2 = -(thep4Z2.BoostVector());
+    TLorentzVector p4M11_BV2( p4M11 );
+	TLorentzVector p4M12_BV2( p4M12 );	
+    TLorentzVector p4M21_BV2( p4M21 );
+	TLorentzVector p4M22_BV2( p4M22 );
+    p4M11_BV2.Boost( boostV2 );
+	p4M12_BV2.Boost( boostV2 );
+	p4M21_BV2.Boost( boostV2 );
+	p4M22_BV2.Boost( boostV2 );
+    
+    TLorentzVector p4V1_BV2 = p4M11_BV2 + p4M12_BV2;
+    //// costheta2
+    costheta2 = -p4V1_BV2.Vect().Dot( p4M21_BV2.Vect() )/p4V1_BV2.Vect().Mag()/p4M21_BV2.Vect().Mag();
+    
+    //// --------------------------- Phi and Phi1
+    //    TVector3 boostX = -(thep4H.BoostVector());
+    TLorentzVector p4M11_BX( p4M11 );
+	TLorentzVector p4M12_BX( p4M12 );	
+    TLorentzVector p4M21_BX( p4M21 );
+	TLorentzVector p4M22_BX( p4M22 );	
+    
+	p4M11_BX.Boost( boostX );
+	p4M12_BX.Boost( boostX );
+	p4M21_BX.Boost( boostX );
+	p4M22_BX.Boost( boostX );
+    
+    TVector3 tmp1 = p4M11_BX.Vect().Cross( p4M12_BX.Vect() );
+    TVector3 tmp2 = p4M21_BX.Vect().Cross( p4M22_BX.Vect() );    
+    
+    TVector3 normal1_BX( tmp1.X()/tmp1.Mag(), tmp1.Y()/tmp1.Mag(), tmp1.Z()/tmp1.Mag() ); 
+    TVector3 normal2_BX( tmp2.X()/tmp2.Mag(), tmp2.Y()/tmp2.Mag(), tmp2.Z()/tmp2.Mag() ); 
+    
+    //// Phi
+    TLorentzVector p4Z1_BX = p4M11_BX + p4M12_BX;    
+    double tmpSgnPhi = p4Z1_BX.Vect().Dot( normal1_BX.Cross( normal2_BX) );
+    double sgnPhi = tmpSgnPhi/fabs(tmpSgnPhi);
+    Phi = sgnPhi * acos( -1.*normal1_BX.Dot( normal2_BX) );
+    
+    
+    //////////////
+    
+    TVector3 beamAxis(0,0,1);
+    TVector3 tmp3 = (p4M11_BX + p4M12_BX).Vect();
+    
+    TVector3 p3V1_BX( tmp3.X()/tmp3.Mag(), tmp3.Y()/tmp3.Mag(), tmp3.Z()/tmp3.Mag() );
+    TVector3 tmp4 = beamAxis.Cross( p3V1_BX );
+    TVector3 normalSC_BX( tmp4.X()/tmp4.Mag(), tmp4.Y()/tmp4.Mag(), tmp4.Z()/tmp4.Mag() );
+    
+    //// Phi1
+    double tmpSgnPhi1 = p4Z1_BX.Vect().Dot( normal1_BX.Cross( normalSC_BX) );
+    double sgnPhi1 = tmpSgnPhi1/fabs(tmpSgnPhi1);    
+    Phi1 = sgnPhi1 * acos( normal1_BX.Dot( normalSC_BX) );    
+    
+    //    std::cout << "extractAngles: " << std::endl;
+    //    std::cout << "costhetastar = " << costhetastar << ", costheta1 = " << costheta1 << ", costheta2 = " << costheta2 << std::endl;
+    //    std::cout << "Phi = " << Phi << ", Phi1 = " << Phi1 << std::endl;    
+    
+}
+
+
 void GenAnalyzer::SetBranches(){
 	//AddBranch(&pdgID_,	"pdgID");
+AddBranch(&isMuMinus_ , "isMuMinus");
+AddBranch(&LHELeptPt_ ,	"LHELeptPt");
+AddBranch(&LHELeptEta_ ,	"LHELeptEta");
+AddBranch(&LHELeptPhi_ ,	"LHELeptPhi");
+AddBranch(&LHELeptM_ ,	"LHELeptM");
+AddBranch(&LHELeptE_ ,	"LHELeptE");
+AddBranch(&LHENuPt_ ,	"LHENuPt");
+AddBranch(&LHENuEta_ ,	"LHENuEta");
+AddBranch(&LHENuPhi_ ,	"LHENuPhi");
+AddBranch(&LHENuM_ ,	"LHENuM");
+AddBranch(&LHENuE_ ,	"LHENuE");
+AddBranch(&LHE_Wqrk0_pt_ ,	"LHE_Wqrk0_pt");
+AddBranch(&LHE_Wqrk0_eta_ ,	"LHE_Wqrk0_eta");
+AddBranch(&LHE_Wqrk0_phi_ ,	"LHE_Wqrk0_phi");
+AddBranch(&LHE_Wqrk0_M_ ,	"LHE_Wqrk0_M");
+AddBranch(&LHE_Wqrk0_E_ ,	"LHE_Wqrk0_E");
+AddBranch(&LHE_Wqrk0_Mt_ ,	"LHE_Wqrk0_Mt");
+AddBranch(&LHE_Wqrk1_pt_ ,	"LHE_Wqrk1_pt");
+AddBranch(&LHE_Wqrk1_eta_ ,	"LHE_Wqrk1_eta");
+AddBranch(&LHE_Wqrk1_phi_ ,	"LHE_Wqrk1_phi");
+AddBranch(&LHE_Wqrk1_M_ ,	"LHE_Wqrk1_M");
+AddBranch(&LHE_Wqrk1_E_ ,	"LHE_Wqrk1_E");
+AddBranch(&LHE_Wqrk1_Mt_ ,	"LHE_Wqrk1_Mt");
+AddBranch(&LHE_Iqrk0_pt_ ,	"LHE_Iqrk0_pt");
+AddBranch(&LHE_Iqrk0_eta_ ,	"LHE_Iqrk0_eta");
+AddBranch(&LHE_Iqrk0_phi_ ,	"LHE_Iqrk0_phi");
+AddBranch(&LHE_Iqrk0_E_ ,	"LHE_Iqrk0_E");
+AddBranch(&LHE_Iqrk0_M_ ,	"LHE_Iqrk0_M");
+AddBranch(&LHE_Iqrk0_Mt_ ,	"LHE_Iqrk0_Mt");
+AddBranch(&LHE_Iqrk1_pt_ ,	"LHE_Iqrk1_pt");
+AddBranch(&LHE_Iqrk1_eta_ ,	"LHE_Iqrk1_eta");
+AddBranch(&LHE_Iqrk1_phi_ ,	"LHE_Iqrk1_phi");
+AddBranch(&LHE_Iqrk1_E_ ,	"LHE_Iqrk1_E");
+AddBranch(&LHE_Iqrk1_M_ ,	"LHE_Iqrk1_M");
+AddBranch(&LHE_Iqrk1_Mt_ ,	"LHE_Iqrk1_Mt");
+AddBranch(&LHE_mWW_ ,	"LHE_mWW");
+AddBranch(&LHE_mtWW_ ,	"LHE_mtWW");
+AddBranch(&LHE_mWLep_ ,	"LHE_mWLep");
+AddBranch(&LHE_mtWLep_ ,	"LHE_mtWLep");
+AddBranch(&LHE_mWHad_ ,	"LHE_mWHad");
+AddBranch(&LHE_mtWHad_ ,	"LHE_mtWHad");
+AddBranch(&LHE_costheta1_ ,	"LHE_costheta1");
+AddBranch(&LHE_costheta2_ ,	"LHE_costheta2");
+AddBranch(&LHE_phi_ ,	"LHE_phi");
+AddBranch(&LHE_costhetastar_ ,	"LHE_costhetastar");
+AddBranch(&LHE_phi1_ ,	"LHE_phi1");
+AddBranch(&LHE_dEtajj_ ,	"LHE_dEtajj");
+AddBranch(&LHE_dPhijj_ ,	"LHE_dPhijj");
+AddBranch(&LHE_mjj_ ,	"LHE_mjj");
+AddBranch(&LHE_VBSCentrality_ ,	"LHE_VBSCentrality");
 	
   	AddBranch(&LHEWeightIDs_, "LHEWeightIDs");
   	AddBranch(&LHEWeights_, "LHEWeights");
-
-	AddBranch(&ngenLept_, "ngenLept");
-	AddBranch(&genLeptPt_, "genLeptPt");
-	AddBranch(&genLeptEta_,"genLeptEta");
-	AddBranch(&genLeptPhi_,"genLeptPhi");
-	AddBranch(&genLeptM_,"genLeptM");
-	AddBranch(&genLeptStatus_,"genLeptStatus");
-	AddBranch(&genLeptId_,"genLeptId");
-	AddBranch(&genLeptMother_,"genLeptMother");
-	AddBranch(&genLeptGrandMother_,"genLeptGrandMother");
-
-  	AddBranch(&genNuPdgId_,"genNuPdgId");
-  	AddBranch(&ngenNu_,"ngenNu");
-  	AddBranch(&genNuPt_, "genNuPt");
-  	AddBranch(&genNuEta_,"genNuEta");
-  	AddBranch(&genNuPhi_,"genNuPhi");
-  	AddBranch(&genNuM_,"genNuM");
-  	AddBranch(&genNuQ_,"genNuQ");
-  	AddBranch(&genNustatus_,"genNustatus");
-  	AddBranch(&genNuMother_,"genNuMother");
-  	AddBranch(&genNuGrandMother_,"genNuGrandMother");
-
-  	AddBranch(&genWJet1_PdgId_,"genWJet1_PdgId");
-  	AddBranch(&ngenWJet1__,"ngenWJet1_");
-  	AddBranch(&genWJet1_Pt_, "genWJet1_Pt");
-  	AddBranch(&genWJet1_Eta_,"genWJet1_Eta");
-  	AddBranch(&genWJet1_Phi_,"genWJet1_Phi");
-  	AddBranch(&genWJet1_M_,"genWJet1_M");
-  	AddBranch(&genWJet1_Q_,"genWJet1_Q");
-  	AddBranch(&genWJet1_status_,"genWJet1_status");
-  	AddBranch(&genWJet1_Mother_,"genWJet1_Mother");
-  	AddBranch(&genWJet1_GrandMother_,"genWJet1_GrandMother");
-
-  	AddBranch(&genWJet2_PdgId_,"genWJet2_PdgId");
-  	AddBranch(&ngenWJet2__,"ngenWJet2_");
-  	AddBranch(&genWJet2_Pt_, "genWJet2_Pt");
-  	AddBranch(&genWJet2_Eta_,"genWJet2_Eta");
-  	AddBranch(&genWJet2_Phi_,"genWJet2_Phi");
-  	AddBranch(&genWJet2_M_,"genWJet2_M");
-  	AddBranch(&genWJet2_Q_,"genWJet2_Q");
-  	AddBranch(&genWJet2_status_,"genWJet2_status");
-  	AddBranch(&genWJet2_Mother_,"genWJet2_Mother");
-  	AddBranch(&genWJet2_GrandMother_,"genWJet2_GrandMother");
-
-  	AddBranch(&genVBFjet1_PdgId_,"genVBFjet1_PdgId");
-  	AddBranch(&ngenVBFjet1__,"ngenVBFjet1_");
-  	AddBranch(&genVBFjet1_Pt_, "genVBFjet1_Pt");
-  	AddBranch(&genVBFjet1_Eta_,"genVBFjet1_Eta");
-  	AddBranch(&genVBFjet1_Phi_,"genVBFjet1_Phi");
-  	AddBranch(&genVBFjet1_M_,"genVBFjet1_M");
-  	AddBranch(&genVBFjet1_Q_,"genVBFjet1_Q");
-  	AddBranch(&genVBFjet1_status_,"genVBFjet1_status");
-  	AddBranch(&genVBFjet1_Mother_,"genVBFjet1_Mother");
-  	AddBranch(&genVBFjet1_GrandMother_,"genVBFjet1_GrandMother");
-
-  	AddBranch(&genVBFjet2_PdgId_,"genVBFjet2_PdgId");
-  	AddBranch(&ngenVBFjet2__,"ngenVBFjet2_");
-  	AddBranch(&genVBFjet2_Pt_, "genVBFjet2_Pt");
-  	AddBranch(&genVBFjet2_Eta_,"genVBFjet2_Eta");
-  	AddBranch(&genVBFjet2_Phi_,"genVBFjet2_Phi");
-  	AddBranch(&genVBFjet2_M_,"genVBFjet2_M");
-  	AddBranch(&genVBFjet2_Q_,"genVBFjet2_Q");
-  	AddBranch(&genVBFjet2_status_,"genVBFjet2_status");
-  	AddBranch(&genVBFjet2_Mother_,"genVBFjet2_Mother");
-  	AddBranch(&genVBFjet2_GrandMother_,"genVBFjet2_GrandMother");
-
-  AddBranch(&genQuarkStatus_, "genQuarkStatus");
-  AddBranch(&genJetPt_, "genJetPt");
-  AddBranch(&genJetEta_, "genJetEta");
-  AddBranch(&genJetPhi_, "genJetPhi");
-  AddBranch(&genJetMass_, "genJetMass");
-  AddBranch(&ngenJet_, "ngenJet");
-  AddBranch(&nVBFJet_, "nVBFJet");
-
-  AddBranch(&genCaloMET_, "genCaloMET");
-  AddBranch(&genCaloMETPhi_, "genCaloMETPhi");
-  AddBranch(&genTrueMET_, "genTrueMET");
-  AddBranch(&genTrueMETPhi_, "genTrueMETPhi");
-
-AddBranch(&vbf_maxpt_j1_pt_, "vbf_maxpt_j1_pt");
-AddBranch(&vbf_maxpt_j1_eta_, "vbf_maxpt_j1_eta");
-AddBranch(&vbf_maxpt_j1_phi_, "vbf_maxpt_j1_phi");
-AddBranch(&vbf_maxpt_j1_e_, "vbf_maxpt_j1_e");
-AddBranch(&vbf_maxpt_j1_bDiscriminatorCSV_, "vbf_maxpt_j1_bDiscriminatorCSV");
-AddBranch(&vbf_maxpt_j2_pt_, "vbf_maxpt_j2_pt");
-AddBranch(&vbf_maxpt_j2_eta_, "vbf_maxpt_j2_eta");
-AddBranch(&vbf_maxpt_j2_phi_, "vbf_maxpt_j2_phi");
-AddBranch(&vbf_maxpt_j2_e_, "vbf_maxpt_j2_e");
-AddBranch(&vbf_maxpt_j2_bDiscriminatorCSV_, "vbf_maxpt_j2_bDiscriminatorCSV");
-AddBranch(&vbf_maxpt_jj_pt_, "vbf_maxpt_jj_pt");
-AddBranch(&vbf_maxpt_jj_eta_, "vbf_maxpt_jj_eta");
-AddBranch(&vbf_maxpt_jj_phi_, "vbf_maxpt_jj_phi");
-AddBranch(&vbf_maxpt_jj_m_, "vbf_maxpt_jj_m");
-AddBranch(&vbf_maxpt_deltaR_, "vbf_maxpt_deltaR");
-AddBranch(&AK4_jet1_pt_, "AK4_jet1_pt");
-AddBranch(&AK4_jet1_eta_, "AK4_jet1_eta");
-AddBranch(&AK4_jet1_phi_, "AK4_jet1_phi");
-AddBranch(&AK4_jet1_e_, "AK4_jet1_e");
-AddBranch(&AK4_jet1_bDiscriminatorCSV_, "AK4_jet1_bDiscriminatorCSV");
-AddBranch(&AK4_jet2_pt_, "AK4_jet2_pt");
-AddBranch(&AK4_jet2_eta_, "AK4_jet2_eta");
-AddBranch(&AK4_jet2_phi_, "AK4_jet2_phi");
-AddBranch(&AK4_jet2_e_, "AK4_jet2_e");
-AddBranch(&AK4_jet2_bDiscriminatorCSV_, "AK4_jet2_bDiscriminatorCSV");
-AddBranch(&AK4_jetjet_pt_, "AK4_jetjet_pt");
-AddBranch(&AK4_jetjet_mass_, "AK4_jetjet_mass");
-AddBranch(&AK4_jetjet_deltaeta_, "AK4_jetjet_deltaeta");
-AddBranch(&AK4_jetjet_deltaphi_, "AK4_jetjet_deltaphi");
-AddBranch(&AK4_jetjet_deltar_, "AK4_jetjet_deltar");
-AddBranch(&deltaR_lak4jetjet_, "deltaR_lak4jetjet");
-AddBranch(&deltaphi_METak4jetjet_, "deltaphi_METak4jetjet");
-AddBranch(&deltaphi_Vak4jetjet_, "deltaphi_Vak4jetjet");
-AddBranch(&mass_lvjj_run2_AK4_, "mass_lvjj_run2_AK4");
 
 }
 
 void GenAnalyzer::Clear(){
 	//pdgID_.clear();
+isMuMinus_	= -999.0;
+LHELeptPt_	= -999.0;
+LHELeptEta_	= -999.0;
+LHELeptPhi_	= -999.0;
+LHELeptM_	= -999.0;
+LHELeptE_	= -999.0;
+LHENuPt_	= -999.0;
+LHENuEta_	= -999.0;
+LHENuPhi_	= -999.0;
+LHENuM_	= -999.0;
+LHENuE_	= -999.0;
+LHE_Wqrk0_pt_	= -999.0;
+LHE_Wqrk0_eta_	= -999.0;
+LHE_Wqrk0_phi_	= -999.0;
+LHE_Wqrk0_M_	= -999.0;
+LHE_Wqrk0_E_	= -999.0;
+LHE_Wqrk0_Mt_	= -999.0;
+LHE_Wqrk1_pt_	= -999.0;
+LHE_Wqrk1_eta_	= -999.0;
+LHE_Wqrk1_phi_	= -999.0;
+LHE_Wqrk1_M_	= -999.0;
+LHE_Wqrk1_E_	= -999.0;
+LHE_Wqrk1_Mt_	= -999.0;
+LHE_Iqrk0_pt_	= -999.0;
+LHE_Iqrk0_eta_	= -999.0;
+LHE_Iqrk0_phi_	= -999.0;
+LHE_Iqrk0_E_	= -999.0;
+LHE_Iqrk0_M_	= -999.0;
+LHE_Iqrk0_Mt_	= -999.0;
+LHE_Iqrk1_pt_	= -999.0;
+LHE_Iqrk1_eta_	= -999.0;
+LHE_Iqrk1_phi_	= -999.0;
+LHE_Iqrk1_E_	= -999.0;
+LHE_Iqrk1_M_	= -999.0;
+LHE_Iqrk1_Mt_	= -999.0;
+LHE_mWW_	= -999.0;
+LHE_mtWW_	= -999.0;
+LHE_mWLep_	= -999.0;
+LHE_mtWLep_	= -999.0;
+LHE_mWHad_	= -999.0;
+LHE_mtWHad_	= -999.0;
+LHE_costheta1_	= -999.0;
+LHE_costheta2_	= -999.0;
+LHE_phi_	= -999.0;
+LHE_costhetastar_	= -999.0;
+LHE_phi1_	= -999.0;
+LHE_dEtajj_	= -999.0;
+LHE_dPhijj_	= -999.0;
+LHE_mjj_	= -999.0;
+LHE_VBSCentrality_	= -999.0;
 
-	ngenLept_ = -999;
-	genLeptPt_ = -999.0;
-	genLeptEta_ = -999.0;
-	genLeptPhi_ = -999.0;
-	genLeptStatus_ = -999;
-	genLeptMother_ = -999.0;
-	genLeptGrandMother_ = -999;
-	genLeptId_ = -999;
-	genLeptM_ = -999.0;
-
-  ngenNu_ = -999;
-  genNuPt_ = -999.0;
-  genNuEta_ = -999.0;
-  genNuPhi_ = -999.0;
-  genNuM_ = -999.0;
-  genNuQ_ = -999.0;
-  genNustatus_ = -999;
-  genNuMother_ = -999;
-  genNuGrandMother_ = -999;
-  genNuPdgId_ = -999;
-
-  ngenWJet1__ = -999;
-  genWJet1_Pt_ = -999.0;
-  genWJet1_Eta_ = -999.0;
-  genWJet1_Phi_ = -999.0;
-  genWJet1_M_ = -999.0;
-  genWJet1_Q_ = -999.0;
-  genWJet1_status_ = -999;
-  genWJet1_Mother_ = -999;
-  genWJet1_GrandMother_ = -999;
-  genWJet1_PdgId_ = -999;
-
-  ngenWJet2__ = -999;
-  genWJet2_Pt_ = -999.0;
-  genWJet2_Eta_ = -999.0;
-  genWJet2_Phi_ = -999.0;
-  genWJet2_M_ = -999.0;
-  genWJet2_Q_ = -999.0;
-  genWJet2_status_ = -999;
-  genWJet2_Mother_ = -999;
-  genWJet2_GrandMother_ = -999;
-  genWJet2_PdgId_ = -999;
-
-  ngenVBFjet1__ = -999;
-  genVBFjet1_Pt_ = -999.0;
-  genVBFjet1_Eta_ = -999.0;
-  genVBFjet1_Phi_ = -999.0;
-  genVBFjet1_M_ = -999.0;
-  genVBFjet1_Q_ = -999.0;
-  genVBFjet1_status_ = -999;
-  genVBFjet1_Mother_ = -999;
-  genVBFjet1_GrandMother_ = -999;
-  genVBFjet1_PdgId_ = -999;
-
-  ngenVBFjet2__ = -999;
-  genVBFjet2_Pt_ = -999.0;
-  genVBFjet2_Eta_ = -999.0;
-  genVBFjet2_Phi_ = -999.0;
-  genVBFjet2_M_ = -999.0;
-  genVBFjet2_Q_ = -999.0;
-  genVBFjet2_status_ = -999;
-  genVBFjet2_Mother_ = -999;
-  genVBFjet2_GrandMother_ = -999;
-  genVBFjet2_PdgId_ = -999;
-
-nVBFJet_ = -999;
-ngenJet_ = -999;
-LHEWeightIDs_.clear();
-LHEWeights_.clear();
-genQuarkStatus_.clear();
-genJetPt_.clear();
-genJetEta_.clear();
-genJetPhi_.clear();
-genJetMass_.clear();
-
-genCaloMET_.clear();
-genCaloMETPhi_.clear();
-genTrueMET_.clear();
-genTrueMETPhi_.clear();
-
-
-vbf_maxpt_j1_pt_ = -999.0;
-vbf_maxpt_j1_eta_ = -999.0;
-vbf_maxpt_j1_phi_ = -999.0;
-vbf_maxpt_j1_e_ = -999.0;
-vbf_maxpt_j1_bDiscriminatorCSV_ = -999.0;
-vbf_maxpt_j2_pt_ = -999.0;
-vbf_maxpt_j2_eta_ = -999.0;
-vbf_maxpt_j2_phi_ = -999.0;
-vbf_maxpt_j2_e_ = -999.0;
-vbf_maxpt_j2_bDiscriminatorCSV_ = -999.0;
-vbf_maxpt_jj_pt_ = -999.0;
-vbf_maxpt_jj_pt_ = -999.0;
-vbf_maxpt_jj_eta_ = -999.0;
-vbf_maxpt_jj_phi_ = -999.0;
-vbf_maxpt_jj_m_ = -999.0;
-vbf_maxpt_deltaR_ = -999.0;
-AK4_jet1_pt_ = -999.0;
-AK4_jet1_eta_ = -999.0;
-AK4_jet1_phi_ = -999.0;
-AK4_jet1_e_ = -999.0;
-AK4_jet1_bDiscriminatorCSV_ = -999.0;
-AK4_jet2_pt_ = -999.0;
-AK4_jet2_eta_ = -999.0;
-AK4_jet2_phi_ = -999.0;
-AK4_jet2_e_ = -999.0;
-AK4_jet2_bDiscriminatorCSV_ = -999.0;
-AK4_jetjet_pt_ = -999.0;
-AK4_jetjet_mass_ = -999.0;
-AK4_jetjet_deltaeta_ = -999.0;
-AK4_jetjet_deltaphi_ = -999.0;
-AK4_jetjet_deltar_ = -999.0;
-deltaR_lak4jetjet_ = -999.0;
-deltaphi_METak4jetjet_ = -999.0;
-deltaphi_Vak4jetjet_ = -999.0;
-mass_lvjj_run2_AK4_ = -999.0;
 }
 
