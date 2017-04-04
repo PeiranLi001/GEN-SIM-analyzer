@@ -69,18 +69,28 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   iEvent.getByToken(LHEEventToken, LHEEventHandle);
   const LHEEventProduct* LHE = 0;
 
+  std::vector<int> leptons ;      
+  std::vector<int> finalQuarks ;      
+  std::vector<int> intermediates ;
+  std::vector<int> tops ;        
+
   if(LHEEventHandle.isValid()){
+
+  	// clear the defined vectors before start
+  	leptons.clear();
+	finalQuarks.clear();
+	intermediates.clear();
+	tops.clear();
+
   	LHE = LHEEventHandle.product();
 
 	for(const auto& weight : LHE->weights()) {
 		LHEWeightIDs_.push_back(weight.id);
 		LHEWeights_.push_back(weight.wgt);
 	}
+	//std::cout<<"size of LHEWeightIDS:\t"<<LHEWeightIDs_.size()<<std::endl;
+	//std::cout<<"size of LHEWeight: \t"<<LHEWeights_.size()<<std::endl;
 	
-        std::vector<int> leptons ;      
-        std::vector<int> finalQuarks ;      
-        std::vector<int> intermediates ;
-        std::vector<int> tops ;        
 	TLorentzVector Is_Iqrk1,Is_Iqrk0;
         //PG loop over particles in the event
 	int incomingPart = 0;
@@ -243,6 +253,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         
         // assign the other quarks
         std::vector<int> finalQuarksNotW;
+	finalQuarksNotW.clear();
         if (finalQuarks.size() == 4){
         for (unsigned int a = 0; a < finalQuarks.size(); ++a ){
             if (finalQuarks.at(a) != i_wqrk_1 && finalQuarks.at(a) != i_wqrk_2){

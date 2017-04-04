@@ -369,6 +369,8 @@ AddBranch(&LHE_VBSCentrality_ ,	"LHE_VBSCentrality");
 
 void GenAnalyzer::Clear(){
 	//pdgID_.clear();
+LHEWeightIDs_.clear();
+LHEWeights_.clear();
 isMuMinus_	= -999.0;
 LHELeptPt_	= -999.0;
 LHELeptEta_	= -999.0;
