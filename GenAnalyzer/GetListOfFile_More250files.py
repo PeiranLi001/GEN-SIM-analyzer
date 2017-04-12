@@ -1,9 +1,11 @@
 import os
 import ROOT as ROOT
 #source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_SMNoDecay_mjj200_Pythia8CUEP8M1_13TeV_Madgraph/RunIISummer15wmLHEGS/170410_120247/'
-#source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_NPle1_mjj200_Pythia8CUEP8M1_13TeV_Madgraph'
+source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_NPle1_mjj200_Pythia8CUEP8M1_13TeV_Madgraph'
 #source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_NPle1_DefaultCut_Pythia8CUEP8M1_13TeV_Madgraph'
-source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_SM_mjj200_Pythia8CUEP8M1_13TeV_Madgraph'
+#source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_SM_mjj200_Pythia8CUEP8M1_13TeV_Madgraph'
+#source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_SM_DefaultCut_Pythia8CUEP8M1_13TeV_Madgraph'
+
 
 search1='log'
 search2='failed'
@@ -41,4 +43,7 @@ for i in range(0,len(Arrayfilepath)):
 	else:
 		print "\t'root://cmseos.fnal.gov/"+NewFilePath+"',"
 print "])"
-print "process.source = cms.Source(\"PoolSource\", fileNames = myfilelist)"
+print "process.source = cms.Source(\"PoolSource\","
+print "\t\tfileNames = myfilelist,"
+print "\t\tskipBadFiles = cms.untracked.bool(True)"
+print "\t\t)"
