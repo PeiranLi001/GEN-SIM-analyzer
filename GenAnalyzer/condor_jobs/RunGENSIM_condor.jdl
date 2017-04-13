@@ -6,6 +6,6 @@ Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 transfer_input_files = RunGENSIM_condor.sh, CMSSW_8_0_11.tar.gz
 x509userproxy = $ENV(X509_USER_PROXY)
-Output = aQGC_WPlepWMhadJJ_EWK_LO_NPle1_tarball_MadDefCard_$(Process).stdout
-Error  = aQGC_WPlepWMhadJJ_EWK_LO_NPle1_tarball_MadDefCard_$(Process).stdout
+Output = aQGC_WPlepWMhadJJ_EWK_LO_NPle1_DefaultCut_Pythia8CUEP8M1_13TeV_Madgraph_$(Process).stdout
+Error  = aQGC_WPlepWMhadJJ_EWK_LO_NPle1_DefaultCut_Pythia8CUEP8M1_13TeV_Madgraph_$(Process).stdout
 Queue 1

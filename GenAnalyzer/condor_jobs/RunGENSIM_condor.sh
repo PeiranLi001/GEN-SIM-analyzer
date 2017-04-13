@@ -8,8 +8,9 @@ echo "CMSSW on Condor"
 CMSSWVER=CMSSW_8_0_11
 OUTDIR=root://cmseos.fnal.gov//store/user/rasharma/LHE_GEN_Analyzer_Output/
 #OutPutFileName=aQGC_WPlepWMhadJJ_EWK_LO_NPle1_mjj200_Pythia8CUEP8M1_13TeV_Madgraph.root
-#OutPutFileName=aQGC_WPlepWMhadJJ_EWK_LO_NPle1_DefaultCut_Pythia8CUEP8M1_13TeV_Madgraph.root
-OutPutFileName=aQGC_WPlepWMhadJJ_EWK_SM_mjj200_Pythia8CUEP8M1_13TeV_Madgraph.root
+OutPutFileName=aQGC_WPlepWMhadJJ_EWK_LO_NPle1_DefaultCut_Pythia8CUEP8M1_13TeV_Madgraph.root
+#OutPutFileName=aQGC_WPlepWMhadJJ_EWK_SM_mjj200_Pythia8CUEP8M1_13TeV_Madgraph.root
+#OutPutFileName=aQGC_WPlepWMhadJJ_EWK_SM_DefaultCut_Pythia8CUEP8M1_13TeV_Madgraph.root
 
 echo ""
 echo "parameter set:"

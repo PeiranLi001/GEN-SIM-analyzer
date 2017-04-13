@@ -64,23 +64,33 @@ void
 GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
    using namespace edm;
-
-  edm::Handle<LHEEventProduct> LHEEventHandle;
-  iEvent.getByToken(LHEEventToken, LHEEventHandle);
-  const LHEEventProduct* LHE = 0;
-
-  std::vector<int> leptons ;      
-  std::vector<int> finalQuarks ;      
-  std::vector<int> intermediates ;
-  std::vector<int> tops ;        
-
-  if(LHEEventHandle.isValid()){
-
-  	// clear the defined vectors before start
+   
+   edm::Handle<reco::GenParticleCollection> genpsHandle;
+   iEvent.getByToken(genParticlesToken, genpsHandle);
+   
+   const vector<reco::GenParticle>* genps_coll = genpsHandle.product();
+   
+   edm::Handle<LHEEventProduct> LHEEventHandle;
+   iEvent.getByToken(LHEEventToken, LHEEventHandle);
+   const LHEEventProduct* LHE = 0;
+   
+   std::vector<int> leptons ;      
+   std::vector<int> finalQuarks ;      
+   std::vector<int> intermediates ;
+   std::vector<int> tops ;        
+   
+   if (Verbose_)  std::cout<<"===================\n\n"<<endl;
+   
+   if(LHEEventHandle.isValid()){
+   	// clear the defined vectors before start
   	leptons.clear();
 	finalQuarks.clear();
 	intermediates.clear();
 	tops.clear();
+	int WDaughter_MothInfo1 = 0;
+	int WDaughter_MothInfo2 = 0;
+	int FQuark_MothInfo1 = 0;
+	int FQuark_MothInfo2 = 0;
 
   	LHE = LHEEventHandle.product();
 
@@ -94,10 +104,18 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	TLorentzVector Is_Iqrk1,Is_Iqrk0;
         //PG loop over particles in the event
 	int incomingPart = 0;
+	if (Verbose_) std::cout<<"Total No. of particles = "<< LHE->hepeup().NUP <<std::endl;
         for (int iPart = 0 ; iPart < LHE->hepeup().NUP; ++iPart){
-            
-            //PG incoming particle          
-            if (LHE->hepeup().ISTUP.at (iPart) == -1){
+
+		int mother1 = LHE->hepeup().MOTHUP[iPart].first;
+		int mother2 = LHE->hepeup().MOTHUP[iPart].second;
+		if (Verbose_)
+		if (LHE->hepeup().ISTUP.at (iPart) != -1)
+		std::cout<<"PDGID = "<<LHE->hepeup().IDUP.at(iPart)<<"\tStatus = "<< LHE->hepeup().ISTUP.at(iPart)<<"\tMother1 pos = "<<mother1<<"\t"<<mother2<<"\tPDGID = "<< LHE->hepeup().IDUP.at(mother1-1) <<"\t"<< LHE->hepeup().IDUP.at(mother2-1) <<std::endl;
+		else
+		std::cout<<"PDGID = "<<LHE->hepeup().IDUP.at(iPart)<<"\tStatus = "<< LHE->hepeup().ISTUP.at(iPart)<<std::endl;
+		//PG incoming particle          
+		if (LHE->hepeup().ISTUP.at (iPart) == -1){
 		incomingPart++;
 		if (incomingPart == 1)
 		{
@@ -184,31 +202,41 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	    //std::cout << "lep1 = " << LHE->hepeup().IDUP.at(i_olep_anti) << std::endl;
         }
         else{
-            std::cout << "Problem!" << std::endl;
+            std::cout << "Warning!!!  Lepton size > 2" << std::endl;
         }
         
         // --------------- If signal, find the quarks from the W  -------------------
         if (finalQuarks.size() == 4){
             for (unsigned int a = 0; a < finalQuarks.size(); ++a ){
                 int tmpMoth = LHE->hepeup().MOTHUP.at(finalQuarks.at(a)).first - 1;
+		if (Verbose_)
+			std::cout<<LHE->hepeup().IDUP.at(finalQuarks.at(a))<<"\tMOthere = "<<LHE->hepeup().IDUP.at(tmpMoth)<<std::endl;
 
                 if ( abs(LHE->hepeup().IDUP.at(tmpMoth)) == 24 && LHE->hepeup().IDUP.at(finalQuarks.at(a)) > 0 ){
                     signalWCtr++;
+		    WDaughter_MothInfo1 = finalQuarks.at(a);
+		    if (Verbose_)	std::cout<<"First"<<endl;
                 }
                 if ( abs(LHE->hepeup().IDUP.at(tmpMoth)) == 24 && LHE->hepeup().IDUP.at(finalQuarks.at(a)) < 0 ){
                     signalWCtr++;
+		    WDaughter_MothInfo2 = finalQuarks.at(a);
+		    if (Verbose_)	std::cout<<"Second"<<endl;
                 }
                 if ( abs(LHE->hepeup().IDUP.at(tmpMoth)) != 24 && tmpfill1){
                     signalWCtr++;
+		    FQuark_MothInfo1 = finalQuarks.at(a);
+		    if (Verbose_)	std::cout<<"Third"<<endl;
                 }
                 if ( abs(LHE->hepeup().IDUP.at(tmpMoth)) != 24 && !tmpfill1){
                     signalWCtr++;
+		    FQuark_MothInfo2 = finalQuarks.at(a);
+		    if (Verbose_)	std::cout<<"Forth"<<endl;
                     tmpfill1++;
                 }
             }
         }
         else{
-            std::cout << "Problem!" << std::endl;
+            std::cout << "Warning!!! Final quark size > 4" << std::endl;
         }
         
         //if (signalWCtr == 4 && tops.size() == 0){ signalFlag = 1; NSignal++; }
@@ -311,12 +339,12 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
          LHE->hepeup().PUP[i_wqrk_1][2], //PG pz
          LHE->hepeup().PUP[i_wqrk_1][3] //PG E
          ) ;
-	 	LHE_Wqrk0_E_  = LHE->hepeup().PUP[i_wqrk_1][3];
-		LHE_Wqrk0_pt_ = fs_Wqrk0.Pt();
-		LHE_Wqrk0_eta_= fs_Wqrk0.Eta();
-		LHE_Wqrk0_phi_= fs_Wqrk0.Phi();
-		LHE_Wqrk0_M_  = fs_Wqrk0.M();
-		LHE_Wqrk0_Mt_  = fs_Wqrk0.Mt();
+	 	LHE_DeltaM_Wqrk0_E_  = LHE->hepeup().PUP[i_wqrk_1][3];
+		LHE_DeltaM_Wqrk0_pt_ = fs_Wqrk0.Pt();
+		LHE_DeltaM_Wqrk0_eta_= fs_Wqrk0.Eta();
+		LHE_DeltaM_Wqrk0_phi_= fs_Wqrk0.Phi();
+		LHE_DeltaM_Wqrk0_M_  = fs_Wqrk0.M();
+		LHE_DeltaM_Wqrk0_Mt_  = fs_Wqrk0.Mt();
 
         TLorentzVector fs_Wqrk1
         (
@@ -325,12 +353,12 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
          LHE->hepeup().PUP[i_wqrk_2][2], //PG pz
          LHE->hepeup().PUP[i_wqrk_2][3] //PG E
          ) ;
-	 	LHE_Wqrk1_E_   = LHE->hepeup().PUP[i_wqrk_2][3];
-		LHE_Wqrk1_pt_  = fs_Wqrk1.Pt();
-		LHE_Wqrk1_eta_ = fs_Wqrk1.Eta();
-		LHE_Wqrk1_phi_ = fs_Wqrk1.Phi();
-		LHE_Wqrk1_M_   = fs_Wqrk1.M();
-		LHE_Wqrk1_Mt_  = fs_Wqrk1.Mt();
+	 	LHE_DeltaM_Wqrk1_E_   = LHE->hepeup().PUP[i_wqrk_2][3];
+		LHE_DeltaM_Wqrk1_pt_  = fs_Wqrk1.Pt();
+		LHE_DeltaM_Wqrk1_eta_ = fs_Wqrk1.Eta();
+		LHE_DeltaM_Wqrk1_phi_ = fs_Wqrk1.Phi();
+		LHE_DeltaM_Wqrk1_M_   = fs_Wqrk1.M();
+		LHE_DeltaM_Wqrk1_Mt_  = fs_Wqrk1.Mt();
 
         TLorentzVector fs_Iqrk0
         (
@@ -339,12 +367,12 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
          LHE->hepeup().PUP[i_iqrk_1][2], //PG pz
          LHE->hepeup().PUP[i_iqrk_1][3] //PG E
          ) ;
-	 	LHE_Iqrk0_E_   = LHE->hepeup().PUP[i_iqrk_1][3];
-		LHE_Iqrk0_pt_  = fs_Iqrk0.Pt();
-		LHE_Iqrk0_eta_ = fs_Iqrk0.Eta();
-		LHE_Iqrk0_phi_ = fs_Iqrk0.Phi();
-		LHE_Iqrk0_M_   = fs_Iqrk0.M();
-		LHE_Iqrk0_Mt_  = fs_Iqrk0.Mt();
+	 	LHE_DeltaM_Iqrk0_E_   = LHE->hepeup().PUP[i_iqrk_1][3];
+		LHE_DeltaM_Iqrk0_pt_  = fs_Iqrk0.Pt();
+		LHE_DeltaM_Iqrk0_eta_ = fs_Iqrk0.Eta();
+		LHE_DeltaM_Iqrk0_phi_ = fs_Iqrk0.Phi();
+		LHE_DeltaM_Iqrk0_M_   = fs_Iqrk0.M();
+		LHE_DeltaM_Iqrk0_Mt_  = fs_Iqrk0.Mt();
 
 
         TLorentzVector fs_Iqrk1
@@ -354,12 +382,65 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
          LHE->hepeup().PUP[i_iqrk_2][2], //PG pz
          LHE->hepeup().PUP[i_iqrk_2][3] //PG E
          ) ;
-	 	LHE_Iqrk1_E_   = LHE->hepeup().PUP[i_iqrk_2][3];
-		LHE_Iqrk1_pt_  = fs_Iqrk1.Pt();
-		LHE_Iqrk1_eta_ = fs_Iqrk1.Eta();
-		LHE_Iqrk1_phi_ = fs_Iqrk1.Phi();
-		LHE_Iqrk1_M_   = fs_Iqrk1.M();
-		LHE_Iqrk1_Mt_  = fs_Iqrk1.Mt();
+	 	LHE_DeltaM_Iqrk1_E_   = LHE->hepeup().PUP[i_iqrk_2][3];
+		LHE_DeltaM_Iqrk1_pt_  = fs_Iqrk1.Pt();
+		LHE_DeltaM_Iqrk1_eta_ = fs_Iqrk1.Eta();
+		LHE_DeltaM_Iqrk1_phi_ = fs_Iqrk1.Phi();
+		LHE_DeltaM_Iqrk1_M_   = fs_Iqrk1.M();
+		LHE_DeltaM_Iqrk1_Mt_  = fs_Iqrk1.Mt();
+	TLorentzVector MothInfo_Wqrk1
+	(
+	  LHE->hepeup().PUP[WDaughter_MothInfo1][0],
+	  LHE->hepeup().PUP[WDaughter_MothInfo1][1],
+	  LHE->hepeup().PUP[WDaughter_MothInfo1][2],
+	  LHE->hepeup().PUP[WDaughter_MothInfo1][3]
+	);
+	 	LHE_MothInfo_Wqrk0_E_   = LHE->hepeup().PUP[WDaughter_MothInfo1][3];
+		LHE_MothInfo_Wqrk0_pt_  = MothInfo_Wqrk1.Pt();
+		LHE_MothInfo_Wqrk0_eta_ = MothInfo_Wqrk1.Eta();
+		LHE_MothInfo_Wqrk0_phi_ = MothInfo_Wqrk1.Phi();
+		LHE_MothInfo_Wqrk0_M_   = MothInfo_Wqrk1.M();
+		LHE_MothInfo_Wqrk0_Mt_  = MothInfo_Wqrk1.Mt();
+		
+	TLorentzVector MothInfo_Wqrk2
+	(
+	  LHE->hepeup().PUP[WDaughter_MothInfo2][0],
+	  LHE->hepeup().PUP[WDaughter_MothInfo2][1],
+	  LHE->hepeup().PUP[WDaughter_MothInfo2][2],
+	  LHE->hepeup().PUP[WDaughter_MothInfo2][3]
+	);
+	 	LHE_MothInfo_Wqrk1_E_   = LHE->hepeup().PUP[WDaughter_MothInfo2][3];
+		LHE_MothInfo_Wqrk1_pt_  = MothInfo_Wqrk2.Pt();
+		LHE_MothInfo_Wqrk1_eta_ = MothInfo_Wqrk2.Eta();
+		LHE_MothInfo_Wqrk1_phi_ = MothInfo_Wqrk2.Phi();
+		LHE_MothInfo_Wqrk1_M_   = MothInfo_Wqrk2.M();
+		LHE_MothInfo_Wqrk1_Mt_  = MothInfo_Wqrk2.Mt();
+	TLorentzVector MothInfo_Fqrk1
+	(
+	  LHE->hepeup().PUP[FQuark_MothInfo1][0],
+	  LHE->hepeup().PUP[FQuark_MothInfo1][1],
+	  LHE->hepeup().PUP[FQuark_MothInfo1][2],
+	  LHE->hepeup().PUP[FQuark_MothInfo1][3]
+	);
+	 	LHE_MothInfo_Iqrk0_E_   = LHE->hepeup().PUP[FQuark_MothInfo1][3];
+		LHE_MothInfo_Iqrk0_pt_  = MothInfo_Fqrk1.Pt();
+		LHE_MothInfo_Iqrk0_eta_ = MothInfo_Fqrk1.Eta();
+		LHE_MothInfo_Iqrk0_phi_ = MothInfo_Fqrk1.Phi();
+		LHE_MothInfo_Iqrk0_M_   = MothInfo_Fqrk1.M();
+		LHE_MothInfo_Iqrk0_Mt_  = MothInfo_Fqrk1.Mt();
+	TLorentzVector MothInfo_Fqrk2
+	(
+	  LHE->hepeup().PUP[FQuark_MothInfo2][0],
+	  LHE->hepeup().PUP[FQuark_MothInfo2][1],
+	  LHE->hepeup().PUP[FQuark_MothInfo2][2],
+	  LHE->hepeup().PUP[FQuark_MothInfo2][3]
+	);
+	 	LHE_MothInfo_Iqrk1_E_   = LHE->hepeup().PUP[FQuark_MothInfo2][3];
+		LHE_MothInfo_Iqrk1_pt_  = MothInfo_Fqrk2.Pt();
+		LHE_MothInfo_Iqrk1_eta_ = MothInfo_Fqrk2.Eta();
+		LHE_MothInfo_Iqrk1_phi_ = MothInfo_Fqrk2.Phi();
+		LHE_MothInfo_Iqrk1_M_   = MothInfo_Fqrk2.M();
+		LHE_MothInfo_Iqrk1_Mt_  = MothInfo_Fqrk2.Mt();
 
         TLorentzVector p4_WHad = fs_Wqrk0 + fs_Wqrk1;
         TLorentzVector p4_WLep = fs_lep0 + fs_lep1;        
@@ -369,26 +450,59 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         computeAngles( p4_WW, p4_WLep, fs_lep0, fs_lep1, p4_WHad, fs_Wqrk0, fs_Wqrk1, 
                       a_costheta1, a_costheta2, a_Phi, a_costhetastar, a_Phi1);
         
-        LHE_mWW_ = (float) p4_WW.M();
-        LHE_mtWW_ = (float) p4_WW.Mt();
-        LHE_mWLep_ = (float) p4_WLep.M();
-        LHE_mtWLep_ = (float) p4_WLep.Mt();
-        LHE_mWHad_ = (float) p4_WHad.M();        
-        LHE_mtWHad_ = (float) p4_WHad.Mt();
-        LHE_costheta1_ = (float) a_costheta1;                
-        LHE_costheta2_ = (float) a_costheta2;
-        LHE_phi_ = (float) a_Phi;
-        LHE_costhetastar_ = (float) a_costhetastar;
-        LHE_phi1_ = (float) a_Phi1;
+        LHE_DeltaM_mWW_ = (float) p4_WW.M();
+        LHE_DeltaM_mtWW_ = (float) p4_WW.Mt();
+        LHE_DeltaM_mWLep_ = (float) p4_WLep.M();
+        LHE_DeltaM_mtWLep_ = (float) p4_WLep.Mt();
+        LHE_DeltaM_mWHad_ = (float) p4_WHad.M();        
+        LHE_DeltaM_mtWHad_ = (float) p4_WHad.Mt();
+        LHE_DeltaM_costheta1_ = (float) a_costheta1;                
+        LHE_DeltaM_costheta2_ = (float) a_costheta2;
+        LHE_DeltaM_phi_ = (float) a_Phi;
+        LHE_DeltaM_costhetastar_ = (float) a_costhetastar;
+        LHE_DeltaM_phi1_ = (float) a_Phi1;
 
-        LHE_dEtajj_ = (float) fabs( fs_Iqrk0.Eta() - fs_Iqrk1.Eta() );
-        LHE_dPhijj_ = (float) deltaPhi(fs_Iqrk0.Phi(),fs_Iqrk1.Phi());     
-        LHE_mjj_ = (float) (fs_Iqrk0 + fs_Iqrk1).M();
+        LHE_DeltaM_dEtajj_ = (float) fabs( fs_Iqrk0.Eta() - fs_Iqrk1.Eta() );
+        LHE_DeltaM_dPhijj_ = (float) deltaPhi(fs_Iqrk0.Phi(),fs_Iqrk1.Phi());     
+        LHE_DeltaM_mjj_ = (float) (fs_Iqrk0 + fs_Iqrk1).M();
 
 	if (fabs(fs_Iqrk0.Eta()-fs_Iqrk1.Eta()) == 0.0)
-		LHE_VBSCentrality_ = -999.0;
+		LHE_DeltaM_VBSCentrality_ = -999.0;
 	else
-		LHE_VBSCentrality_ = fabs(fs_Iqrk0.Eta()-(fs_Wqrk0.Rapidity()+fs_Wqrk1.Rapidity())-fs_Iqrk1.Eta())/fabs(fs_Iqrk0.Eta()-fs_Iqrk1.Eta());
+		LHE_DeltaM_VBSCentrality_ = fabs(fs_Iqrk0.Eta()-(fs_Wqrk0.Rapidity()+fs_Wqrk1.Rapidity())-fs_Iqrk1.Eta())/fabs(fs_Iqrk0.Eta()-fs_Iqrk1.Eta());
+
+        //isSignal = signalFlag;
+
+	//initialQuarks_.clear();
+		
+        TLorentzVector p4_WHad_MothInfo = MothInfo_Wqrk1 + MothInfo_Wqrk2;
+        //TLorentzVector p4_WLep = fs_lep0 + fs_lep1;        
+        TLorentzVector p4_WW_MothInfo = p4_WHad_MothInfo + p4_WLep;
+        
+        //double a_costheta1, a_costheta2, a_costhetastar, a_Phi, a_Phi1;
+        computeAngles( p4_WW_MothInfo, p4_WLep, fs_lep0, fs_lep1, p4_WHad_MothInfo, MothInfo_Wqrk1, MothInfo_Wqrk2, 
+                      a_costheta1, a_costheta2, a_Phi, a_costhetastar, a_Phi1);
+        
+        LHE_MothInfo_mWW_ = (float) p4_WW_MothInfo.M();
+        LHE_MothInfo_mtWW_ = (float) p4_WW_MothInfo.Mt();
+        LHE_MothInfo_mWLep_ = (float) p4_WLep.M();
+        LHE_MothInfo_mtWLep_ = (float) p4_WLep.Mt();
+        LHE_MothInfo_mWHad_ = (float) p4_WHad_MothInfo.M();        
+        LHE_MothInfo_mtWHad_ = (float) p4_WHad_MothInfo.Mt();
+        LHE_MothInfo_costheta1_ = (float) a_costheta1;                
+        LHE_MothInfo_costheta2_ = (float) a_costheta2;
+        LHE_MothInfo_phi_ = (float) a_Phi;
+        LHE_MothInfo_costhetastar_ = (float) a_costhetastar;
+        LHE_MothInfo_phi1_ = (float) a_Phi1;
+
+        LHE_MothInfo_dEtajj_ = (float) fabs( MothInfo_Fqrk1.Eta() - MothInfo_Fqrk2.Eta() );
+        LHE_MothInfo_dPhijj_ = (float) deltaPhi(MothInfo_Fqrk1.Phi(),MothInfo_Fqrk2.Phi());     
+        LHE_MothInfo_mjj_ = (float) (MothInfo_Fqrk1 + MothInfo_Fqrk2).M();
+
+	if (fabs(MothInfo_Fqrk1.Eta()-MothInfo_Fqrk2.Eta()) == 0.0)
+		LHE_MothInfo_VBSCentrality_ = -999.0;
+	else
+		LHE_MothInfo_VBSCentrality_ = fabs(MothInfo_Fqrk1.Eta()-(fs_Wqrk0.Rapidity()+fs_Wqrk1.Rapidity())-MothInfo_Fqrk2.Eta())/fabs(MothInfo_Fqrk1.Eta()-MothInfo_Fqrk2.Eta());
 
         //isSignal = signalFlag;
 
@@ -397,6 +511,162 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	}
   }
   }
+
+  int nGenParticle=0;
+
+  
+  double l_pt=0., l_eta=0., l_phi=0., l_mass=0., l_mother=0.;
+  int l_pdgId=0, l_status=0, l_gmother=0;
+
+  double nu_pt=0., nu_eta=0., nu_phi=0., nu_mass=0.;
+  int nu_pdgId=0, nu_status=0, nu_mother=0, nu_gmother=0;
+
+  TLorentzVector ELE, MU, TAU;
+  TLorentzVector NU;
+  TLorentzVector JET, VBFquarks, Wquarks;
+  TLorentzVector VBF1, VBF2, VBFTOT;
+  TLorentzVector Wjet1, Wjet2, WjetTOT;
+
+  std::vector<TLorentzVector> tightLep, vNU, vJET, wJET;
+  
+  for(vector<reco::GenParticle>::const_iterator genps_it = genps_coll->begin(); genps_it != genps_coll->end(); genps_it++) 
+  {
+  	nGenParticle++;
+	if((abs(genps_it->pdgId())==11 || abs(genps_it->pdgId())==13 || abs(genps_it->pdgId())==15) && (abs(genps_it->mother()->pdgId()) == 24) )
+	{
+		if (Verbose_)
+		cout<<"Status of leptons = "<<genps_it->status()<<endl;
+		if (Verbose_)
+		cout<<"Status of leptons monther = "<<genps_it->mother()->status()<<endl;
+		if (genps_it->pt() < 45.0) continue;
+		if (fabs(genps_it->eta()) > 2.1) continue;
+
+		l_pdgId = genps_it->pdgId();
+		l_status = genps_it->status();
+		l_mother = genps_it->mother()->pdgId();
+		l_gmother = genps_it->mother()->mother()->pdgId();
+
+		ELE.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
+		tightLep.push_back(ELE);
+	}
+	if((abs(genps_it->pdgId())==12 || abs(genps_it->pdgId())==14 || abs(genps_it->pdgId())==16) && (abs(genps_it->mother()->pdgId()) == 24) )
+	{
+		if (Verbose_)
+		cout<<"Status of Neutrino = "<<genps_it->status()<<endl;
+
+		nu_pdgId   = genps_it->pdgId();
+		nu_status  = genps_it->status();
+		nu_mother  = genps_it->mother()->pdgId();
+		nu_gmother = genps_it->mother()->mother()->pdgId();
+
+		NU.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
+		vNU.push_back(NU);
+	}
+	if((abs(genps_it->pdgId())==1 || abs(genps_it->pdgId())==2 || abs(genps_it->pdgId())==3 || abs(genps_it->pdgId())==4 || abs(genps_it->pdgId())==5 || abs(genps_it->pdgId())==6) && (abs(genps_it->mother()->pdgId()) == 24) && (genps_it->status()==23) )
+	{
+		Wquarks.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
+		wJET.push_back(Wquarks);
+	}
+	if((abs(genps_it->pdgId())==1 || abs(genps_it->pdgId())==2 || abs(genps_it->pdgId())==3 || abs(genps_it->pdgId())==4 || abs(genps_it->pdgId())==5 || abs(genps_it->pdgId())==6) && (abs(genps_it->mother()->pdgId()) != 24) && (genps_it->status()==23) )
+	{
+		VBFquarks.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
+		vJET.push_back(VBFquarks);
+	}
+  }
+
+  if (tightLep.size()==1 && vNU.size()==1 && wJET.size()==2 && vJET.size()==2)
+  {
+		if (Verbose_)
+  	cout<<"Event selected"<<nEVENT<<endl;
+	nEVENT++;
+
+	gen_LeptPt_ 	= ELE.Pt() ;
+	gen_LeptEta_ 	= ELE.Eta();
+	gen_LeptPhi_ 	= ELE.Phi();
+	gen_LeptM_ 	= ELE.M() ;
+	gen_LeptId_ 	= l_pdgId ;
+	gen_LeptStatus_ 	= l_status ;
+	gen_LeptMother_ 	= l_mother ;
+	gen_LeptGrandMother_ = l_gmother;
+
+	gen_NuPt_ 	= NU.Pt(); 
+	gen_NuEta_ 	= NU.Eta();
+	gen_NuPhi_ 	= NU.Phi();
+	gen_NuM_ 	= NU.M();
+	//gen_NuQ_ 	= ;
+	gen_Nustatus_ 	= nu_status;
+	gen_NuMother_ 	= nu_mother;
+	gen_NuGrandMother_ = nu_gmother;
+	gen_NuPdgId_ 	= nu_pdgId;	
+
+	gen_VBFjet1_Pt_ = vJET[0].Pt();
+	gen_VBFjet1_Eta_= vJET[0].Eta();
+	gen_VBFjet1_Phi_= vJET[0].Phi();
+	gen_VBFjet1_E_  = vJET[0].E();
+
+	gen_VBFjet2_Pt_ = vJET[1].Pt();
+	gen_VBFjet2_Eta_= vJET[1].Eta();
+	gen_VBFjet2_Phi_= vJET[1].Phi();
+	gen_VBFjet2_E_	 = vJET[1].E();
+
+	gen_VBFjet1jet2_Pt_ = (vJET[0]+vJET[1]).Pt();
+	gen_VBFjet1jet2_Eta_= (vJET[0]+vJET[1]).Eta();
+	gen_VBFjet1jet2_Phi_= (vJET[0]+vJET[1]).Phi();
+	gen_VBFjet1jet2_M_  = (vJET[0]+vJET[1]).M();
+	gen_vbfjet_deltaR_= deltaR(vJET[0].Eta(),vJET[0].Phi(),vJET[1].Eta(),vJET[1].Phi());
+
+	gen_WJet1_Pt_	= wJET[0].Pt();
+	gen_WJet1_Eta_	= wJET[0].Eta();
+	gen_WJet1_Phi_	= wJET[0].Phi();
+	gen_WJet1_E_	= wJET[0].E();
+
+	gen_WJet2_Pt_	= wJET[1].Pt();
+	gen_WJet2_Eta_	= wJET[1].Eta();
+	gen_WJet2_Phi_	= wJET[1].Phi();
+	gen_WJet2_E_	= wJET[1].E();
+
+	gen_WHad_Pt_	= (wJET[0]+wJET[1]).Pt();
+	gen_WHad_M_= (wJET[0]+wJET[1]).M();
+	gen_WHad_Mt_= (wJET[0]+wJET[1]).Mt();
+	gen_WHad_deltaeta_= fabs(wJET[0].Eta()-wJET[1].Eta());
+	gen_WHad_deltaphi_= fabs(wJET[0].Phi()-wJET[1].Phi());
+	gen_WHad_deltar_= deltaR(wJET[0].Eta(),wJET[0].Phi(),wJET[1].Eta(),wJET[1].Phi());
+	gen_deltaR_LepWHad_= deltaR((wJET[0]+wJET[1]).Eta(),(wJET[0]+wJET[1]).Phi(),l_eta, l_phi);
+	gen_deltaphi_NuWHad_= fabs((wJET[0]+wJET[1]).Phi() - nu_phi);
+	gen_deltaphi_WlepWHad_= fabs((wJET[0]+wJET[1]).Phi() - (ELE + NU).Phi());
+
+		
+        TLorentzVector p4_WHad_GEN = wJET[0] + wJET[1];
+        TLorentzVector p4_WLep_GEN = ELE + NU;
+        TLorentzVector p4_WW_GEN = p4_WHad_GEN + p4_WLep_GEN;
+        
+        double a_costheta1, a_costheta2, a_costhetastar, a_Phi, a_Phi1;
+        computeAngles( p4_WW_GEN, p4_WLep_GEN, ELE, NU, p4_WHad_GEN, wJET[0], wJET[1], 
+                      a_costheta1, a_costheta2, a_Phi, a_costhetastar, a_Phi1);
+        
+	gen_mWW_  = (float) p4_WW_GEN.M();
+	gen_mtWW_ = (float) p4_WW_GEN.Mt();
+        gen_mWLep_ = (float) p4_WLep_GEN.M();
+        gen_mtWLep_ = (float) p4_WLep_GEN.Mt();
+        gen_mWHad_ = (float) p4_WHad_GEN.M();        
+        gen_mtWHad_ = (float) p4_WHad_GEN.Mt();
+        gen_costheta1_ = (float) a_costheta1;                
+        gen_costheta2_ = (float) a_costheta2;
+        gen_phi_ = (float) a_Phi;
+        gen_costhetastar_ = (float) a_costhetastar;
+        gen_phi1_ = (float) a_Phi1;
+
+        gen_dEtajj_ = (float) fabs( vJET[0].Eta() - vJET[1].Eta() );
+        gen_dPhijj_ = (float) deltaPhi(vJET[0].Phi(),vJET[1].Phi());     
+        gen_mjj_ = (float) (vJET[0] + vJET[1]).M();
+
+	if (fabs(vJET[0].Eta()-vJET[1].Eta()) == 0.0)
+		gen_VBSCentrality_ = -999.0;
+	else
+		gen_VBSCentrality_ = fabs(vJET[0].Eta()-(wJET[0].Rapidity()+wJET[1].Rapidity())-vJET[1].Eta())/fabs(vJET[0].Eta()-vJET[1].Eta());
+
+  }
+
 
 
 
