@@ -538,8 +538,8 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		cout<<"Status of leptons = "<<genps_it->status()<<endl;
 		if (Verbose_)
 		cout<<"Status of leptons monther = "<<genps_it->mother()->status()<<endl;
-		if (genps_it->pt() < 45.0) continue;
-		if (fabs(genps_it->eta()) > 2.1) continue;
+		//if (genps_it->pt() < 45.0) continue;
+		//if (fabs(genps_it->eta()) > 2.1) continue;
 
 		l_pdgId = genps_it->pdgId();
 		l_status = genps_it->status();
