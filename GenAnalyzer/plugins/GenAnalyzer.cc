@@ -215,22 +215,22 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 if ( abs(LHE->hepeup().IDUP.at(tmpMoth)) == 24 && LHE->hepeup().IDUP.at(finalQuarks.at(a)) > 0 ){
                     signalWCtr++;
 		    WDaughter_MothInfo1 = finalQuarks.at(a);
-		    if (Verbose_)	std::cout<<"First"<<endl;
+		    if (Verbose_)	std::cout<<"First"<< WDaughter_MothInfo1 <<std::endl;
                 }
                 if ( abs(LHE->hepeup().IDUP.at(tmpMoth)) == 24 && LHE->hepeup().IDUP.at(finalQuarks.at(a)) < 0 ){
                     signalWCtr++;
 		    WDaughter_MothInfo2 = finalQuarks.at(a);
-		    if (Verbose_)	std::cout<<"Second"<<endl;
+		    if (Verbose_)	std::cout<<"Second"<<WDaughter_MothInfo2 <<std::endl;
                 }
                 if ( abs(LHE->hepeup().IDUP.at(tmpMoth)) != 24 && tmpfill1){
                     signalWCtr++;
 		    FQuark_MothInfo1 = finalQuarks.at(a);
-		    if (Verbose_)	std::cout<<"Third"<<endl;
+		    if (Verbose_)	std::cout<<"Third"<< FQuark_MothInfo1 <<std::endl;
                 }
                 if ( abs(LHE->hepeup().IDUP.at(tmpMoth)) != 24 && !tmpfill1){
                     signalWCtr++;
 		    FQuark_MothInfo2 = finalQuarks.at(a);
-		    if (Verbose_)	std::cout<<"Forth"<<endl;
+		    if (Verbose_)	std::cout<<"Forth"<< FQuark_MothInfo2 <<std::endl;
                     tmpfill1++;
                 }
             }
@@ -388,6 +388,68 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		LHE_DeltaM_Iqrk1_phi_ = fs_Iqrk1.Phi();
 		LHE_DeltaM_Iqrk1_M_   = fs_Iqrk1.M();
 		LHE_DeltaM_Iqrk1_Mt_  = fs_Iqrk1.Mt();
+
+        TLorentzVector p4_WHad = fs_Wqrk0 + fs_Wqrk1;
+        TLorentzVector p4_WLep = fs_lep0 + fs_lep1;        
+        TLorentzVector p4_WW = p4_WHad + p4_WLep;
+        
+        double a_costheta1, a_costheta2, a_costhetastar, a_Phi, a_Phi1;
+        computeAngles( p4_WW, p4_WLep, fs_lep0, fs_lep1, p4_WHad, fs_Wqrk0, fs_Wqrk1, 
+                      a_costheta1, a_costheta2, a_Phi, a_costhetastar, a_Phi1);
+        
+        LHE_DeltaM_mWW_ = (float) p4_WW.M();
+        LHE_DeltaM_mtWW_ = (float) p4_WW.Mt();
+        LHE_DeltaM_mWLep_ = (float) p4_WLep.M();
+        LHE_DeltaM_mtWLep_ = (float) p4_WLep.Mt();
+        LHE_DeltaM_mWHad_ = (float) p4_WHad.M();        
+        LHE_DeltaM_mtWHad_ = (float) p4_WHad.Mt();
+        LHE_DeltaM_costheta1_ = (float) a_costheta1;                
+        LHE_DeltaM_costheta2_ = (float) a_costheta2;
+        LHE_DeltaM_phi_ = (float) a_Phi;
+        LHE_DeltaM_costhetastar_ = (float) a_costhetastar;
+        LHE_DeltaM_phi1_ = (float) a_Phi1;
+
+        LHE_DeltaM_dEtajj_ = (float) fabs( fs_Iqrk0.Eta() - fs_Iqrk1.Eta() );
+        LHE_DeltaM_dPhijj_ = (float) deltaPhi(fs_Iqrk0.Phi(),fs_Iqrk1.Phi());     
+        LHE_DeltaM_mjj_ = (float) (fs_Iqrk0 + fs_Iqrk1).M();
+
+	if (fabs(fs_Iqrk0.Eta()-fs_Iqrk1.Eta()) == 0.0)
+		LHE_DeltaM_VBSCentrality_ = -999.0;
+	else
+		LHE_DeltaM_VBSCentrality_ = fabs(fs_Iqrk0.Eta()-(fs_Wqrk0.Rapidity()+fs_Wqrk1.Rapidity())-fs_Iqrk1.Eta())/fabs(fs_Iqrk0.Eta()-fs_Iqrk1.Eta());
+	}
+	}
+
+        if (leptons.size() == 2){
+	if ( WDaughter_MothInfo1 != 0 && WDaughter_MothInfo2 != 0 &&  FQuark_MothInfo1 != 0 && FQuark_MothInfo2 != 0){
+
+        TLorentzVector fs_lep0
+        (
+         LHE->hepeup().PUP[i_olep_part][0], //PG px
+         LHE->hepeup().PUP[i_olep_part][1], //PG py
+         LHE->hepeup().PUP[i_olep_part][2], //PG pz
+         LHE->hepeup().PUP[i_olep_part][3] //PG E
+         ) ;
+		LHELeptPt_	= fs_lep0.Pt();
+		LHELeptEta_	= fs_lep0.Eta();
+		LHELeptPhi_	= fs_lep0.Phi();
+		LHELeptM_	= fs_lep0.M();
+		LHELeptE_	= fs_lep0.E();
+	//cout<<LHELeptPt_<<LHELeptEta_<<LHELeptPhi_<<LHELeptM_<<LHELeptE_<<end;
+
+        TLorentzVector fs_lep1
+        (
+         LHE->hepeup().PUP[i_olep_anti][0], //PG px
+         LHE->hepeup().PUP[i_olep_anti][1], //PG py
+         LHE->hepeup().PUP[i_olep_anti][2], //PG pz
+         LHE->hepeup().PUP[i_olep_anti][3] //PG E
+         ) ;
+		LHENuPt_  = fs_lep1.Pt();
+		LHENuEta_ = fs_lep1.Eta();
+		LHENuPhi_ = fs_lep1.Phi();
+		LHENuM_   = fs_lep1.M();
+		LHENuE_   = fs_lep1.E();
+
 	TLorentzVector MothInfo_Wqrk1
 	(
 	  LHE->hepeup().PUP[WDaughter_MothInfo1][0],
@@ -442,44 +504,12 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		LHE_MothInfo_Iqrk1_M_   = MothInfo_Fqrk2.M();
 		LHE_MothInfo_Iqrk1_Mt_  = MothInfo_Fqrk2.Mt();
 
-        TLorentzVector p4_WHad = fs_Wqrk0 + fs_Wqrk1;
-        TLorentzVector p4_WLep = fs_lep0 + fs_lep1;        
-        TLorentzVector p4_WW = p4_WHad + p4_WLep;
-        
-        double a_costheta1, a_costheta2, a_costhetastar, a_Phi, a_Phi1;
-        computeAngles( p4_WW, p4_WLep, fs_lep0, fs_lep1, p4_WHad, fs_Wqrk0, fs_Wqrk1, 
-                      a_costheta1, a_costheta2, a_Phi, a_costhetastar, a_Phi1);
-        
-        LHE_DeltaM_mWW_ = (float) p4_WW.M();
-        LHE_DeltaM_mtWW_ = (float) p4_WW.Mt();
-        LHE_DeltaM_mWLep_ = (float) p4_WLep.M();
-        LHE_DeltaM_mtWLep_ = (float) p4_WLep.Mt();
-        LHE_DeltaM_mWHad_ = (float) p4_WHad.M();        
-        LHE_DeltaM_mtWHad_ = (float) p4_WHad.Mt();
-        LHE_DeltaM_costheta1_ = (float) a_costheta1;                
-        LHE_DeltaM_costheta2_ = (float) a_costheta2;
-        LHE_DeltaM_phi_ = (float) a_Phi;
-        LHE_DeltaM_costhetastar_ = (float) a_costhetastar;
-        LHE_DeltaM_phi1_ = (float) a_Phi1;
-
-        LHE_DeltaM_dEtajj_ = (float) fabs( fs_Iqrk0.Eta() - fs_Iqrk1.Eta() );
-        LHE_DeltaM_dPhijj_ = (float) deltaPhi(fs_Iqrk0.Phi(),fs_Iqrk1.Phi());     
-        LHE_DeltaM_mjj_ = (float) (fs_Iqrk0 + fs_Iqrk1).M();
-
-	if (fabs(fs_Iqrk0.Eta()-fs_Iqrk1.Eta()) == 0.0)
-		LHE_DeltaM_VBSCentrality_ = -999.0;
-	else
-		LHE_DeltaM_VBSCentrality_ = fabs(fs_Iqrk0.Eta()-(fs_Wqrk0.Rapidity()+fs_Wqrk1.Rapidity())-fs_Iqrk1.Eta())/fabs(fs_Iqrk0.Eta()-fs_Iqrk1.Eta());
-
-        //isSignal = signalFlag;
-
-	//initialQuarks_.clear();
 		
         TLorentzVector p4_WHad_MothInfo = MothInfo_Wqrk1 + MothInfo_Wqrk2;
-        //TLorentzVector p4_WLep = fs_lep0 + fs_lep1;        
+        TLorentzVector p4_WLep = fs_lep0 + fs_lep1;        
         TLorentzVector p4_WW_MothInfo = p4_WHad_MothInfo + p4_WLep;
         
-        //double a_costheta1, a_costheta2, a_costhetastar, a_Phi, a_Phi1;
+        double a_costheta1, a_costheta2, a_costhetastar, a_Phi, a_Phi1;
         computeAngles( p4_WW_MothInfo, p4_WLep, fs_lep0, fs_lep1, p4_WHad_MothInfo, MothInfo_Wqrk1, MothInfo_Wqrk2, 
                       a_costheta1, a_costheta2, a_Phi, a_costhetastar, a_Phi1);
         
@@ -502,14 +532,14 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	if (fabs(MothInfo_Fqrk1.Eta()-MothInfo_Fqrk2.Eta()) == 0.0)
 		LHE_MothInfo_VBSCentrality_ = -999.0;
 	else
-		LHE_MothInfo_VBSCentrality_ = fabs(MothInfo_Fqrk1.Eta()-(fs_Wqrk0.Rapidity()+fs_Wqrk1.Rapidity())-MothInfo_Fqrk2.Eta())/fabs(MothInfo_Fqrk1.Eta()-MothInfo_Fqrk2.Eta());
+		LHE_MothInfo_VBSCentrality_ = fabs(MothInfo_Fqrk1.Eta()-(MothInfo_Wqrk1.Rapidity()+MothInfo_Wqrk2.Rapidity())-MothInfo_Fqrk2.Eta())/fabs(MothInfo_Fqrk1.Eta()-MothInfo_Fqrk2.Eta());
 
         //isSignal = signalFlag;
 
 	//initialQuarks_.clear();
 		
 	}
-  }
+	}
   }
 
   int nGenParticle=0;
@@ -532,7 +562,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   for(vector<reco::GenParticle>::const_iterator genps_it = genps_coll->begin(); genps_it != genps_coll->end(); genps_it++) 
   {
   	nGenParticle++;
-	if((abs(genps_it->pdgId())==11 || abs(genps_it->pdgId())==13 || abs(genps_it->pdgId())==15) && (abs(genps_it->mother()->pdgId()) == 24) )
+	if((abs(genps_it->pdgId())==11 || abs(genps_it->pdgId())==13 || abs(genps_it->pdgId())==15) && (abs(genps_it->mother()->pdgId()) == 24) && genps_it->isHardProcess() )
 	{
 		if (Verbose_)
 		cout<<"Status of leptons = "<<genps_it->status()<<endl;
@@ -549,7 +579,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		ELE.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
 		tightLep.push_back(ELE);
 	}
-	if((abs(genps_it->pdgId())==12 || abs(genps_it->pdgId())==14 || abs(genps_it->pdgId())==16) && (abs(genps_it->mother()->pdgId()) == 24) )
+	if((abs(genps_it->pdgId())==12 || abs(genps_it->pdgId())==14 || abs(genps_it->pdgId())==16) && (abs(genps_it->mother()->pdgId()) == 24)  && genps_it->isHardProcess() )
 	{
 		if (Verbose_)
 		cout<<"Status of Neutrino = "<<genps_it->status()<<endl;
@@ -562,7 +592,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		NU.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
 		vNU.push_back(NU);
 	}
-	if((abs(genps_it->pdgId())==1 || abs(genps_it->pdgId())==2 || abs(genps_it->pdgId())==3 || abs(genps_it->pdgId())==4 || abs(genps_it->pdgId())==5 || abs(genps_it->pdgId())==6) && (abs(genps_it->mother()->pdgId()) == 24) && (genps_it->status()==23) )
+	if((abs(genps_it->pdgId())==1 || abs(genps_it->pdgId())==2 || abs(genps_it->pdgId())==3 || abs(genps_it->pdgId())==4 || abs(genps_it->pdgId())==5 || abs(genps_it->pdgId())==6) && (abs(genps_it->mother()->pdgId()) == 24) && (genps_it->status()==23) && genps_it->isHardProcess() )
 	{
 		Wquarks.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
 		wJET.push_back(Wquarks);
