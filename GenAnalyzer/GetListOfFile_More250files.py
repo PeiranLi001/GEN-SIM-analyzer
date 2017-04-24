@@ -1,11 +1,15 @@
 import os
 import ROOT as ROOT
 #source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_SMNoDecay_mjj200_Pythia8CUEP8M1_13TeV_Madgraph/RunIISummer15wmLHEGS/170410_120247/'
-source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_NPle1_mjj200_Pythia8CUEP8M1_13TeV_Madgraph'
+#source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_NPle1_mjj200_Pythia8CUEP8M1_13TeV_Madgraph'
 #source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_NPle1_DefaultCut_Pythia8CUEP8M1_13TeV_Madgraph'
 #source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_SM_mjj200_Pythia8CUEP8M1_13TeV_Madgraph'
 #source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_SM_DefaultCut_Pythia8CUEP8M1_13TeV_Madgraph'
-
+#source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_NPle1_RunCardChanged_InitilaizeAllaQGCPar_Pythia8CUEP8M1_13TeV_Madgraph'
+#source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_ENuQQJJ_EWK_LO_SM_Pythia8CUEP8M1_13TeV_Madgraph'
+#source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_NPle1_FT010e12_Pythia8CUEP8M1_13TeV_Madgraph'
+#source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_NPle1_FT08e12_Pythia8CUEP8M1_13TeV_Madgraph'
+source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_NPle1_FT014e12_Pythia8CUEP8M1_13TeV_Madgraph'
 
 search1='log'
 search2='failed'
