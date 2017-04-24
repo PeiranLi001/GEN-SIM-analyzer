@@ -15,3 +15,22 @@
 1. Comp_Old_New_Sample.py : This macro compares inclusive polarized SM sample with the newly generated SM sample at generator level.
 
 1. Signal_Reco_mT_plot.py : To plot a varialbe from MINIAOD signal sample after full event selection.
+
+# To calculate cross-section for each parameter of aQGC
+
+1. Get_Cross_Sec_aQGC.C  && Get_Cross_Sec_aQGC.h
+2. Change input file name and output file name then run it.
+
+# To plot aQGC par vs Cross-section
+
+1. Make output of above step, input of macro ReadTextFile.py. This will create 9 different text file for each aQGC par
+
+2. Then modify Template.py as per its structure
+
+3. Create a cpp file using command:
+
+		python makeCppGraphMaker.py
+
+4. This will create a <File>.C. So, just run it like :
+
+		root -l -b -q <File>.C

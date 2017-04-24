@@ -6,6 +6,8 @@ infn=sys.argv[1]
 inf=ROOT.TFile(infn,"READ")
 t=inf.Get("otree")
 
+print "nEvents = ",t.GetEntries()
+
 outf=open("branchlist.txt","w")
 brl=t.GetListOfBranches()
 for br in brl:
