@@ -3,8 +3,10 @@
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
+#include <iostream>
+#include <fstream>
 
-void Get_Cross_Sec_aQGC::Loop(std::string outFileName)
+void Get_Cross_Sec_aQGC::Loop(std::string outFileName, float Total_Cross_Section)
 {
 //   In a ROOT session, you can do:
 //      root> .L Get_Cross_Sec_aQGC.C
@@ -93,12 +95,12 @@ void Get_Cross_Sec_aQGC::Loop(std::string outFileName)
       countWgt = 0;
       for (int i =446; i<LHEWeights->size();i++)
       {
-      	//cout<<LHEWeightIDs->at(i)<<"\t"<<SumWeight[countWgt]*17.11<<" +/- "<<DevWeight[countWgt]/sizeof(DevWeight)<<endl;
+      	//cout<<LHEWeightIDs->at(i)<<"\t"<<SumWeight[countWgt]*Total_Cross_Section<<" +/- "<<DevWeight[countWgt]/sizeof(DevWeight)<<endl;
       	cout<<LHEWeightIDs->at(i)<<endl;
-      	cout<<"\t\tSum Wgt   = "<<SumWeight[countWgt]*17.11<<endl;
-      	cout<<"\t\tSum Wgt/N = "<<(SumWeight[countWgt]*17.11)/nentries<<endl;
+      	cout<<"\t\tSum Wgt   = "<<SumWeight[countWgt]*Total_Cross_Section<<endl;
+      	cout<<"\t\tSum Wgt/N = "<<(SumWeight[countWgt]*Total_Cross_Section)/nentries<<endl;
       	cout<<"\t\tError     = "<<DevWeight[countWgt]/sizeof(DevWeight)<<endl;
-	file<<LHEWeightIDs->at(i)<<"\t"<<(SumWeight[countWgt]*17.11)/nentries<<"\t"<<DevWeight[countWgt]/sizeof(DevWeight)<<endl;
+	file<<LHEWeightIDs->at(i)<<"\t"<<(SumWeight[countWgt]*Total_Cross_Section)/nentries<<"\t"<<DevWeight[countWgt]/sizeof(DevWeight)<<endl;
 	countWgt++;
       }
    }

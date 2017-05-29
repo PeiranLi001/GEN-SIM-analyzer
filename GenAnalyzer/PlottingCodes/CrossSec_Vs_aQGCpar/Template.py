@@ -1,10 +1,12 @@
 #OutPutCodeName="aQGC_Plots_11Feb_Range_ModelFSonly_FS0_500em12_WPlepWMhad_Sensitivity"
+#OutPutCodeName="aQGC_Plots_Range_FT0_12p5em12_WPlepWMhad_Sensitivity"
 OutPutCodeName="aQGC_Plots_Range_FT0_12p5em12_WPlepWMhad"
 
-datapath="/uscms_data/d3/rasharma/aQGC_analysis/AnalysisFramework/GENAnalyzer/LHEonlyGEN/CMSSW_8_0_11/src/GEN-SIM-analyzer/GenAnalyzer/PlottingCodes/graph/"
+datapath="/uscms_data/d3/rasharma/aQGC_analysis/AnalysisFramework/GENAnalyzer/LHEonlyGEN/CMSSW_8_0_11/src/GEN-SIM-analyzer/GenAnalyzer/PlottingCodes/CrossSec_Vs_aQGCpar/"
 
-InputData=[ "fs0.txt", "fs1.txt", "ft0.txt", "ft1.txt", "ft2.txt", "fm0.txt", "fm1.txt", "fm6.txt", "fm7.txt"
-	    ]
+InputData=[ "FT0_12p5_fs0.txt", "FT0_12p5_fs1.txt", "FT0_12p5_ft0.txt", "FT0_12p5_ft1.txt", "FT0_12p5_ft2.txt", "FT0_12p5_fm0.txt", "FT0_12p5_fm1.txt", "FT0_12p5_fm6.txt", "FT0_12p5_fm7.txt"]
+#InputData=[ "FT0_12p5_fs0_sensitivity.txt", "FT0_12p5_fs1_sensitivity.txt", "FT0_12p5_ft0_sensitivity.txt", "FT0_12p5_ft1_sensitivity.txt", "FT0_12p5_ft2_sensitivity.txt", "FT0_12p5_fm0_sensitivity.txt", "FT0_12p5_fm1_sensitivity.txt", "FT0_12p5_fm6_sensitivity.txt", "FT0_12p5_fm7_sensitivity.txt"]
+	   
 
 xlabel="aQGC Parameter (#times 10^{-12} GeV^{-4})"
 ylabel="Cross-Section (pb)"
@@ -15,6 +17,7 @@ VarInTextFile=["aQGC_par","CrossSec","ErrCrossSec"]  # Each element of list corr
 
 VarToPlot=[]
 
+#GraphTitle="aQGC parameter Vs Sensitivity"
 GraphTitle="aQGC parameter Vs Cross-Section"
 
 tlatexx = [

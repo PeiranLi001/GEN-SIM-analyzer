@@ -9,7 +9,9 @@ import ROOT as ROOT
 #source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_ENuQQJJ_EWK_LO_SM_Pythia8CUEP8M1_13TeV_Madgraph'
 #source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_NPle1_FT010e12_Pythia8CUEP8M1_13TeV_Madgraph'
 #source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_NPle1_FT08e12_Pythia8CUEP8M1_13TeV_Madgraph'
-source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_NPle1_FT014e12_Pythia8CUEP8M1_13TeV_Madgraph'
+#source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_NPle1_FT014e12_Pythia8CUEP8M1_13TeV_Madgraph'
+#source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_SM_Pythia8CUEP8M1_13TeV_Madgraph_RwgtValidation_v2'
+source = '/eos/uscms/store/user/rasharma/CMSSW_FullSimulation_April2017/aQGC_WPlepWMhadJJ_EWK_LO_NPle1_Pythia8CUEP8M1_13TeV_Madgraph_RwgtValidation'
 
 search1='log'
 search2='failed'

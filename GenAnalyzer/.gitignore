@@ -2,3 +2,6 @@
 *.root
 *.stdout
 *.gz
+*.txt
+*.pdf
+*.png

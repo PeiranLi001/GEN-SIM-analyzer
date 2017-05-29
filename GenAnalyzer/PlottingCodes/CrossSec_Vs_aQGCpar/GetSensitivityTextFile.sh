@@ -1,0 +1,9 @@
+cat FT0_12p5_fs0.txt | awk '{print $1,"\t",($2*20250)/(sqrt(($2+0.514857936407+133008.2534)*20250)),"\t",0.0}' > FT0_12p5_fs0_sensitivity.txt 
+cat FT0_12p5_fs1.txt | awk '{print $1,"\t",($2*20250)/(sqrt(($2+0.514857936407+133008.2534)*20250)),"\t",0.0}' > FT0_12p5_fs1_sensitivity.txt 
+cat FT0_12p5_ft0.txt | awk '{print $1,"\t",($2*20250)/(sqrt(($2+0.514857936407+133008.2534)*20250)),"\t",0.0}' > FT0_12p5_ft0_sensitivity.txt 
+cat FT0_12p5_ft1.txt | awk '{print $1,"\t",($2*20250)/(sqrt(($2+0.514857936407+133008.2534)*20250)),"\t",0.0}' > FT0_12p5_ft1_sensitivity.txt 
+cat FT0_12p5_ft2.txt | awk '{print $1,"\t",($2*20250)/(sqrt(($2+0.514857936407+133008.2534)*20250)),"\t",0.0}' > FT0_12p5_ft2_sensitivity.txt 
+cat FT0_12p5_fm0.txt | awk '{print $1,"\t",($2*20250)/(sqrt(($2+0.514857936407+133008.2534)*20250)),"\t",0.0}' > FT0_12p5_fm0_sensitivity.txt 
+cat FT0_12p5_fm1.txt | awk '{print $1,"\t",($2*20250)/(sqrt(($2+0.514857936407+133008.2534)*20250)),"\t",0.0}' > FT0_12p5_fm1_sensitivity.txt 
+cat FT0_12p5_fm6.txt | awk '{print $1,"\t",($2*20250)/(sqrt(($2+0.514857936407+133008.2534)*20250)),"\t",0.0}' > FT0_12p5_fm6_sensitivity.txt 
+cat FT0_12p5_fm7.txt | awk '{print $1,"\t",($2*20250)/(sqrt(($2+0.514857936407+133008.2534)*20250)),"\t",0.0}' > FT0_12p5_fm7_sensitivity.txt 

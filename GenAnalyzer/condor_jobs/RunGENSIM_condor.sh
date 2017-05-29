@@ -15,7 +15,9 @@ OUTDIR=root://cmseos.fnal.gov//store/user/rasharma/LHE_GEN_Analyzer_Output/
 #OutPutFileName=aQGC_ENuQQJJ_EWK_LO_SM_Pythia8CUEP8M1_13TeV_Madgraph.root
 #OutPutFileName=aQGC_WPlepWMhadJJ_EWK_LO_NPle1_FT010e12_Pythia8CUEP8M1_13TeV_Madgraph.root
 #OutPutFileName=aQGC_WPlepWMhadJJ_EWK_LO_NPle1_FT08e12_Pythia8CUEP8M1_13TeV_Madgraph.root
-OutPutFileName=aQGC_WPlepWMhadJJ_EWK_LO_NPle1_FT014e12_Pythia8CUEP8M1_13TeV_Madgraph.root
+#OutPutFileName=aQGC_WPlepWMhadJJ_EWK_LO_NPle1_FT014e12_Pythia8CUEP8M1_13TeV_Madgraph.root
+#OutPutFileName=aQGC_WPlepWMhadJJ_EWK_LO_SM_Pythia8CUEP8M1_13TeV_Madgraph_RwgtValidation_v2.root
+OutPutFileName=aQGC_WPlepWMhadJJ_EWK_LO_NPle1_Pythia8CUEP8M1_13TeV_Madgraph_RwgtValidation.root
 
 
 echo ""
@@ -37,8 +39,6 @@ cmsRun python/ConfFile_cfg.py
 echo "xrdcp output for condor"
 for FILE in *.root
 do
-  #echo "xrdcp -f ${FILE} ${OUTDIR}/${FILE}"
-  #xrdcp -f ${FILE} ${OUTDIR}/${FILE} 2>&1
   echo "xrdcp -f ${FILE} ${OUTDIR}/${OutPutFileName}"
   xrdcp -f ${FILE} ${OUTDIR}/${OutPutFileName} 2>&1
   XRDEXIT=$?

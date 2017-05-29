@@ -1,5 +1,6 @@
 f = open("Test.txt","r")
 #print f.readlines()
+aQGC_Val_Initializer = "FT0_12p5"
 FileCategory = ["fs0", "fs1", "ft0", "ft1", "ft2", "fm0", "fm1", "fm6", "fm7"]
 FileContent = f.readlines()
 fs0 = [row for row in FileContent if 'fs0' in row]
@@ -18,7 +19,7 @@ f.close()
 
 count = 0
 for f in [fs0, fs1, ft0, ft1, ft2, fm0, fm1, fm6, fm7]:
-	text_file = open(FileCategory[count]+".txt", "w")
+	text_file = open(aQGC_Val_Initializer+"_"+FileCategory[count]+".txt", "w")
 	for i in f:
 		temp =  i.split("\t")
 		temp[0] = temp[0].replace(FileCategory[count]+"_","")
