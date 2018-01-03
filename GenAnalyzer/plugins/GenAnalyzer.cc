@@ -95,7 +95,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   	LHE = LHEEventHandle.product();
 
 	for(const auto& weight : LHE->weights()) {
-		LHEWeightIDs_.push_back(weight.id);
+		//LHEWeightIDs_.push_back(weight.id);
 		LHEWeights_.push_back(weight.wgt);
 	}
 	//std::cout<<"size of LHEWeightIDS:\t"<<LHEWeightIDs_.size()<<std::endl;

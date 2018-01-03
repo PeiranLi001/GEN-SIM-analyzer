@@ -17,14 +17,14 @@ OUTDIR=root://cmseos.fnal.gov//store/user/rasharma/LHE_GEN_Analyzer_Output/
 #OutPutFileName=aQGC_WPlepWMhadJJ_EWK_LO_NPle1_FT08e12_Pythia8CUEP8M1_13TeV_Madgraph.root
 #OutPutFileName=aQGC_WPlepWMhadJJ_EWK_LO_NPle1_FT014e12_Pythia8CUEP8M1_13TeV_Madgraph.root
 #OutPutFileName=aQGC_WPlepWMhadJJ_EWK_LO_SM_Pythia8CUEP8M1_13TeV_Madgraph_RwgtValidation_v2.root
-OutPutFileName=aQGC_WPlepWMhadJJ_EWK_LO_NPle1_Pythia8CUEP8M1_13TeV_Madgraph_RwgtValidation.root
+OutPutFileName=WPhadWMlep_aQGC_trial2.root
 
 
 echo ""
 echo "parameter set:"
 echo "CMSSWVER:   $CMSSWVER"
 
-tar -xzf ${CMSSWVER}.tar.gz
+tar -xzf ${CMSSWVER}.tgz
 cd ${CMSSWVER}
 scram b ProjectRename
 source /cvmfs/cms.cern.ch/cmsset_default.sh

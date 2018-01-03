@@ -4,8 +4,8 @@ Requirements =FileSystemDomain=="fnal.gov" && Arch=="X86_64"
 Notification = ERROR
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
-transfer_input_files = RunGENSIM_condor.sh, CMSSW_8_0_11.tar.gz
+transfer_input_files = RunGENSIM_condor.sh, CMSSW_8_0_11.tgz
 x509userproxy = $ENV(X509_USER_PROXY)
-Output = aQGC_WPlepWMhadJJ_EWK_LO_NPle1_Pythia8CUEP8M1_13TeV_Madgraph_RwgtValidation_$(Process).stdout
-Error  = aQGC_WPlepWMhadJJ_EWK_LO_NPle1_Pythia8CUEP8M1_13TeV_Madgraph_RwgtValidation_$(Process).stdout
+Output = WPhadWMlep_aQGC_trial2_$(Process).stdout
+Error  = WPhadWMlep_aQGC_trial2_$(Process).stdout
 Queue 1
