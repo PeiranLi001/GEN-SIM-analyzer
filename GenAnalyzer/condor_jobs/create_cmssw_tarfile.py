@@ -6,9 +6,12 @@ import subprocess
 
 PCHECK='voms-proxy-info -timeleft'
 
-x = subprocess.check_output(PCHECK, shell=True)
+try:
+	x = subprocess.check_output(PCHECK, shell=True)
+except subprocess.CalledProcessError as xExc:
+	print "Error Code ",xExc.returncode, grepexc.output
 
-if x == 0:
+if int(x) == 0:
 	print "Need to set proxy: voms-proxy-init -voms cms --valid 168:00"
 	print "Please enter the voms-proxy-init password..."
 	os.system("voms-proxy-init -voms cms --valid 168:00")

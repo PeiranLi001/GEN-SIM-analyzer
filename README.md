@@ -5,7 +5,7 @@
 	cmsenv
 	git clone git@github.com:ram1123/GEN-SIM-analyzer.git
 	scramv1 b -j 8
-	cd AnalyzeGenSim/GenAnalyzer
+	cd GEN-SIM-analyzer/GenAnalyzer
 	# Befor running, check the config file and comment/uncomment line for MINIAOD/LHE-GEN
 	cmsRun python/ConfFile_cfg.py
 
@@ -17,7 +17,7 @@
 
 1. To set proxy and create tarfile for your CMSSW directory:
 	
-		source create_cmssw_tarfile.sh  # bash shell
+		python create_cmssw_tarfile.py  
 
 2. Then modify output root file name (or output directory) in script [RunGENSIM_condor.sh](https://github.com/ram1123/GEN-SIM-analyzer/blob/LHEonlyMiniAOD/GenAnalyzer/condor_jobs/RunGENSIM_condor.sh) and output log file name in script [RunGENSIM_condor.jdl](https://github.com/ram1123/GEN-SIM-analyzer/blob/LHEonlyMiniAOD/GenAnalyzer/condor_jobs/RunGENSIM_condor.jdl)
 
@@ -26,8 +26,6 @@
 		condor_submit RunGENSIM_condor.jdl
 
 	
-
-
 # Some General Script
 
 1. Move crab files from crab directory hierchy to top directory : [Move_FileToTopDirFromCrab.py](https://github.com/ram1123/GEN-SIM-analyzer/blob/LHEonlyMiniAOD/GenAnalyzer/Move_FileToTopDirFromCrab.py)

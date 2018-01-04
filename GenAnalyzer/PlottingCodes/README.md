@@ -1,3 +1,9 @@
+# Plot for aQGC different pars:
+To get the aQGC distribution for different aQGC parameters on same canvas with ratio plot w.r.t. SM. 
+
+	python Plot_aQGC.py
+
+
 # List of available codes & uses
 
 1. DataMCInfo.ini : This contains list of cross-section and number of events at MINIAOD level.
