@@ -17,6 +17,7 @@
  */
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
 #include <cmath>
@@ -81,6 +82,7 @@ class GenAnalyzer : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
       edm::Service<TFileService> fs;
       TFile * outputFile_;
       TTree* tree;
+      std::ofstream file1;
 
 
   //std::vector<int> pdgID_;

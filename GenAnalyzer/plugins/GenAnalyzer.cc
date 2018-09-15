@@ -506,8 +506,15 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 		
         TLorentzVector p4_WHad_MothInfo = MothInfo_Wqrk1 + MothInfo_Wqrk2;
+	TLorentzVector p4_WLep_MothInfo = fs_lep0 + fs_lep1;
         TLorentzVector p4_WLep = fs_lep0 + fs_lep1;        
         TLorentzVector p4_WW_MothInfo = p4_WHad_MothInfo + p4_WLep;
+
+	if (MothInfo_Fqrk1.Pt()>30 && MothInfo_Fqrk2.Pt()>30 && fabs(MothInfo_Fqrk1.Eta())<5.0 && fabs( MothInfo_Fqrk2.Eta()) < 5.0 && p4_WHad_MothInfo.Pt() > 200 && fabs( p4_WHad_MothInfo.Eta()) < 2.0 &&  (p4_WHad_MothInfo.M()>60 && p4_WHad_MothInfo.M()<110) && (MothInfo_Fqrk1+MothInfo_Fqrk2).M()>800 && fabs(MothInfo_Fqrk1.Eta() - MothInfo_Fqrk2.Eta())>4.0 )
+	{
+	//cout<<p4_WLep_MothInfo.Px() << "\t" << p4_WLep_MothInfo.Py() << "\t" << p4_WLep_MothInfo.Pz() << "\t" << p4_WLep_MothInfo.E() << "\t" << p4_WHad_MothInfo.Px() << "\t" << p4_WHad_MothInfo.Py() << "\t" << p4_WHad_MothInfo.Pz() << "\t" << p4_WHad_MothInfo.E() << "\t" << MothInfo_Fqrk1.Px() << "\t" << MothInfo_Fqrk1.Py() << "\t" << MothInfo_Fqrk1.Pz() << "\t" << MothInfo_Fqrk1.E() << "\t" <<  MothInfo_Fqrk2.Px() << "\t" << MothInfo_Fqrk2.Py() << "\t" << MothInfo_Fqrk2.Pz() << "\t" << MothInfo_Fqrk2.E();
+	file1<<p4_WLep_MothInfo.Px() << "\t" << p4_WLep_MothInfo.Py() << "\t" << p4_WLep_MothInfo.Pz() << "\t" << p4_WLep_MothInfo.E() << "\t" << p4_WHad_MothInfo.Px() << "\t" << p4_WHad_MothInfo.Py() << "\t" << p4_WHad_MothInfo.Pz() << "\t" << p4_WHad_MothInfo.E() << "\t" << MothInfo_Fqrk1.Px() << "\t" << MothInfo_Fqrk1.Py() << "\t" << MothInfo_Fqrk1.Pz() << "\t" << MothInfo_Fqrk1.E() << "\t" <<  MothInfo_Fqrk2.Px() << "\t" << MothInfo_Fqrk2.Py() << "\t" << MothInfo_Fqrk2.Pz() << "\t" << MothInfo_Fqrk2.E()<<endl;
+	}
         
         double a_costheta1, a_costheta2, a_costhetastar, a_Phi, a_Phi1;
         computeAngles( p4_WW_MothInfo, p4_WLep, fs_lep0, fs_lep1, p4_WHad_MothInfo, MothInfo_Wqrk1, MothInfo_Wqrk2, 
@@ -713,6 +720,7 @@ GenAnalyzer::beginJob()
     outputFile_ = new TFile("LHEinfo.root","RECREATE"); 
     outputFile_->SetCompressionLevel(2);
     tree = new TTree("otree","GenParticles Basic Info"); 
+    file1.open("out_TEMP_NAME.txt");
 
     SetBranches();
 }
@@ -723,6 +731,7 @@ GenAnalyzer::endJob()
 {
     outputFile_->Write();
     outputFile_->Close();
+    file1.close();
 }
 
 // ------------ method fills 'descriptions' with the allowed parameters for the module  ------------
