@@ -100,6 +100,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	}
 	//std::cout<<"size of LHEWeightIDS:\t"<<LHEWeightIDs_.size()<<std::endl;
 	//std::cout<<"size of LHEWeight: \t"<<LHEWeights_.size()<<std::endl;
+	//std::cout<< " ID = " << LHEWeightIDs_[645] << "\t Weight = " << LHEWeights_[645] << std::endl;
 	
 	TLorentzVector Is_Iqrk1,Is_Iqrk0;
         //PG loop over particles in the event
@@ -513,7 +514,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	if (MothInfo_Fqrk1.Pt()>30 && MothInfo_Fqrk2.Pt()>30 && fabs(MothInfo_Fqrk1.Eta())<5.0 && fabs( MothInfo_Fqrk2.Eta()) < 5.0 && p4_WHad_MothInfo.Pt() > 200 && fabs( p4_WHad_MothInfo.Eta()) < 2.0 &&  (p4_WHad_MothInfo.M()>60 && p4_WHad_MothInfo.M()<110) && (MothInfo_Fqrk1+MothInfo_Fqrk2).M()>800 && fabs(MothInfo_Fqrk1.Eta() - MothInfo_Fqrk2.Eta())>4.0 )
 	{
 	//cout<<p4_WLep_MothInfo.Px() << "\t" << p4_WLep_MothInfo.Py() << "\t" << p4_WLep_MothInfo.Pz() << "\t" << p4_WLep_MothInfo.E() << "\t" << p4_WHad_MothInfo.Px() << "\t" << p4_WHad_MothInfo.Py() << "\t" << p4_WHad_MothInfo.Pz() << "\t" << p4_WHad_MothInfo.E() << "\t" << MothInfo_Fqrk1.Px() << "\t" << MothInfo_Fqrk1.Py() << "\t" << MothInfo_Fqrk1.Pz() << "\t" << MothInfo_Fqrk1.E() << "\t" <<  MothInfo_Fqrk2.Px() << "\t" << MothInfo_Fqrk2.Py() << "\t" << MothInfo_Fqrk2.Pz() << "\t" << MothInfo_Fqrk2.E();
-	file1<<p4_WLep_MothInfo.Px() << "\t" << p4_WLep_MothInfo.Py() << "\t" << p4_WLep_MothInfo.Pz() << "\t" << p4_WLep_MothInfo.E() << "\t" << p4_WHad_MothInfo.Px() << "\t" << p4_WHad_MothInfo.Py() << "\t" << p4_WHad_MothInfo.Pz() << "\t" << p4_WHad_MothInfo.E() << "\t" << MothInfo_Fqrk1.Px() << "\t" << MothInfo_Fqrk1.Py() << "\t" << MothInfo_Fqrk1.Pz() << "\t" << MothInfo_Fqrk1.E() << "\t" <<  MothInfo_Fqrk2.Px() << "\t" << MothInfo_Fqrk2.Py() << "\t" << MothInfo_Fqrk2.Pz() << "\t" << MothInfo_Fqrk2.E()<<endl;
+	file1<<(LHEWeights_[645]/LHEWeights_[0])*p4_WLep_MothInfo.Px() << "\t" << (LHEWeights_[645]/LHEWeights_[0])*p4_WLep_MothInfo.Py() << "\t" << (LHEWeights_[645]/LHEWeights_[0])*p4_WLep_MothInfo.Pz() << "\t" << (LHEWeights_[645]/LHEWeights_[0])*p4_WLep_MothInfo.E() << "\t" << (LHEWeights_[645]/LHEWeights_[0])*p4_WHad_MothInfo.Px() << "\t" << (LHEWeights_[645]/LHEWeights_[0])*p4_WHad_MothInfo.Py() << "\t" << (LHEWeights_[645]/LHEWeights_[0])*p4_WHad_MothInfo.Pz() << "\t" << (LHEWeights_[645]/LHEWeights_[0])*p4_WHad_MothInfo.E() << "\t" << (LHEWeights_[645]/LHEWeights_[0])*MothInfo_Fqrk1.Px() << "\t" << (LHEWeights_[645]/LHEWeights_[0])*MothInfo_Fqrk1.Py() << "\t" << (LHEWeights_[645]/LHEWeights_[0])*MothInfo_Fqrk1.Pz() << "\t" << (LHEWeights_[645]/LHEWeights_[0])*MothInfo_Fqrk1.E() << "\t" <<  (LHEWeights_[645]/LHEWeights_[0])*MothInfo_Fqrk2.Px() << "\t" << (LHEWeights_[645]/LHEWeights_[0])*MothInfo_Fqrk2.Py() << "\t" << (LHEWeights_[645]/LHEWeights_[0])*MothInfo_Fqrk2.Pz() << "\t" << (LHEWeights_[645]/LHEWeights_[0])*MothInfo_Fqrk2.E()<<endl;
 	}
         
         double a_costheta1, a_costheta2, a_costhetastar, a_Phi, a_Phi1;

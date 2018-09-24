@@ -13,7 +13,8 @@ process.options = cms.untracked.PSet(
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 import FWCore.Utilities.FileUtils as FileUtils
-readFiles = cms.untracked.vstring(FileUtils.loadListFromFile('TEMP_NAME.txt'))
+readFiles = cms.untracked.vstring(FileUtils.loadListFromFile('WplusTo2JWminusToLNuJJ_EWK_LO_aQGC_MJJ100PTJ10_TuneCUETP8M1_13TeV.txt'))
+#readFiles = cms.untracked.vstring(FileUtils.loadListFromFile('TEMP_NAME.txt'))
 
 
 process.source = cms.Source("PoolSource",
