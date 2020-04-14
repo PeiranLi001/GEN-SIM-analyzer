@@ -53,6 +53,7 @@ public:
   ~GenAnalyzer();
   
   static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
+  static bool reorder(const TLorentzVector &a, const TLorentzVector &b);
   
   void SetBranches();
   void Clear();
@@ -84,221 +85,76 @@ private:
   
   //std::vector<int> pdgID_;
   
-  std::vector<std::string> LHEWeightIDs_;
-  std::vector<double> LHEWeights_;
+//  std::vector<std::string> LHEWeightIDs_;
+//  std::vector<double> LHEWeights_;
   
   int nEVENT=-999;
   
-  int		isMuMinus_ = -999;
-  double 	LHELeptPt_ = -999.0;
-  double 	LHELeptEta_ = -999.0;
-  double 	LHELeptPhi_ = -999.0;
-  double 	LHELeptM_ = -999.0;
-  double 	LHELeptE_ = -999.0;
+//  int		isMuMinus_ = -999;
+//  double 	LHELeptPt_ = -999.0;
+//  double 	LHELeptEta_ = -999.0;
+//  double 	LHELeptPhi_ = -999.0;
+//  double 	LHELeptM_ = -999.0;
+//  double 	LHELeptE_ = -999.0;
   
-  double LHENuPt_ = -999.0;
-  double LHENuEta_ = -999.0;
-  double LHENuPhi_ = -999.0;
-  double LHENuM_ = -999.0;
-  double LHENuE_ = -999.0;
+  double gen_leading_photon_Pt_   = -999.0;
+  double gen_leading_photon_Eta_  = -999.0;
+  double gen_leading_photon_Phi_  = -999.0;
+  double gen_leading_photon_M_    = -999.0;
+  double gen_Subleading_photon_Pt_    = -999.0;
+  double gen_Subleading_photon_Eta_   = -999.0;
+  double gen_Subleading_photon_Phi_   = -999.0;
+  double gen_Subleading_photon_M_     = -999.0;
+  double gen_leading_WpJets_Pt_   = -999.0;
+  double gen_leading_WpJets_Eta_  = -999.0;
+  double gen_leading_WpJets_Phi_  = -999.0;
+  double gen_leading_WpJets_M_    = -999.0;
+  double gen_Subleading_WpJets_Pt_    = -999.0;
+  double gen_Subleading_WpJets_Eta_   = -999.0;
+  double gen_Subleading_WpJets_Phi_   = -999.0;
+  double gen_Subleading_WpJets_M_     = -999.0;
+  double gen_leading_WmJets_Pt_   = -999.0;
+  double gen_leading_WmJets_Eta_  = -999.0;
+  double gen_leading_WmJets_Phi_  = -999.0;
+  double gen_leading_WmJets_M_    = -999.0;
+  double gen_Subleading_WmJets_Pt_    = -999.0;
+  double gen_Subleading_WmJets_Eta_   = -999.0;
+  double gen_Subleading_WmJets_Phi_   = -999.0;
+  double gen_Subleading_WmJets_M_     = -999.0;
+  double gen_leading_WBoson_Pt_   = -999.0;
+  double gen_leading_WBoson_Eta_  = -999.0;
+  double gen_leading_WBoson_Phi_  = -999.0;
+  double gen_leading_WBoson_M_    = -999.0;
+  double gen_Subleading_WBoson_Pt_    = -999.0;
+  double gen_Subleading_WBoson_Eta_   = -999.0;
+  double gen_Subleading_WBoson_Phi_   = -999.0;
+  double gen_Subleading_WBoson_M_     = -999.0;
+  double gen_leading_Higgs_Pt_    = -999.0;
+  double gen_leading_Higgs_Eta_   = -999.0;
+  double gen_leading_Higgs_Phi_   = -999.0;
+  double gen_leading_Higgs_M_     = -999.0;
+  double gen_Subleading_Higgs_Pt_     = -999.0;
+  double gen_Subleading_Higgs_Eta_    = -999.0;
+  double gen_Subleading_Higgs_Phi_    = -999.0;
+  double gen_Subleading_Higgs_M_  = -999.0;
+  double gen_deltaR_Photon0_Photon1_  = -999.0;
+  double gen_deltaR_Photon0_WmJ0_     = -999.0;
+  double gen_deltaR_Photon0_WmJ1_     = -999.0;
+  double gen_deltaR_Photon0_WpJ0_     = -999.0;
+  double gen_deltaR_Photon0_WpJ1_     = -999.0;
+  double gen_deltaR_Photon1_WmJ0_     = -999.0;
+  double gen_deltaR_Photon1_WmJ1_     = -999.0;
+  double gen_deltaR_Photon1_WpJ0_     = -999.0;
+  double gen_deltaR_Photon1_WpJ1_     = -999.0;
+  double gen_deltaR_WpJ0_WpJ1_     = -999.0;
+  double gen_deltaR_WpJ0_WmJ0_     = -999.0;
+  double gen_deltaR_WpJ0_WmJ1_     = -999.0;
+  double gen_deltaR_WpJ1_WmJ0_     = -999.0;
+  double gen_deltaR_WpJ1_WmJ1_     = -999.0;
+  double gen_deltaR_WmJ0_WmJ1_     = -999.0;
+  double gen_deltaR_Wp_Wm_     = -999.0;
+  double gen_deltaR_H1_H2_     = -999.0;
   
-  double LHE_DeltaM_Wqrk0_pt_ = -999.0;
-  double LHE_DeltaM_Wqrk0_eta_ = -999.0;
-  double LHE_DeltaM_Wqrk0_phi_ = -999.0;
-  double LHE_DeltaM_Wqrk0_M_ = -999.0;
-  double LHE_DeltaM_Wqrk0_E_ = -999.0;
-  double LHE_DeltaM_Wqrk0_Mt_ = -999.0;
-  
-  double LHE_DeltaM_Wqrk1_pt_ = -999.0;
-  double LHE_DeltaM_Wqrk1_eta_ = -999.0;
-  double LHE_DeltaM_Wqrk1_phi_ = -999.0;
-  double LHE_DeltaM_Wqrk1_M_ = -999.0;
-  double LHE_DeltaM_Wqrk1_E_ = -999.0;
-  double LHE_DeltaM_Wqrk1_Mt_ = -999.0;
-  
-  double LHE_DeltaM_Iqrk0_pt_ = -999.0;
-  double LHE_DeltaM_Iqrk0_eta_ = -999.0;
-  double LHE_DeltaM_Iqrk0_phi_ = -999.0;
-  double LHE_DeltaM_Iqrk0_E_ = -999.0;
-  double LHE_DeltaM_Iqrk0_M_ = -999.0;
-  double LHE_DeltaM_Iqrk0_Mt_ = -999.0;
-  
-  double LHE_DeltaM_Iqrk1_pt_ = -999.0;
-  double LHE_DeltaM_Iqrk1_eta_ = -999.0;
-  double LHE_DeltaM_Iqrk1_phi_ = -999.0;
-  double LHE_DeltaM_Iqrk1_E_ = -999.0;
-  double LHE_DeltaM_Iqrk1_M_ = -999.0;
-  double LHE_DeltaM_Iqrk1_Mt_ = -999.0;
-  
-  double  LHE_DeltaM_mWW_ = -999.0;
-  double  LHE_DeltaM_mtWW_ = -999.0;
-  double  LHE_DeltaM_mWLep_ = -999.0;
-  double  LHE_DeltaM_mtWLep_ = -999.0;
-  double  LHE_DeltaM_mWHad_ = -999.0;
-  double  LHE_DeltaM_mtWHad_ = -999.0;
-  double  LHE_DeltaM_costheta1_ = -999.0;
-  double  LHE_DeltaM_costheta2_ = -999.0;
-  double  LHE_DeltaM_phi_ = -999.0;
-  double  LHE_DeltaM_costhetastar_ = -999.0;
-  double  LHE_DeltaM_phi1_ = -999.0;
-  double  LHE_DeltaM_dEtajj_ = -999.0;
-  double  LHE_DeltaM_dPhijj_ = -999.0;
-  double  LHE_DeltaM_mjj_ = -999.0;
-  double  LHE_DeltaM_VBSCentrality_ = -999.0;
-  
-  
-  double LHE_MothInfo_Wqrk0_pt_ = -999.0;
-  double LHE_MothInfo_Wqrk0_eta_ = -999.0;
-  double LHE_MothInfo_Wqrk0_phi_ = -999.0;
-  double LHE_MothInfo_Wqrk0_M_ = -999.0;
-  double LHE_MothInfo_Wqrk0_E_ = -999.0;
-  double LHE_MothInfo_Wqrk0_Mt_ = -999.0;
-  
-  double LHE_MothInfo_Wqrk1_pt_ = -999.0;
-  double LHE_MothInfo_Wqrk1_eta_ = -999.0;
-  double LHE_MothInfo_Wqrk1_phi_ = -999.0;
-  double LHE_MothInfo_Wqrk1_M_ = -999.0;
-  double LHE_MothInfo_Wqrk1_E_ = -999.0;
-  double LHE_MothInfo_Wqrk1_Mt_ = -999.0;
-  
-  double LHE_MothInfo_Iqrk0_pt_ = -999.0;
-  double LHE_MothInfo_Iqrk0_eta_ = -999.0;
-  double LHE_MothInfo_Iqrk0_phi_ = -999.0;
-  double LHE_MothInfo_Iqrk0_E_ = -999.0;
-  double LHE_MothInfo_Iqrk0_M_ = -999.0;
-  double LHE_MothInfo_Iqrk0_Mt_ = -999.0;
-  
-  double LHE_MothInfo_Iqrk1_pt_ = -999.0;
-  double LHE_MothInfo_Iqrk1_eta_ = -999.0;
-  double LHE_MothInfo_Iqrk1_phi_ = -999.0;
-  double LHE_MothInfo_Iqrk1_E_ = -999.0;
-  double LHE_MothInfo_Iqrk1_M_ = -999.0;
-  double LHE_MothInfo_Iqrk1_Mt_ = -999.0;
-  
-  double  LHE_MothInfo_mWW_ = -999.0;
-  double  LHE_MothInfo_mtWW_ = -999.0;
-  double  LHE_MothInfo_mWLep_ = -999.0;
-  double  LHE_MothInfo_mtWLep_ = -999.0;
-  double  LHE_MothInfo_mWHad_ = -999.0;
-  double  LHE_MothInfo_mtWHad_ = -999.0;
-  double  LHE_MothInfo_costheta1_ = -999.0;
-  double  LHE_MothInfo_costheta2_ = -999.0;
-  double  LHE_MothInfo_phi_ = -999.0;
-  double  LHE_MothInfo_costhetastar_ = -999.0;
-  double  LHE_MothInfo_phi1_ = -999.0;
-  double  LHE_MothInfo_dEtajj_ = -999.0;
-  double  LHE_MothInfo_dPhijj_ = -999.0;
-  double  LHE_MothInfo_mjj_ = -999.0;
-  double  LHE_MothInfo_VBSCentrality_ = -999.0;
-  
-  int ngen_Lept_;
-  double gen_photon_Pt_;
-  double gen_photon_Eta_;
-  double gen_photon_Phi_;
-  double gen_photon_M_;
-  int gen_photon_Id_;
-  int gen_photon_Status_;
-  double gen_photon_Mother_;
-  int gen_photon_GrandMother_;
-  
-  int ngen_Nu_;
-  double gen_NuPt_;
-  double gen_NuEta_;
-  double gen_NuPhi_;
-  double gen_NuM_;
-  double gen_NuQ_;
-  int gen_Nustatus_;
-  int gen_NuMother_;
-  int gen_NuGrandMother_;
-  int gen_NuPdgId_;
-  
-  int ngen_WJet1__;
-  double gen_WJet1_Pt_;
-  double gen_WJet1_Eta_;
-  double gen_WJet1_Phi_;
-  double gen_WJet1_M_;
-  double gen_WJet1_E_;
-  double gen_WJet1_Q_;
-  int gen_WJet1_status_;
-  int gen_WJet1_Mother_;
-  int gen_WJet1_GrandMother_;
-  int gen_WJet1_PdgId_;
-  
-  int ngen_WJet2__;
-  double gen_WJet2_Pt_;
-  double gen_WJet2_Eta_;
-  double gen_WJet2_Phi_;
-  double gen_WJet2_M_;
-  double gen_WJet2_E_;
-  double gen_WJet2_Q_;
-  int gen_WJet2_status_;
-  int gen_WJet2_Mother_;
-  int gen_WJet2_GrandMother_;
-  int gen_WJet2_PdgId_;
-  
-  int ngen_VBFjet1__;
-  double gen_VBFjet1_Pt_;
-  double gen_VBFjet1_Eta_;
-  double gen_VBFjet1_Phi_;
-  double gen_VBFjet1_M_;
-  double gen_VBFjet1_E_;
-  double gen_VBFjet1_Q_;
-  int gen_VBFjet1_status_;
-  int gen_VBFjet1_Mother_;
-  int gen_VBFjet1_GrandMother_;
-  int gen_VBFjet1_PdgId_;
-  
-  int ngen_VBFjet2__;
-  double gen_VBFjet2_Pt_;
-  double gen_VBFjet2_Eta_;
-  double gen_VBFjet2_Phi_;
-  double gen_VBFjet2_M_;
-  double gen_VBFjet2_E_;
-  double gen_VBFjet2_Q_;
-  int gen_VBFjet2_status_;
-  int gen_VBFjet2_Mother_;
-  int gen_VBFjet2_GrandMother_;
-  int gen_VBFjet2_PdgId_;
-  
-  double gen_VBFjet1jet2_Pt_;
-  double gen_VBFjet1jet2_Eta_;
-  double gen_VBFjet1jet2_Phi_;
-  double gen_VBFjet1jet2_M_;
-  double gen_vbfjet_deltaR_;
-  
-  double gen_WHad_Pt_;
-  double gen_WHad_M_;
-  double gen_WHad_Mt_;
-  double gen_WHad_deltaeta_;
-  double gen_WHad_deltaphi_;
-  double gen_WHad_deltar_;
-  
-  double gen_mWW_;
-  double gen_mtWW_;
-  double gen_mWLep_;
-  double gen_mtWLep_;
-  double gen_mWHad_;
-  double gen_mtWHad_;
-  double gen_costheta1_;
-  double gen_costheta2_;
-  double gen_phi_;
-  double gen_costhetastar_;
-  double gen_phi1_;
-  double gen_dEtajj_;
-  double gen_dPhijj_;
-  double gen_mjj_;
-  double gen_VBSCentrality_;
-  //double
-  
-  double gen_deltaR_LepWHad_;
-  double gen_deltaphi_NuWHad_;
-  double gen_deltaphi_WlepWHad_;
-  
-  
-  int ngenJet_;
-  int nVBFJet_;
-  
-  std::vector<double> genQuarkStatus_;
 };
 
 //
@@ -329,13 +185,6 @@ GenAnalyzer::~GenAnalyzer()
   // (e.g. close files, deallocate resources etc.)
   delete outputFile_;
 }
-
-class PtGreater {
-public:
-  template <typename T> bool operator () (const T& i, const T& j) {
-    return (i->pt() > j->pt());
-  }
-};
 
 void GenAnalyzer::AddBranch(std::vector<std::string>* vec, std::string name){
   tree->Branch(name.c_str(),vec);
@@ -455,407 +304,143 @@ void GenAnalyzer::computeAngles(TLorentzVector thep4H, TLorentzVector thep4Z1, T
 
 void GenAnalyzer::SetBranches(){
   //AddBranch(&pdgID_,	"pdgID");
-  AddBranch(&isMuMinus_ , "isMuMinus");
-  AddBranch(&LHELeptPt_ ,	"LHELeptPt");
-  AddBranch(&LHELeptEta_ ,	"LHELeptEta");
-  AddBranch(&LHELeptPhi_ ,	"LHELeptPhi");
-  AddBranch(&LHELeptM_ ,	"LHELeptM");
-  AddBranch(&LHELeptE_ ,	"LHELeptE");
-  AddBranch(&LHENuPt_ ,	"LHENuPt");
-  AddBranch(&LHENuEta_ ,	"LHENuEta");
-  AddBranch(&LHENuPhi_ ,	"LHENuPhi");
-  AddBranch(&LHENuM_ ,	"LHENuM");
-  AddBranch(&LHENuE_ ,	"LHENuE");
-  AddBranch(&LHE_DeltaM_Wqrk0_pt_ ,	"LHE_DeltaM_Wqrk0_pt");
-  AddBranch(&LHE_DeltaM_Wqrk0_eta_ ,	"LHE_DeltaM_Wqrk0_eta");
-  AddBranch(&LHE_DeltaM_Wqrk0_phi_ ,	"LHE_DeltaM_Wqrk0_phi");
-  AddBranch(&LHE_DeltaM_Wqrk0_M_ ,	"LHE_DeltaM_Wqrk0_M");
-  AddBranch(&LHE_DeltaM_Wqrk0_E_ ,	"LHE_DeltaM_Wqrk0_E");
-  AddBranch(&LHE_DeltaM_Wqrk0_Mt_ ,	"LHE_DeltaM_Wqrk0_Mt");
-  AddBranch(&LHE_DeltaM_Wqrk1_pt_ ,	"LHE_DeltaM_Wqrk1_pt");
-  AddBranch(&LHE_DeltaM_Wqrk1_eta_ ,	"LHE_DeltaM_Wqrk1_eta");
-  AddBranch(&LHE_DeltaM_Wqrk1_phi_ ,	"LHE_DeltaM_Wqrk1_phi");
-  AddBranch(&LHE_DeltaM_Wqrk1_M_ ,	"LHE_DeltaM_Wqrk1_M");
-  AddBranch(&LHE_DeltaM_Wqrk1_E_ ,	"LHE_DeltaM_Wqrk1_E");
-  AddBranch(&LHE_DeltaM_Wqrk1_Mt_ ,	"LHE_DeltaM_Wqrk1_Mt");
-  AddBranch(&LHE_DeltaM_Iqrk0_pt_ ,	"LHE_DeltaM_Iqrk0_pt");
-  AddBranch(&LHE_DeltaM_Iqrk0_eta_ ,	"LHE_DeltaM_Iqrk0_eta");
-  AddBranch(&LHE_DeltaM_Iqrk0_phi_ ,	"LHE_DeltaM_Iqrk0_phi");
-  AddBranch(&LHE_DeltaM_Iqrk0_E_ ,	"LHE_DeltaM_Iqrk0_E");
-  AddBranch(&LHE_DeltaM_Iqrk0_M_ ,	"LHE_DeltaM_Iqrk0_M");
-  AddBranch(&LHE_DeltaM_Iqrk0_Mt_ ,	"LHE_DeltaM_Iqrk0_Mt");
-  AddBranch(&LHE_DeltaM_Iqrk1_pt_ ,	"LHE_DeltaM_Iqrk1_pt");
-  AddBranch(&LHE_DeltaM_Iqrk1_eta_ ,	"LHE_DeltaM_Iqrk1_eta");
-  AddBranch(&LHE_DeltaM_Iqrk1_phi_ ,	"LHE_DeltaM_Iqrk1_phi");
-  AddBranch(&LHE_DeltaM_Iqrk1_E_ ,	"LHE_DeltaM_Iqrk1_E");
-  AddBranch(&LHE_DeltaM_Iqrk1_M_ ,	"LHE_DeltaM_Iqrk1_M");
-  AddBranch(&LHE_DeltaM_Iqrk1_Mt_ ,	"LHE_DeltaM_Iqrk1_Mt");
-  AddBranch(&LHE_DeltaM_mWW_ ,	"LHE_DeltaM_mWW");
-  AddBranch(&LHE_DeltaM_mtWW_ ,	"LHE_DeltaM_mtWW");
-  AddBranch(&LHE_DeltaM_mWLep_ ,	"LHE_DeltaM_mWLep");
-  AddBranch(&LHE_DeltaM_mtWLep_ ,	"LHE_DeltaM_mtWLep");
-  AddBranch(&LHE_DeltaM_mWHad_ ,	"LHE_DeltaM_mWHad");
-  AddBranch(&LHE_DeltaM_mtWHad_ ,	"LHE_DeltaM_mtWHad");
-  AddBranch(&LHE_DeltaM_costheta1_ ,	"LHE_DeltaM_costheta1");
-  AddBranch(&LHE_DeltaM_costheta2_ ,	"LHE_DeltaM_costheta2");
-  AddBranch(&LHE_DeltaM_phi_ ,	"LHE_DeltaM_phi");
-  AddBranch(&LHE_DeltaM_costhetastar_ ,	"LHE_DeltaM_costhetastar");
-  AddBranch(&LHE_DeltaM_phi1_ ,	"LHE_DeltaM_phi1");
-  AddBranch(&LHE_DeltaM_dEtajj_ ,	"LHE_DeltaM_dEtajj");
-  AddBranch(&LHE_DeltaM_dPhijj_ ,	"LHE_DeltaM_dPhijj");
-  AddBranch(&LHE_DeltaM_mjj_ ,	"LHE_DeltaM_mjj");
-  AddBranch(&LHE_DeltaM_VBSCentrality_ ,	"LHE_DeltaM_VBSCentrality");
+//  AddBranch(&isMuMinus_ , "isMuMinus");
+//  AddBranch(&LHELeptPt_ ,	"LHELeptPt");
+//  AddBranch(&LHELeptEta_ ,	"LHELeptEta");
+//  AddBranch(&LHELeptPhi_ ,	"LHELeptPhi");
+//  AddBranch(&LHELeptM_ ,	"LHELeptM");
+//  AddBranch(&LHELeptE_ ,	"LHELeptE");
+//
+//  AddBranch(&LHEWeightIDs_, "LHEWeightIDs");
+//  AddBranch(&LHEWeights_, "LHEWeights");
   
-  
-  AddBranch(&LHE_MothInfo_Wqrk0_pt_ ,	"LHE_MothInfo_Wqrk0_pt");
-  AddBranch(&LHE_MothInfo_Wqrk0_eta_ ,	"LHE_MothInfo_Wqrk0_eta");
-  AddBranch(&LHE_MothInfo_Wqrk0_phi_ ,	"LHE_MothInfo_Wqrk0_phi");
-  AddBranch(&LHE_MothInfo_Wqrk0_M_ ,	"LHE_MothInfo_Wqrk0_M");
-  AddBranch(&LHE_MothInfo_Wqrk0_E_ ,	"LHE_MothInfo_Wqrk0_E");
-  AddBranch(&LHE_MothInfo_Wqrk0_Mt_ ,	"LHE_MothInfo_Wqrk0_Mt");
-  AddBranch(&LHE_MothInfo_Wqrk1_pt_ ,	"LHE_MothInfo_Wqrk1_pt");
-  AddBranch(&LHE_MothInfo_Wqrk1_eta_ ,	"LHE_MothInfo_Wqrk1_eta");
-  AddBranch(&LHE_MothInfo_Wqrk1_phi_ ,	"LHE_MothInfo_Wqrk1_phi");
-  AddBranch(&LHE_MothInfo_Wqrk1_M_ ,	"LHE_MothInfo_Wqrk1_M");
-  AddBranch(&LHE_MothInfo_Wqrk1_E_ ,	"LHE_MothInfo_Wqrk1_E");
-  AddBranch(&LHE_MothInfo_Wqrk1_Mt_ ,	"LHE_MothInfo_Wqrk1_Mt");
-  AddBranch(&LHE_MothInfo_Iqrk0_pt_ ,	"LHE_MothInfo_Iqrk0_pt");
-  AddBranch(&LHE_MothInfo_Iqrk0_eta_ ,	"LHE_MothInfo_Iqrk0_eta");
-  AddBranch(&LHE_MothInfo_Iqrk0_phi_ ,	"LHE_MothInfo_Iqrk0_phi");
-  AddBranch(&LHE_MothInfo_Iqrk0_E_ ,	"LHE_MothInfo_Iqrk0_E");
-  AddBranch(&LHE_MothInfo_Iqrk0_M_ ,	"LHE_MothInfo_Iqrk0_M");
-  AddBranch(&LHE_MothInfo_Iqrk0_Mt_ ,	"LHE_MothInfo_Iqrk0_Mt");
-  AddBranch(&LHE_MothInfo_Iqrk1_pt_ ,	"LHE_MothInfo_Iqrk1_pt");
-  AddBranch(&LHE_MothInfo_Iqrk1_eta_ ,	"LHE_MothInfo_Iqrk1_eta");
-  AddBranch(&LHE_MothInfo_Iqrk1_phi_ ,	"LHE_MothInfo_Iqrk1_phi");
-  AddBranch(&LHE_MothInfo_Iqrk1_E_ ,	"LHE_MothInfo_Iqrk1_E");
-  AddBranch(&LHE_MothInfo_Iqrk1_M_ ,	"LHE_MothInfo_Iqrk1_M");
-  AddBranch(&LHE_MothInfo_Iqrk1_Mt_ ,	"LHE_MothInfo_Iqrk1_Mt");
-  AddBranch(&LHE_MothInfo_mWW_ ,	"LHE_MothInfo_mWW");
-  AddBranch(&LHE_MothInfo_mtWW_ ,	"LHE_MothInfo_mtWW");
-  AddBranch(&LHE_MothInfo_mWLep_ ,	"LHE_MothInfo_mWLep");
-  AddBranch(&LHE_MothInfo_mtWLep_ ,	"LHE_MothInfo_mtWLep");
-  AddBranch(&LHE_MothInfo_mWHad_ ,	"LHE_MothInfo_mWHad");
-  AddBranch(&LHE_MothInfo_mtWHad_ ,	"LHE_MothInfo_mtWHad");
-  AddBranch(&LHE_MothInfo_costheta1_ ,	"LHE_MothInfo_costheta1");
-  AddBranch(&LHE_MothInfo_costheta2_ ,	"LHE_MothInfo_costheta2");
-  AddBranch(&LHE_MothInfo_phi_ ,	"LHE_MothInfo_phi");
-  AddBranch(&LHE_MothInfo_costhetastar_ ,	"LHE_MothInfo_costhetastar");
-  AddBranch(&LHE_MothInfo_phi1_ ,	"LHE_MothInfo_phi1");
-  AddBranch(&LHE_MothInfo_dEtajj_ ,	"LHE_MothInfo_dEtajj");
-  AddBranch(&LHE_MothInfo_dPhijj_ ,	"LHE_MothInfo_dPhijj");
-  AddBranch(&LHE_MothInfo_mjj_ ,	"LHE_MothInfo_mjj");
-  AddBranch(&LHE_MothInfo_VBSCentrality_ ,	"LHE_MothInfo_VBSCentrality");
-  
-  AddBranch(&LHEWeightIDs_, "LHEWeightIDs");
-  AddBranch(&LHEWeights_, "LHEWeights");
-  
-  AddBranch(&ngen_Lept_, "ngen_Lept");
-  AddBranch(&gen_photon_Pt_, "gen_photon_Pt");
-  AddBranch(&gen_photon_Eta_,"gen_photon_Eta");
-  AddBranch(&gen_photon_Phi_,"gen_photon_Phi");
-  AddBranch(&gen_photon_M_,"gen_photon_M");
-  AddBranch(&gen_photon_Status_,"gen_photon_Status");
-  AddBranch(&gen_photon_Id_,"gen_photon_Id");
-  AddBranch(&gen_photon_Mother_,"gen_photon_Mother");
-  AddBranch(&gen_photon_GrandMother_,"gen_photon_GrandMother");
-  
-  AddBranch(&gen_NuPdgId_,"gen_NuPdgId");
-  AddBranch(&ngen_Nu_,"ngen_Nu");
-  AddBranch(&gen_NuPt_, "gen_NuPt");
-  AddBranch(&gen_NuEta_,"gen_NuEta");
-  AddBranch(&gen_NuPhi_,"gen_NuPhi");
-  AddBranch(&gen_NuM_,"gen_NuM");
-  AddBranch(&gen_NuQ_,"gen_NuQ");
-  AddBranch(&gen_Nustatus_,"gen_Nustatus");
-  AddBranch(&gen_NuMother_,"gen_NuMother");
-  AddBranch(&gen_NuGrandMother_,"gen_NuGrandMother");
-  
-  AddBranch(&gen_WJet1_PdgId_,"gen_WJet1_PdgId");
-  AddBranch(&ngen_WJet1__,"ngen_WJet1_");
-  AddBranch(&gen_WJet1_Pt_, "gen_WJet1_Pt");
-  AddBranch(&gen_WJet1_Eta_,"gen_WJet1_Eta");
-  AddBranch(&gen_WJet1_Phi_,"gen_WJet1_Phi");
-  AddBranch(&gen_WJet1_M_,"gen_WJet1_M");
-  AddBranch(&gen_WJet1_E_, "gen_WJet1_E");
-  AddBranch(&gen_WJet1_Q_,"gen_WJet1_Q");
-  AddBranch(&gen_WJet1_status_,"gen_WJet1_status");
-  AddBranch(&gen_WJet1_Mother_,"gen_WJet1_Mother");
-  AddBranch(&gen_WJet1_GrandMother_,"gen_WJet1_GrandMother");
-  
-  AddBranch(&gen_WJet2_PdgId_,"gen_WJet2_PdgId");
-  AddBranch(&ngen_WJet2__,"ngen_WJet2_");
-  AddBranch(&gen_WJet2_Pt_, "gen_WJet2_Pt");
-  AddBranch(&gen_WJet2_Eta_,"gen_WJet2_Eta");
-  AddBranch(&gen_WJet2_Phi_,"gen_WJet2_Phi");
-  AddBranch(&gen_WJet2_M_,"gen_WJet2_M");
-  AddBranch(&gen_WJet2_E_, "gen_WJet2_E");
-  AddBranch(&gen_WJet2_Q_,"gen_WJet2_Q");
-  AddBranch(&gen_WJet2_status_,"gen_WJet2_status");
-  AddBranch(&gen_WJet2_Mother_,"gen_WJet2_Mother");
-  AddBranch(&gen_WJet2_GrandMother_,"gen_WJet2_GrandMother");
-  
-  AddBranch(&gen_VBFjet1_PdgId_,"gen_VBFjet1_PdgId");
-  AddBranch(&ngen_VBFjet1__,"ngen_VBFjet1_");
-  AddBranch(&gen_VBFjet1_Pt_, "gen_VBFjet1_Pt");
-  AddBranch(&gen_VBFjet1_Eta_,"gen_VBFjet1_Eta");
-  AddBranch(&gen_VBFjet1_Phi_,"gen_VBFjet1_Phi");
-  AddBranch(&gen_VBFjet1_M_,"gen_VBFjet1_M");
-  AddBranch(&gen_VBFjet1_Q_,"gen_VBFjet1_Q");
-  AddBranch(&gen_VBFjet1_status_,"gen_VBFjet1_status");
-  AddBranch(&gen_VBFjet1_Mother_,"gen_VBFjet1_Mother");
-  AddBranch(&gen_VBFjet1_GrandMother_,"gen_VBFjet1_GrandMother");
-  
-  AddBranch(&gen_VBFjet2_PdgId_,"gen_VBFjet2_PdgId");
-  AddBranch(&ngen_VBFjet2__,"ngen_VBFjet2_");
-  AddBranch(&gen_VBFjet2_Pt_, "gen_VBFjet2_Pt");
-  AddBranch(&gen_VBFjet2_Eta_,"gen_VBFjet2_Eta");
-  AddBranch(&gen_VBFjet2_Phi_,"gen_VBFjet2_Phi");
-  AddBranch(&gen_VBFjet2_M_,"gen_VBFjet2_M");
-  AddBranch(&gen_VBFjet2_Q_,"gen_VBFjet2_Q");
-  AddBranch(&gen_VBFjet2_status_,"gen_VBFjet2_status");
-  AddBranch(&gen_VBFjet2_Mother_,"gen_VBFjet2_Mother");
-  AddBranch(&gen_VBFjet2_GrandMother_,"gen_VBFjet2_GrandMother");
-  
-  AddBranch(&gen_VBFjet1jet2_Pt_, "gen_VBFjet1jet2_Pt");
-  AddBranch(&gen_VBFjet1jet2_Eta_, "gen_VBFjet1jet2_Eta");
-  AddBranch(&gen_VBFjet1jet2_Phi_, "gen_VBFjet1jet2_Phi");
-  AddBranch(&gen_VBFjet1jet2_M_, "gen_VBFjet1jet2_M");
-  AddBranch(&gen_vbfjet_deltaR_, "gen_vbfjet_deltaR");
-  AddBranch(&gen_WHad_Pt_, "gen_WHad_Pt");
-  AddBranch(&gen_WHad_M_, "gen_WHad_M");
-  AddBranch(&gen_WHad_Mt_, "gen_WHad_Mt");
-  AddBranch(&gen_WHad_deltaeta_, "gen_WHad_deltaeta");
-  AddBranch(&gen_WHad_deltaphi_, "gen_WHad_deltaphi");
-  AddBranch(&gen_WHad_deltar_, "gen_WHad_deltar");
-  AddBranch(&gen_deltaR_LepWHad_, "gen_deltaR_LepWHad");
-  AddBranch(&gen_deltaphi_NuWHad_, "gen_deltaphi_NuWHad");
-  AddBranch(&gen_deltaphi_WlepWHad_, "gen_deltaphi_WlepWHad");
-  
-  AddBranch(&gen_mWW_, "gen_mWW");
-  AddBranch(&gen_mtWW_, "gen_mtWW");
-  AddBranch(&gen_mWLep_, "gen_mWLep");
-  AddBranch(&gen_mtWLep_, "gen_mtWLep");
-  AddBranch(&gen_mWHad_, "gen_mWHad");
-  AddBranch(&gen_mtWHad_, "gen_mtWHad");
-  AddBranch(&gen_costheta1_, "gen_costheta1");
-  AddBranch(&gen_costheta2_, "gen_costheta2");
-  AddBranch(&gen_phi_, "gen_phi");
-  AddBranch(&gen_costhetastar_, "gen_costhetastar");
-  AddBranch(&gen_phi1_, "gen_phi1");
-  AddBranch(&gen_dEtajj_, "gen_dEtajj");
-  AddBranch(&gen_dPhijj_, "gen_dPhijj");
-  AddBranch(&gen_mjj_, "gen_mjj");
-  AddBranch(&gen_VBSCentrality_, "gen_VBSCentrality");
-  
-  AddBranch(&genQuarkStatus_, "genQuarkStatus");
-  AddBranch(&ngenJet_, "ngenJet");
-  AddBranch(&nVBFJet_, "nVBFJet");
-  
+  AddBranch(&gen_leading_photon_Pt_, "gen_leading_photon_Pt");
+  AddBranch(&gen_leading_photon_Eta_, "gen_leading_photon_Eta");
+  AddBranch(&gen_leading_photon_Phi_, "gen_leading_photon_Phi");
+  AddBranch(&gen_leading_photon_M_, "gen_leading_photon_M");
+  AddBranch(&gen_Subleading_photon_Pt_, "gen_Subleading_photon_Pt");
+  AddBranch(&gen_Subleading_photon_Eta_, "gen_Subleading_photon_Eta");
+  AddBranch(&gen_Subleading_photon_Phi_, "gen_Subleading_photon_Phi");
+  AddBranch(&gen_Subleading_photon_M_, "gen_Subleading_photon_M");
+  AddBranch(&gen_leading_WpJets_Pt_, "gen_leading_WpJets_Pt");
+  AddBranch(&gen_leading_WpJets_Eta_, "gen_leading_WpJets_Eta");
+  AddBranch(&gen_leading_WpJets_Phi_, "gen_leading_WpJets_Phi");
+  AddBranch(&gen_leading_WpJets_M_, "gen_leading_WpJets_M");
+  AddBranch(&gen_Subleading_WpJets_Pt_, "gen_Subleading_WpJets_Pt");
+  AddBranch(&gen_Subleading_WpJets_Eta_, "gen_Subleading_WpJets_Eta");
+  AddBranch(&gen_Subleading_WpJets_Phi_, "gen_Subleading_WpJets_Phi");
+  AddBranch(&gen_Subleading_WpJets_M_, "gen_Subleading_WpJets_M");
+  AddBranch(&gen_leading_WmJets_Pt_, "gen_leading_WmJets_Pt");
+  AddBranch(&gen_leading_WmJets_Eta_, "gen_leading_WmJets_Eta");
+  AddBranch(&gen_leading_WmJets_Phi_, "gen_leading_WmJets_Phi");
+  AddBranch(&gen_leading_WmJets_M_, "gen_leading_WmJets_M");
+  AddBranch(&gen_Subleading_WmJets_Pt_, "gen_Subleading_WmJets_Pt");
+  AddBranch(&gen_Subleading_WmJets_Eta_, "gen_Subleading_WmJets_Eta");
+  AddBranch(&gen_Subleading_WmJets_Phi_, "gen_Subleading_WmJets_Phi");
+  AddBranch(&gen_Subleading_WmJets_M_, "gen_Subleading_WmJets_M");
+  AddBranch(&gen_leading_WBoson_Pt_, "gen_leading_WBoson_Pt");
+  AddBranch(&gen_leading_WBoson_Eta_, "gen_leading_WBoson_Eta");
+  AddBranch(&gen_leading_WBoson_Phi_, "gen_leading_WBoson_Phi");
+  AddBranch(&gen_leading_WBoson_M_, "gen_leading_WBoson_M");
+  AddBranch(&gen_Subleading_WBoson_Pt_, "gen_Subleading_WBoson_Pt");
+  AddBranch(&gen_Subleading_WBoson_Eta_, "gen_Subleading_WBoson_Eta");
+  AddBranch(&gen_Subleading_WBoson_Phi_, "gen_Subleading_WBoson_Phi");
+  AddBranch(&gen_Subleading_WBoson_M_, "gen_Subleading_WBoson_M");
+  AddBranch(&gen_leading_Higgs_Pt_, "gen_leading_Higgs_Pt");
+  AddBranch(&gen_leading_Higgs_Eta_, "gen_leading_Higgs_Eta");
+  AddBranch(&gen_leading_Higgs_Phi_, "gen_leading_Higgs_Phi");
+  AddBranch(&gen_leading_Higgs_M_, "gen_leading_Higgs_M");
+  AddBranch(&gen_Subleading_Higgs_Pt_, "gen_Subleading_Higgs_Pt");
+  AddBranch(&gen_Subleading_Higgs_Eta_, "gen_Subleading_Higgs_Eta");
+  AddBranch(&gen_Subleading_Higgs_Phi_, "gen_Subleading_Higgs_Phi");
+  AddBranch(&gen_Subleading_Higgs_M_, "gen_Subleading_Higgs_M");
+  AddBranch(&gen_deltaR_Photon0_Photon1_, "gen_deltaR_Photon0_Photon1");
+  AddBranch(&gen_deltaR_Photon0_WmJ0_, "gen_deltaR_Photon0_WmJ0");
+  AddBranch(&gen_deltaR_Photon0_WmJ1_, "gen_deltaR_Photon0_WmJ1");
+  AddBranch(&gen_deltaR_Photon0_WpJ0_, "gen_deltaR_Photon0_WpJ0");
+  AddBranch(&gen_deltaR_Photon0_WpJ1_, "gen_deltaR_Photon0_WpJ1");
+  AddBranch(&gen_deltaR_Photon1_WmJ0_, "gen_deltaR_Photon1_WmJ0");
+  AddBranch(&gen_deltaR_Photon1_WmJ1_, "gen_deltaR_Photon1_WmJ1");
+  AddBranch(&gen_deltaR_Photon1_WpJ0_, "gen_deltaR_Photon1_WpJ0");
+  AddBranch(&gen_deltaR_Photon1_WpJ1_, "gen_deltaR_Photon1_WpJ1");
+  AddBranch(&gen_deltaR_WpJ0_WpJ1_, "gen_deltaR_WpJ0_WpJ1");
+  AddBranch(&gen_deltaR_WpJ0_WmJ0_, "gen_deltaR_WpJ0_WmJ0");
+  AddBranch(&gen_deltaR_WpJ0_WmJ1_, "gen_deltaR_WpJ0_WmJ1");
+  AddBranch(&gen_deltaR_WpJ1_WmJ0_, "gen_deltaR_WpJ1_WmJ0");
+  AddBranch(&gen_deltaR_WpJ1_WmJ1_, "gen_deltaR_WpJ1_WmJ1");
+  AddBranch(&gen_deltaR_WmJ0_WmJ1_, "gen_deltaR_WmJ0_WmJ1");
+  AddBranch(&gen_deltaR_Wp_Wm_, "gen_deltaR_Wp_Wm");
+  AddBranch(&gen_deltaR_H1_H2_  , "gen_deltaR_H1_H2");
   
   
 }
 
 void GenAnalyzer::Clear(){
   //pdgID_.clear();
-  LHEWeightIDs_.clear();
-  LHEWeights_.clear();
-  isMuMinus_	= -999.0;
-  LHELeptPt_	= -999.0;
-  LHELeptEta_	= -999.0;
-  LHELeptPhi_	= -999.0;
-  LHELeptM_	= -999.0;
-  LHELeptE_	= -999.0;
-  LHENuPt_	= -999.0;
-  LHENuEta_	= -999.0;
-  LHENuPhi_	= -999.0;
-  LHENuM_	= -999.0;
-  LHENuE_	= -999.0;
-  LHE_DeltaM_Wqrk0_pt_	= -999.0;
-  LHE_DeltaM_Wqrk0_eta_	= -999.0;
-  LHE_DeltaM_Wqrk0_phi_	= -999.0;
-  LHE_DeltaM_Wqrk0_M_	= -999.0;
-  LHE_DeltaM_Wqrk0_E_	= -999.0;
-  LHE_DeltaM_Wqrk0_Mt_	= -999.0;
-  LHE_DeltaM_Wqrk1_pt_	= -999.0;
-  LHE_DeltaM_Wqrk1_eta_	= -999.0;
-  LHE_DeltaM_Wqrk1_phi_	= -999.0;
-  LHE_DeltaM_Wqrk1_M_	= -999.0;
-  LHE_DeltaM_Wqrk1_E_	= -999.0;
-  LHE_DeltaM_Wqrk1_Mt_	= -999.0;
-  LHE_DeltaM_Iqrk0_pt_	= -999.0;
-  LHE_DeltaM_Iqrk0_eta_	= -999.0;
-  LHE_DeltaM_Iqrk0_phi_	= -999.0;
-  LHE_DeltaM_Iqrk0_E_	= -999.0;
-  LHE_DeltaM_Iqrk0_M_	= -999.0;
-  LHE_DeltaM_Iqrk0_Mt_	= -999.0;
-  LHE_DeltaM_Iqrk1_pt_	= -999.0;
-  LHE_DeltaM_Iqrk1_eta_	= -999.0;
-  LHE_DeltaM_Iqrk1_phi_	= -999.0;
-  LHE_DeltaM_Iqrk1_E_	= -999.0;
-  LHE_DeltaM_Iqrk1_M_	= -999.0;
-  LHE_DeltaM_Iqrk1_Mt_	= -999.0;
-  LHE_DeltaM_mWW_	= -999.0;
-  LHE_DeltaM_mtWW_	= -999.0;
-  LHE_DeltaM_mWLep_	= -999.0;
-  LHE_DeltaM_mtWLep_	= -999.0;
-  LHE_DeltaM_mWHad_	= -999.0;
-  LHE_DeltaM_mtWHad_	= -999.0;
-  LHE_DeltaM_costheta1_	= -999.0;
-  LHE_DeltaM_costheta2_	= -999.0;
-  LHE_DeltaM_phi_	= -999.0;
-  LHE_DeltaM_costhetastar_	= -999.0;
-  LHE_DeltaM_phi1_	= -999.0;
-  LHE_DeltaM_dEtajj_	= -999.0;
-  LHE_DeltaM_dPhijj_	= -999.0;
-  LHE_DeltaM_mjj_	= -999.0;
-  LHE_DeltaM_VBSCentrality_	= -999.0;
+//  LHEWeightIDs_.clear();
+//  LHEWeights_.clear();
   
-  
-  LHE_MothInfo_Wqrk0_pt_	= -999.0;
-  LHE_MothInfo_Wqrk0_eta_	= -999.0;
-  LHE_MothInfo_Wqrk0_phi_	= -999.0;
-  LHE_MothInfo_Wqrk0_M_	= -999.0;
-  LHE_MothInfo_Wqrk0_E_	= -999.0;
-  LHE_MothInfo_Wqrk0_Mt_	= -999.0;
-  LHE_MothInfo_Wqrk1_pt_	= -999.0;
-  LHE_MothInfo_Wqrk1_eta_	= -999.0;
-  LHE_MothInfo_Wqrk1_phi_	= -999.0;
-  LHE_MothInfo_Wqrk1_M_	= -999.0;
-  LHE_MothInfo_Wqrk1_E_	= -999.0;
-  LHE_MothInfo_Wqrk1_Mt_	= -999.0;
-  LHE_MothInfo_Iqrk0_pt_	= -999.0;
-  LHE_MothInfo_Iqrk0_eta_	= -999.0;
-  LHE_MothInfo_Iqrk0_phi_	= -999.0;
-  LHE_MothInfo_Iqrk0_E_	= -999.0;
-  LHE_MothInfo_Iqrk0_M_	= -999.0;
-  LHE_MothInfo_Iqrk0_Mt_	= -999.0;
-  LHE_MothInfo_Iqrk1_pt_	= -999.0;
-  LHE_MothInfo_Iqrk1_eta_	= -999.0;
-  LHE_MothInfo_Iqrk1_phi_	= -999.0;
-  LHE_MothInfo_Iqrk1_E_	= -999.0;
-  LHE_MothInfo_Iqrk1_M_	= -999.0;
-  LHE_MothInfo_Iqrk1_Mt_	= -999.0;
-  LHE_MothInfo_mWW_	= -999.0;
-  LHE_MothInfo_mtWW_	= -999.0;
-  LHE_MothInfo_mWLep_	= -999.0;
-  LHE_MothInfo_mtWLep_	= -999.0;
-  LHE_MothInfo_mWHad_	= -999.0;
-  LHE_MothInfo_mtWHad_	= -999.0;
-  LHE_MothInfo_costheta1_	= -999.0;
-  LHE_MothInfo_costheta2_	= -999.0;
-  LHE_MothInfo_phi_	= -999.0;
-  LHE_MothInfo_costhetastar_	= -999.0;
-  LHE_MothInfo_phi1_	= -999.0;
-  LHE_MothInfo_dEtajj_	= -999.0;
-  LHE_MothInfo_dPhijj_	= -999.0;
-  LHE_MothInfo_mjj_	= -999.0;
-  LHE_MothInfo_VBSCentrality_	= -999.0;
-  
-  
-  
-  ngen_Lept_ = -999;
-  gen_photon_Pt_ = -999.0;
-  gen_photon_Eta_ = -999.0;
-  gen_photon_Phi_ = -999.0;
-  gen_photon_Status_ = -999;
-  gen_photon_Mother_ = -999.0;
-  gen_photon_GrandMother_ = -999;
-  gen_photon_Id_ = -999;
-  gen_photon_M_ = -999.0;
-  
-  ngen_Nu_ = -999;
-  gen_NuPt_ = -999.0;
-  gen_NuEta_ = -999.0;
-  gen_NuPhi_ = -999.0;
-  gen_NuM_ = -999.0;
-  gen_NuQ_ = -999.0;
-  gen_Nustatus_ = -999;
-  gen_NuMother_ = -999;
-  gen_NuGrandMother_ = -999;
-  gen_NuPdgId_ = -999;
-  
-  ngen_WJet1__ = -999;
-  gen_WJet1_Pt_ = -999.0;
-  gen_WJet1_Eta_ = -999.0;
-  gen_WJet1_Phi_ = -999.0;
-  gen_WJet1_M_ = -999.0;
-  gen_WJet1_E_ = -999.0;
-  gen_WJet1_Q_ = -999.0;
-  gen_WJet1_status_ = -999;
-  gen_WJet1_Mother_ = -999;
-  gen_WJet1_GrandMother_ = -999;
-  gen_WJet1_PdgId_ = -999;
-  
-  ngen_WJet2__ = -999;
-  gen_WJet2_Pt_ = -999.0;
-  gen_WJet2_Eta_ = -999.0;
-  gen_WJet2_Phi_ = -999.0;
-  gen_WJet2_M_ = -999.0;
-  gen_WJet2_E_ = -999.0;
-  gen_WJet2_Q_ = -999.0;
-  gen_WJet2_status_ = -999;
-  gen_WJet2_Mother_ = -999;
-  gen_WJet2_GrandMother_ = -999;
-  gen_WJet2_PdgId_ = -999;
-  
-  ngen_VBFjet1__ = -999;
-  gen_VBFjet1_Pt_ = -999.0;
-  gen_VBFjet1_Eta_ = -999.0;
-  gen_VBFjet1_Phi_ = -999.0;
-  gen_VBFjet1_M_ = -999.0;
-  gen_VBFjet1_Q_ = -999.0;
-  gen_VBFjet1_status_ = -999;
-  gen_VBFjet1_Mother_ = -999;
-  gen_VBFjet1_GrandMother_ = -999;
-  gen_VBFjet1_PdgId_ = -999;
-  
-  ngen_VBFjet2__ = -999;
-  gen_VBFjet2_Pt_ = -999.0;
-  gen_VBFjet2_Eta_ = -999.0;
-  gen_VBFjet2_Phi_ = -999.0;
-  gen_VBFjet2_M_ = -999.0;
-  gen_VBFjet2_Q_ = -999.0;
-  gen_VBFjet2_status_ = -999;
-  gen_VBFjet2_Mother_ = -999;
-  gen_VBFjet2_GrandMother_ = -999;
-  gen_VBFjet2_PdgId_ = -999;
-  
-  
-  gen_VBFjet1jet2_Pt_ = -999.0;
-  gen_VBFjet1jet2_Eta_ = -999.0;
-  gen_VBFjet1jet2_Phi_ = -999.0;
-  gen_VBFjet1jet2_M_ = -999.0;
-  gen_vbfjet_deltaR_ = -999.0;
-  gen_WHad_Pt_ = -999.0;
-  gen_WHad_M_ = -999.0;
-  gen_WHad_Mt_ = -999.0;
-  gen_WHad_deltaeta_ = -999.0;
-  gen_WHad_deltaphi_ = -999.0;
-  gen_WHad_deltar_ = -999.0;
-  gen_deltaR_LepWHad_ = -999.0;
-  gen_deltaphi_NuWHad_ = -999.0;
-  gen_deltaphi_WlepWHad_ = -999.0;
-  
-  
-  gen_mWLep_ = -999.0;
-  gen_mtWLep_ = -999.0;
-  gen_mWHad_ = -999.0;
-  gen_mtWHad_ = -999.0;
-  gen_costheta1_ = -999.0;
-  gen_costheta2_ = -999.0;
-  gen_phi_ = -999.0;
-  gen_costhetastar_ = -999.0;
-  gen_phi1_ = -999.0;
-  gen_dEtajj_ = -999.0;
-  gen_dPhijj_ = -999.0;
-  gen_mjj_ = -999.0;
-  gen_VBSCentrality_ = -999.0;
-  
-  nVBFJet_ = -999;
-  ngenJet_ = -999;
-  LHEWeightIDs_.clear();
-  LHEWeights_.clear();
-  genQuarkStatus_.clear();
+  gen_leading_photon_Pt_ = -999.0;
+  gen_leading_photon_Eta_ = -999.0;
+  gen_leading_photon_Phi_ = -999.0;
+  gen_leading_photon_M_ = -999.0;
+  gen_Subleading_photon_Pt_ = -999.0;
+  gen_Subleading_photon_Eta_ = -999.0;
+  gen_Subleading_photon_Phi_ = -999.0;
+  gen_Subleading_photon_M_ = -999.0;
+  gen_leading_WpJets_Pt_ = -999.0;
+  gen_leading_WpJets_Eta_ = -999.0;
+  gen_leading_WpJets_Phi_ = -999.0;
+  gen_leading_WpJets_M_ = -999.0;
+  gen_Subleading_WpJets_Pt_ = -999.0;
+  gen_Subleading_WpJets_Eta_ = -999.0;
+  gen_Subleading_WpJets_Phi_ = -999.0;
+  gen_Subleading_WpJets_M_ = -999.0;
+  gen_leading_WmJets_Pt_ = -999.0;
+  gen_leading_WmJets_Eta_ = -999.0;
+  gen_leading_WmJets_Phi_ = -999.0;
+  gen_leading_WmJets_M_ = -999.0;
+  gen_Subleading_WmJets_Pt_ = -999.0;
+  gen_Subleading_WmJets_Eta_ = -999.0;
+  gen_Subleading_WmJets_Phi_ = -999.0;
+  gen_Subleading_WmJets_M_ = -999.0;
+  gen_leading_WBoson_Pt_ = -999.0;
+  gen_leading_WBoson_Eta_ = -999.0;
+  gen_leading_WBoson_Phi_ = -999.0;
+  gen_leading_WBoson_M_ = -999.0;
+  gen_Subleading_WBoson_Pt_ = -999.0;
+  gen_Subleading_WBoson_Eta_ = -999.0;
+  gen_Subleading_WBoson_Phi_ = -999.0;
+  gen_Subleading_WBoson_M_ = -999.0;
+  gen_leading_Higgs_Pt_ = -999.0;
+  gen_leading_Higgs_Eta_ = -999.0;
+  gen_leading_Higgs_Phi_ = -999.0;
+  gen_leading_Higgs_M_ = -999.0;
+  gen_Subleading_Higgs_Pt_ = -999.0;
+  gen_Subleading_Higgs_Eta_ = -999.0;
+  gen_Subleading_Higgs_Phi_ = -999.0;
+  gen_Subleading_Higgs_M_ = -999.0;
+  gen_deltaR_Photon0_Photon1_ = -999.0;
+  gen_deltaR_Photon0_WmJ0_ = -999.0;
+  gen_deltaR_Photon0_WmJ1_ = -999.0;
+  gen_deltaR_Photon0_WpJ0_ = -999.0;
+  gen_deltaR_Photon0_WpJ1_ = -999.0;
+  gen_deltaR_Photon1_WmJ0_ = -999.0;
+  gen_deltaR_Photon1_WmJ1_ = -999.0;
+  gen_deltaR_Photon1_WpJ0_ = -999.0;
+  gen_deltaR_Photon1_WpJ1_ = -999.0;
+  gen_deltaR_WpJ0_WpJ1_ = -999.0;
+  gen_deltaR_WpJ0_WmJ0_ = -999.0;
+  gen_deltaR_WpJ0_WmJ1_ = -999.0;
+  gen_deltaR_WpJ1_WmJ0_ = -999.0;
+  gen_deltaR_WpJ1_WmJ1_ = -999.0;
+  gen_deltaR_WmJ0_WmJ1_ = -999.0;
+  gen_deltaR_Wp_Wm_ = -999.0;
+  gen_deltaR_H1_H2_ = -999.0;
 }
 
+
+bool GenAnalyzer::reorder(const TLorentzVector &a, const TLorentzVector &b)
+{
+  return a.Pt() > b.Pt();
+}

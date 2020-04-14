@@ -70,180 +70,241 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   
   const vector<reco::GenParticle>* genps_coll = genpsHandle.product();
   
-  edm::Handle<LHEEventProduct> LHEEventHandle;
-  iEvent.getByToken(LHEEventToken, LHEEventHandle);
-  const LHEEventProduct* LHE = 0;
-  
-  std::vector<int> leptons ;
-  std::vector<int> finalQuarks ;
-  std::vector<int> intermediates ;
-  std::vector<int> tops ;
+//  edm::Handle<LHEEventProduct> LHEEventHandle;
+//  iEvent.getByToken(LHEEventToken, LHEEventHandle);
+//  const LHEEventProduct* LHE = 0;
+//
+//  std::vector<int> leptons ;
+//  std::vector<int> finalQuarks ;
+//  std::vector<int> intermediates ;
   
   if (Verbose_)  std::cout<<"===================\n\n"<<endl;
   
-  if(LHEEventHandle.isValid()){
-    // clear the defined vectors before start
-    leptons.clear();
-    finalQuarks.clear();
-    intermediates.clear();
-    tops.clear();
-    int WDaughter_MothInfo1 = 0;
-    int WDaughter_MothInfo2 = 0;
-    int FQuark_MothInfo1 = 0;
-    int FQuark_MothInfo2 = 0;
-    
-    LHE = LHEEventHandle.product();
-    
-    for(const auto& weight : LHE->weights()) {
-      //LHEWeightIDs_.push_back(weight.id);
-      LHEWeights_.push_back(weight.wgt);
-    }
-    std::cout<<"size of LHEWeightIDS:\t"<<LHEWeightIDs_.size()<<std::endl;
-    std::cout<<"size of LHEWeight: \t"<<LHEWeights_.size()<<std::endl;
-    //std::cout<< " ID = " << LHEWeightIDs_[645] << "\t Weight = " << LHEWeights_[645] << std::endl;
-    
-    TLorentzVector Is_Iqrk1,Is_Iqrk0;
-    //PG loop over particles in the event
-    int incomingPart = 0;
-    if (Verbose_) std::cout<<"Total No. of particles = "<< LHE->hepeup().NUP <<std::endl;
-    for (int iPart = 0 ; iPart < LHE->hepeup().NUP; ++iPart){
-      
-      int mother1 = LHE->hepeup().MOTHUP[iPart].first;
-      int mother2 = LHE->hepeup().MOTHUP[iPart].second;
-      if (Verbose_)
-        if (LHE->hepeup().ISTUP.at (iPart) != -1)
-          std::cout<<"PDGID = "<<LHE->hepeup().IDUP.at(iPart)<<"\tStatus = "<< LHE->hepeup().ISTUP.at(iPart)<<"\tMother1 pos = "<<mother1<<"\t"<<mother2<<"\tPDGID = "<< LHE->hepeup().IDUP.at(mother1-1) <<"\t"<< LHE->hepeup().IDUP.at(mother2-1) <<std::endl;
-        else
-          std::cout<<"PDGID = "<<LHE->hepeup().IDUP.at(iPart)<<"\tStatus = "<< LHE->hepeup().ISTUP.at(iPart)<<std::endl;
-      //PG incoming particle
-      if (LHE->hepeup().ISTUP.at (iPart) == -1){
-        incomingPart++;
-        if (incomingPart == 1)
-        {
-          Is_Iqrk0.SetPxPyPzE
-          (
-           LHE->hepeup().PUP[incomingPart][0], //PG px
-           LHE->hepeup().PUP[incomingPart][1], //PG py
-           LHE->hepeup().PUP[incomingPart][2], //PG pz
-           LHE->hepeup().PUP[incomingPart][3] //PG E
-           );
-        }
-        if (incomingPart == 2)
-        {
-          Is_Iqrk1.SetPxPyPzE
-          (
-           LHE->hepeup().PUP[incomingPart][0], //PG px
-           LHE->hepeup().PUP[incomingPart][1], //PG py
-           LHE->hepeup().PUP[incomingPart][2], //PG pz
-           LHE->hepeup().PUP[incomingPart][3] //PG E
-           );
-        }
-      }
-      
-      //PG outgoing particles
-      //if (LHE->hepeup().ISTUP.at (iPart) == 1){
-      //    //PG leptons
-      //    if (abs (LHE->hepeup().IDUP.at (iPart)) == 11 ||   //PG electron
-      //        abs (LHE->hepeup().IDUP.at (iPart)) == 13 ||   //PG muon
-      //        abs (LHE->hepeup().IDUP.at (iPart)) == 15 ||   //PG tau
-      //        abs (LHE->hepeup().IDUP.at (iPart)) == 12 ||   //PG neutrino
-      //        abs (LHE->hepeup().IDUP.at (iPart)) == 14 ||   //PG neutrino
-      //        abs (LHE->hepeup().IDUP.at (iPart)) == 16)     //PG neutrino
-      //        {
-      //        leptons.push_back (iPart) ;
-      //        } //PG leptons
-      //    else
-      //        {
-      //        finalQuarks.push_back (iPart) ;
-      //        }
-      //
-      //}
-      
-      //PG intermediates
-      if (LHE->hepeup().ISTUP.at(iPart) == 2){
-        intermediates.push_back (iPart) ;
-      }
-      
-    } //PG loop over particles in the event
-    
-  }
+//  if(LHEEventHandle.isValid()){
+//    // clear the defined vectors before start
+//    leptons.clear();
+//    finalQuarks.clear();
+//    intermediates.clear();
+//
+//    LHE = LHEEventHandle.product();
+//
+//    for(const auto& weight : LHE->weights()) {
+//      //LHEWeightIDs_.push_back(weight.id);
+//      LHEWeights_.push_back(weight.wgt);
+//    }
+//    std::cout<<"size of LHEWeightIDS:\t"<<LHEWeightIDs_.size()<<std::endl;
+//    std::cout<<"size of LHEWeight: \t"<<LHEWeights_.size()<<std::endl;
+//    //std::cout<< " ID = " << LHEWeightIDs_[645] << "\t Weight = " << LHEWeights_[645] << std::endl;
+//
+//    TLorentzVector Is_Iqrk1,Is_Iqrk0;
+//    //PG loop over particles in the event
+//    int incomingPart = 0;
+//    if (Verbose_) std::cout<<"Total No. of particles = "<< LHE->hepeup().NUP <<std::endl;
+//    for (int iPart = 0 ; iPart < LHE->hepeup().NUP; ++iPart){
+//
+//      int mother1 = LHE->hepeup().MOTHUP[iPart].first;
+//      int mother2 = LHE->hepeup().MOTHUP[iPart].second;
+//      if (Verbose_) {
+//        if (LHE->hepeup().ISTUP.at (iPart) != -1) {
+//          std::cout<<"PDGID = "<<LHE->hepeup().IDUP.at(iPart)<<"\tStatus = "<< LHE->hepeup().ISTUP.at(iPart)<<"\tMother1 pos = "<<mother1<<"\t"<<mother2<<"\tPDGID = "<< LHE->hepeup().IDUP.at(mother1-1) <<"\t"<< LHE->hepeup().IDUP.at(mother2-1) <<std::endl;
+//        } else {
+//          std::cout<<"PDGID = "<<LHE->hepeup().IDUP.at(iPart)<<"\tStatus = "<< LHE->hepeup().ISTUP.at(iPart)<<std::endl;
+//        }
+//      }
+//      //PG incoming particle
+//      if (LHE->hepeup().ISTUP.at (iPart) == -1){
+//        incomingPart++;
+//        if (incomingPart == 1)
+//        {
+//          Is_Iqrk0.SetPxPyPzE
+//          (
+//           LHE->hepeup().PUP[incomingPart][0], //PG px
+//           LHE->hepeup().PUP[incomingPart][1], //PG py
+//           LHE->hepeup().PUP[incomingPart][2], //PG pz
+//           LHE->hepeup().PUP[incomingPart][3] //PG E
+//           );
+//        }
+//        if (incomingPart == 2)
+//        {
+//          Is_Iqrk1.SetPxPyPzE
+//          (
+//           LHE->hepeup().PUP[incomingPart][0], //PG px
+//           LHE->hepeup().PUP[incomingPart][1], //PG py
+//           LHE->hepeup().PUP[incomingPart][2], //PG pz
+//           LHE->hepeup().PUP[incomingPart][3] //PG E
+//           );
+//        }
+//      }
+//
+//      //PG intermediates
+//      if (LHE->hepeup().ISTUP.at(iPart) == 2){
+//        intermediates.push_back (iPart) ;
+//      }
+//
+//    } //PG loop over particles in the event
+//
+//  }
   
   int nGenParticle=0;
   
-  
-  double l_pt=0., l_eta=0., l_phi=0., l_mass=0., l_mother=0.;
-  int l_pdgId=0, l_status=0, l_gmother=0;
-  
-  double nu_pt=0., nu_eta=0., nu_phi=0., nu_mass=0.;
-  int nu_pdgId=0, nu_status=0, nu_mother=0, nu_gmother=0;
-  
   TLorentzVector PHO;
-  TLorentzVector Wquarks;
+  TLorentzVector Wpquarks;
+  TLorentzVector Wmquarks;
+  TLorentzVector Wboson1;
+  TLorentzVector Wboson2;
+  TLorentzVector Higgs1;
+  TLorentzVector Higgs2;
   
-  std::vector<TLorentzVector> photons;
-  std::vector<TLorentzVector> wpJET;
-  std::vector<TLorentzVector> wmJET;
-  
+  std::vector<TLorentzVector> Vec_Photons;
+  std::vector<TLorentzVector> Vec_wpJET;
+  std::vector<TLorentzVector> Vec_wmJET;
+  std::vector<TLorentzVector> Vec_Wboson;
+  std::vector<TLorentzVector> Vec_Higgs;
+
   for(vector<reco::GenParticle>::const_iterator genps_it = genps_coll->begin(); genps_it != genps_coll->end(); genps_it++)
   {
     nGenParticle++;
+    
     /*	Photon selection */
     if ( abs(genps_it->pdgId())==22 && (abs(genps_it->mother()->pdgId())==25) && genps_it->isHardProcess() && (genps_it->status()==23 || genps_it->status()==1) ) {
       if (Verbose_) std::cout << "inphoton if condition" << std::endl;
-      //l_pdgId = genps_it->pdgId();
-      //l_status = genps_it->status();
-      //l_mother = genps_it->mother()->pdgId();
-      //l_gmother = genps_it->mother()->mother()->pdgId();
       
       PHO.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
-      photons.push_back(PHO);
+      Vec_Photons.push_back(PHO);
     } /* End if conditon for photon selection */
     
     /*	Quarks from W-boson	*/
     if ( abs(genps_it->pdgId())<7 && (genps_it->mother()->pdgId()==24) && genps_it->status()==23 && genps_it->isHardProcess() ) {
-      if (Verbose_) std::cout << "In quark loop... " << std::endl;
-      Wquarks.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
-      wpJET.push_back(Wquarks);
+      if (Verbose_) std::cout << "In W+ loop... " << std::endl;
+      Wpquarks.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
+      Vec_wpJET.push_back(Wpquarks);
     } /* END if condition of wjETs */
     
+    /*  Quarks from W- boson  */
     if ( abs(genps_it->pdgId())<7 && (genps_it->mother()->pdgId()==-24) && genps_it->status()==23 && genps_it->isHardProcess() ) {
-      if (Verbose_) std::cout << "In quark loop... " << std::endl;
-      Wquarks.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
-      wmJET.push_back(Wquarks);
+      if (Verbose_) std::cout << "In W- loop... " << std::endl;
+      Wmquarks.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
+      Vec_wmJET.push_back(Wmquarks);
     } /* END if condition of wjETs */
   }
   
-  if (photons.size()==2 &&  wpJET.size()==2 && wmJET.size()==2)
+  if (Vec_Photons.size()==2 &&  Vec_wpJET.size()==2 && Vec_wmJET.size()==2)
   {
-    if (Verbose_)
-      cout<<"Event selected"<<nEVENT<<endl;
+    if (Verbose_) cout<<"Event selected"<<nEVENT<<endl;
     nEVENT++;
     
-    gen_photon0_Pt_ 	= photons[0].Pt() ;
-    gen_photon0_Eta_ 	= photons[0].Eta();
-    gen_photon0_Phi_ 	= photons[0].Phi();
-    gen_photon0_M_ 	= photons[0].M() ;
+    /*  Form the W-bosons 4-Vectors   */
+    Vec_Wboson.push_back(Vec_wmJET[0]+Vec_wmJET[1]);
+    Vec_Wboson.push_back(Vec_wpJET[0]+Vec_wpJET[1]);
     
-    gen_photon1_Pt_ 	= photons[1].Pt() ;
-    gen_photon1_Eta_ 	= photons[1].Eta();
-    gen_photon1_Phi_ 	= photons[1].Phi();
-    gen_photon1_M_ 	= photons[1].M() ;
+    /*  Form the Higgs 4-Vectors  */
+    Vec_Higgs.push_back(Vec_Wboson[0]+Vec_Wboson[1]);
+    Vec_Higgs.push_back(Vec_Photons[0]+Vec_Photons[1]);
     
-    gen_VBFjet1_Pt_ = wpJET[0].Pt();
-    gen_VBFjet1_Eta_= wpJET[0].Eta();
-    gen_VBFjet1_Phi_= wpJET[0].Phi();
-    gen_VBFjet1_E_  = wpJET[0].E();
+    /*  Sort each TLorentzVectors */
+    std::sort(Vec_Photons.begin(), Vec_Photons.end(), GenAnalyzer::reorder);
+    std::sort(Vec_wpJET.begin(), Vec_wpJET.end(), GenAnalyzer::reorder);
+    std::sort(Vec_wmJET.begin(), Vec_wmJET.end(), GenAnalyzer::reorder);
+    std::sort(Vec_Wboson.begin(), Vec_Wboson.end(), GenAnalyzer::reorder);
+    std::sort(Vec_Higgs.begin(), Vec_Higgs.end(), GenAnalyzer::reorder);
     
-    gen_VBFjet2_Pt_ = wpJET[1].Pt();
-    gen_VBFjet2_Eta_= wpJET[1].Eta();
-    gen_VBFjet2_Phi_= wpJET[1].Phi();
-    gen_VBFjet2_E_  = wpJET[1].E();
+    /************************************************************************
+     **
+     **         Get 4-moment for all final state GenParticles
+     **
+     *************************************************************************/
+    gen_leading_photon_Pt_ 	= Vec_Photons[0].Pt() ;
+    gen_leading_photon_Eta_ 	= Vec_Photons[0].Eta();
+    gen_leading_photon_Phi_ 	= Vec_Photons[0].Phi();
+    gen_leading_photon_M_ 	= Vec_Photons[0].M() ;
     
-    //gen_vbfjet_deltaR_= deltaR(vJET[0].Eta(),vJET[0].Phi(),vJET[1].Eta(),vJET[1].Phi());
+    gen_Subleading_photon_Pt_  = Vec_Photons[1].Pt() ;
+    gen_Subleading_photon_Eta_     = Vec_Photons[1].Eta();
+    gen_Subleading_photon_Phi_     = Vec_Photons[1].Phi();
+    gen_Subleading_photon_M_   = Vec_Photons[1].M() ;
+    
+    gen_leading_WpJets_Pt_  = Vec_wpJET[0].Pt();
+    gen_leading_WpJets_Eta_  = Vec_wpJET[0].Eta();
+    gen_leading_WpJets_Phi_  = Vec_wpJET[0].Phi();
+    gen_leading_WpJets_M_  = Vec_wpJET[0].M();
+    
+    gen_Subleading_WpJets_Pt_  = Vec_wpJET[1].Pt();
+    gen_Subleading_WpJets_Eta_  = Vec_wpJET[1].Eta();
+    gen_Subleading_WpJets_Phi_  = Vec_wpJET[1].Phi();
+    gen_Subleading_WpJets_M_  = Vec_wpJET[1].M();
+    
+    gen_leading_WmJets_Pt_  = Vec_wmJET[0].Pt();
+    gen_leading_WmJets_Eta_  = Vec_wmJET[0].Eta();
+    gen_leading_WmJets_Phi_  = Vec_wmJET[0].Phi();
+    gen_leading_WmJets_M_  = Vec_wmJET[0].M();
+    
+    gen_Subleading_WmJets_Pt_  = Vec_wmJET[1].Pt();
+    gen_Subleading_WmJets_Eta_  = Vec_wmJET[1].Eta();
+    gen_Subleading_WmJets_Phi_  = Vec_wmJET[1].Phi();
+    gen_Subleading_WmJets_M_  = Vec_wmJET[1].M();
+    
+    gen_leading_WBoson_Pt_  = Vec_Wboson[0].Pt();
+    gen_leading_WBoson_Eta_  = Vec_Wboson[0].Eta();
+    gen_leading_WBoson_Phi_  = Vec_Wboson[0].Phi();
+    gen_leading_WBoson_M_  = Vec_Wboson[0].M();
+    
+    gen_Subleading_WBoson_Pt_  = Vec_Wboson[1].Pt();
+    gen_Subleading_WBoson_Eta_  = Vec_Wboson[1].Eta();
+    gen_Subleading_WBoson_Phi_  = Vec_Wboson[1].Phi();
+    gen_Subleading_WBoson_M_  = Vec_Wboson[1].M();
+    
+    gen_leading_Higgs_Pt_  = Vec_Higgs[0].Pt();
+    gen_leading_Higgs_Eta_  = Vec_Higgs[0].Eta();
+    gen_leading_Higgs_Phi_  = Vec_Higgs[0].Phi();
+    gen_leading_Higgs_M_  = Vec_Higgs[0].M();
+    
+    gen_Subleading_Higgs_Pt_  = Vec_Higgs[1].Pt();
+    gen_Subleading_Higgs_Eta_  = Vec_Higgs[1].Eta();
+    gen_Subleading_Higgs_Phi_  = Vec_Higgs[1].Phi();
+    gen_Subleading_Higgs_M_  = Vec_Higgs[1].M();
+    
+    
+    /************************************************************************
+     **
+     **         Get Delta-R between each stage particles
+     **
+     *************************************************************************/
+    gen_deltaR_Photon0_Photon1_ = deltaR(Vec_Photons[0].Eta(),Vec_Photons[0].Phi(), Vec_Photons[1].Eta(),Vec_Photons[1].Phi());
+    
+    gen_deltaR_Photon0_WmJ0_ = deltaR(Vec_Photons[0].Eta(),Vec_Photons[0].Phi(), Vec_wmJET[0].Eta(),Vec_wmJET[0].Phi());
+    gen_deltaR_Photon0_WmJ1_ = deltaR(Vec_Photons[0].Eta(),Vec_Photons[0].Phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi());
+    gen_deltaR_Photon0_WpJ0_ = deltaR(Vec_Photons[0].Eta(),Vec_Photons[0].Phi(), Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi());
+    gen_deltaR_Photon0_WpJ1_ = deltaR(Vec_Photons[0].Eta(),Vec_Photons[0].Phi(), Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi());
+    
+    gen_deltaR_Photon1_WmJ0_ = deltaR(Vec_Photons[1].Eta(),Vec_Photons[1].Phi(), Vec_wmJET[0].Eta(),Vec_wmJET[0].Phi());
+    gen_deltaR_Photon1_WmJ1_ = deltaR(Vec_Photons[1].Eta(),Vec_Photons[1].Phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi());
+    gen_deltaR_Photon1_WpJ0_ = deltaR(Vec_Photons[1].Eta(),Vec_Photons[1].Phi(), Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi());
+    gen_deltaR_Photon1_WpJ1_ = deltaR(Vec_Photons[1].Eta(),Vec_Photons[1].Phi(), Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi());
+    
+    gen_deltaR_WpJ0_WpJ1_    = deltaR(Vec_wpJET[0].Eta(),Vec_wpJET[0].Phi(), Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi());
+    gen_deltaR_WpJ0_WmJ0_    = deltaR(Vec_wpJET[0].Eta(),Vec_wpJET[0].Phi(), Vec_wmJET[0].Eta(),Vec_wmJET[0].Phi());
+    gen_deltaR_WpJ0_WmJ1_    = deltaR(Vec_wpJET[0].Eta(),Vec_wpJET[0].Phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi());
+    gen_deltaR_WpJ1_WmJ0_    = deltaR(Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi(), Vec_wmJET[0].Eta(),Vec_wmJET[0].Phi());
+    gen_deltaR_WpJ1_WmJ1_    = deltaR(Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi());
+    gen_deltaR_WmJ0_WmJ1_    = deltaR(Vec_wmJET[0].Eta(),Vec_wmJET[0].Phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi());
+    
+    gen_deltaR_Wp_Wm_    = deltaR(Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
+    gen_deltaR_H1_H2_    = deltaR(Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
     //gen_dPhijj_ = (float) deltaPhi(vJET[0].Phi(),vJET[1].Phi());
+    
+  } else {
+    std::cout << "WARNING:: the condition 2 photons and 2 jets from each w's are not satisfied...." << std::endl;
   }
+ 
   
   tree->Fill();
+  
+  Vec_Wboson.clear();
+  Vec_Higgs.clear();
+  Vec_wmJET.clear();
+  Vec_wpJET.clear();
+  Vec_Photons.clear();
+  
   Clear();
 }
 
@@ -252,11 +313,9 @@ void
 GenAnalyzer::beginJob()
 {
   std::cout<<"Inside beginJob()"<<std::endl;
-  //outputFile_ = new TFile("aQGC_WPhadWMlepJJ_Madspin_EWK_MadDefCard_Pythia8_CUEP8M1_13TeV_Madgraph_NoMatching_New.root","RECREATE");
-  outputFile_ = new TFile("LHEinfo.root","RECREATE");
+  outputFile_ = new TFile("GF_HH_Benchmark2.root","RECREATE");
   outputFile_->SetCompressionLevel(2);
   tree = new TTree("otree","GenParticles Basic Info");
-  file1.open("out_TEMP_NAME.txt");
   
   SetBranches();
 }
@@ -267,7 +326,6 @@ GenAnalyzer::endJob()
 {
   outputFile_->Write();
   outputFile_->Close();
-  file1.close();
 }
 
 // ------------ method fills 'descriptions' with the allowed parameters for the module  ------------
@@ -279,6 +337,7 @@ GenAnalyzer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   desc.setUnknown();
   descriptions.addDefault(desc);
 }
+
 
 //define this as a plug-in
 DEFINE_FWK_MODULE(GenAnalyzer);
