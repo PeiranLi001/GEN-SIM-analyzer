@@ -195,14 +195,14 @@ int nEVENT=-999;
  double  LHE_MothInfo_VBSCentrality_ = -999.0;
 
   int ngen_Lept_;
-  double gen_LeptPt_;
-  double gen_LeptEta_;
-  double gen_LeptPhi_;
-  double gen_LeptM_;
-  int gen_LeptId_;
-  int gen_LeptStatus_;
-  double gen_LeptMother_;
-  int gen_LeptGrandMother_;
+  double gen_photon_Pt_;
+  double gen_photon_Eta_;
+  double gen_photon_Phi_;
+  double gen_photon_M_;
+  int gen_photon_Id_;
+  int gen_photon_Status_;
+  double gen_photon_Mother_;
+  int gen_photon_GrandMother_;
     
  int ngen_Nu_;
  double gen_NuPt_;
@@ -563,14 +563,14 @@ AddBranch(&LHE_MothInfo_VBSCentrality_ ,	"LHE_MothInfo_VBSCentrality");
   	AddBranch(&LHEWeights_, "LHEWeights");
 
 	AddBranch(&ngen_Lept_, "ngen_Lept");
-	AddBranch(&gen_LeptPt_, "gen_LeptPt");
-	AddBranch(&gen_LeptEta_,"gen_LeptEta");
-	AddBranch(&gen_LeptPhi_,"gen_LeptPhi");
-	AddBranch(&gen_LeptM_,"gen_LeptM");
-	AddBranch(&gen_LeptStatus_,"gen_LeptStatus");
-	AddBranch(&gen_LeptId_,"gen_LeptId");
-	AddBranch(&gen_LeptMother_,"gen_LeptMother");
-	AddBranch(&gen_LeptGrandMother_,"gen_LeptGrandMother");
+	AddBranch(&gen_photon_Pt_, "gen_photon_Pt");
+	AddBranch(&gen_photon_Eta_,"gen_photon_Eta");
+	AddBranch(&gen_photon_Phi_,"gen_photon_Phi");
+	AddBranch(&gen_photon_M_,"gen_photon_M");
+	AddBranch(&gen_photon_Status_,"gen_photon_Status");
+	AddBranch(&gen_photon_Id_,"gen_photon_Id");
+	AddBranch(&gen_photon_Mother_,"gen_photon_Mother");
+	AddBranch(&gen_photon_GrandMother_,"gen_photon_GrandMother");
 
   	AddBranch(&gen_NuPdgId_,"gen_NuPdgId");
   	AddBranch(&ngen_Nu_,"ngen_Nu");
@@ -767,14 +767,14 @@ LHE_MothInfo_VBSCentrality_	= -999.0;
 
 
 	ngen_Lept_ = -999;
-	gen_LeptPt_ = -999.0;
-	gen_LeptEta_ = -999.0;
-	gen_LeptPhi_ = -999.0;
-	gen_LeptStatus_ = -999;
-	gen_LeptMother_ = -999.0;
-	gen_LeptGrandMother_ = -999;
-	gen_LeptId_ = -999;
-	gen_LeptM_ = -999.0;
+	gen_photon_Pt_ = -999.0;
+	gen_photon_Eta_ = -999.0;
+	gen_photon_Phi_ = -999.0;
+	gen_photon_Status_ = -999;
+	gen_photon_Mother_ = -999.0;
+	gen_photon_GrandMother_ = -999;
+	gen_photon_Id_ = -999;
+	gen_photon_M_ = -999.0;
 
   ngen_Nu_ = -999;
   gen_NuPt_ = -999.0;

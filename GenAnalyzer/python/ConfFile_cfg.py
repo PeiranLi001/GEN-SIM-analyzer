@@ -10,10 +10,10 @@ process.options = cms.untracked.PSet(
 	wantSummary = cms.untracked.bool(True)
 )
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
 
 import FWCore.Utilities.FileUtils as FileUtils
-readFiles = cms.untracked.vstring(FileUtils.loadListFromFile('WplusTo2JWminusToLNuJJ_EWK_LO_aQGC_MJJ100PTJ10_TuneCUETP8M1_13TeV.txt'))
+readFiles = cms.untracked.vstring(FileUtils.loadListFromFile('GF_HH_Benchmark1.txt'))
 #readFiles = cms.untracked.vstring(FileUtils.loadListFromFile('TEMP_NAME.txt'))
 
 
@@ -28,10 +28,10 @@ process.source = cms.Source("PoolSource",
 
 
 process.demo = cms.EDAnalyzer('GenAnalyzer',
-	Verbose		=	cms.bool(False),
-	genParticlesInputTag  = cms.InputTag("prunedGenParticles"),	# Uncomment if running on MiniAOD
+	Verbose		=	cms.bool(True),
+	#genParticlesInputTag  = cms.InputTag("prunedGenParticles"),	# Uncomment if running on MiniAOD
 	#LHEEventInputTag = cms.InputTag("source"),			# Uncomment if running on MiniAOD
-	#genParticlesInputTag  = cms.InputTag("genParticles"),		# Uncomment if running on GEN only sample
+	genParticlesInputTag  = cms.InputTag("genParticles"),		# Uncomment if running on GEN only sample
 	LHEEventInputTag = cms.InputTag("externalLHEProducer"),		# Uncomment if running on GEN only
 
 )
