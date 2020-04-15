@@ -68,8 +68,16 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   edm::Handle<reco::GenParticleCollection> genpsHandle;
   iEvent.getByToken(genParticlesToken, genpsHandle);
   
-  const vector<reco::GenParticle>* genps_coll = genpsHandle.product();
+  edm::Handle<reco::GenJetCollection> genAK4jetHandle;
+  iEvent.getByToken(genAK4jetToken, genAK4jetHandle);
   
+  edm::Handle<reco::GenJetCollection> genAK8jetHandle;
+  iEvent.getByToken(genAK8jetToken, genAK8jetHandle);
+  
+  const vector<reco::GenParticle>* genps_coll = genpsHandle.product();
+  const vector<reco::GenJet>* genAK4_coll = genAK4jetHandle.product();
+  const vector<reco::GenJet>* genAK8_coll = genAK8jetHandle.product();
+
 //  edm::Handle<LHEEventProduct> LHEEventHandle;
 //  iEvent.getByToken(LHEEventToken, LHEEventHandle);
 //  const LHEEventProduct* LHE = 0;
@@ -295,8 +303,28 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   } else {
     std::cout << "WARNING:: the condition 2 photons and 2 jets from each w's are not satisfied...." << std::endl;
   }
- 
   
+  //genAK4_coll
+  int nAK4jets = 0;
+  for(vector<reco::GenJet>::const_iterator genjet = genAK4_coll->begin(); genjet != genAK4_coll->end(); genjet++) {
+    if (deltaR(genjet->eta(),genjet->phi(), Vec_Photons[0].Eta(),Vec_Photons[0].Phi())>0.4 && deltaR(genjet->eta(),genjet->phi(), Vec_Photons[1].Eta(),Vec_Photons[1].Phi())>0.4 && genjet->pt()>10)
+      nAK4jets++;
+    
+//    std::cout << genjet->pt() << std::endl;
+  }
+  std::cout << "Number of AK4 candidates = " << nAK4jets << std::endl;
+  
+  genJetAK4_njets_ = nAK4jets;
+
+ int nAK8jets = 0;
+ for(vector<reco::GenJet>::const_iterator genjet = genAK8_coll->begin(); genjet != genAK8_coll->end(); genjet++) {
+   if (deltaR(genjet->eta(),genjet->phi(), Vec_Photons[0].Eta(),Vec_Photons[0].Phi())>0.4 && deltaR(genjet->eta(),genjet->phi(), Vec_Photons[1].Eta(),Vec_Photons[1].Phi())>0.4  && genjet->pt()>20)
+     nAK8jets++;
+ }
+ std::cout << "Number of AK8 candidates = " << nAK8jets << std::endl;
+
+  genJetAK8_njets_ = nAK8jets;
+
   tree->Fill();
   
   Vec_Wboson.clear();
@@ -313,7 +341,7 @@ void
 GenAnalyzer::beginJob()
 {
   std::cout<<"Inside beginJob()"<<std::endl;
-  outputFile_ = new TFile("GF_HH_Benchmark2.root","RECREATE");
+  outputFile_ = new TFile(OutPutFileName_,"RECREATE");
   outputFile_->SetCompressionLevel(2);
   tree = new TTree("otree","GenParticles Basic Info");
   

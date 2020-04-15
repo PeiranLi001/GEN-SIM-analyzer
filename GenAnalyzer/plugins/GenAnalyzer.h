@@ -74,9 +74,11 @@ private:
   edm::EDGetTokenT<reco::GenParticleCollection> genParticlesToken;
   edm::EDGetTokenT<LHEEventProduct> LHEEventToken;
   edm::EDGetTokenT<reco::GenJetCollection> genAK4jetToken;
+  edm::EDGetTokenT<reco::GenJetCollection> genAK8jetToken;
   edm::EDGetTokenT<reco::GenMETCollection> genMetCaloToken;
   
   bool	Verbose_;
+  TString OutPutFileName_;
   
   edm::Service<TFileService> fs;
   TFile * outputFile_;
@@ -155,6 +157,9 @@ private:
   double gen_deltaR_Wp_Wm_     = -999.0;
   double gen_deltaR_H1_H2_     = -999.0;
   
+  int genJetAK4_njets_ = -999;
+  int genJetAK8_njets_ = -999;
+
 };
 
 //
@@ -175,7 +180,10 @@ GenAnalyzer::GenAnalyzer(const edm::ParameterSet& iConfig)
   usesResource("TFileService");
   LHEEventToken = consumes<LHEEventProduct>(iConfig.getParameter<edm::InputTag>("LHEEventInputTag"));
   genParticlesToken = consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("genParticlesInputTag"));
+  genAK4jetToken = consumes<reco::GenJetCollection>(iConfig.getParameter<edm::InputTag>("ak4GenJetsInputTag"));
+  genAK8jetToken = consumes<reco::GenJetCollection>(iConfig.getParameter<edm::InputTag>("ak8GenJetsInputTag"));
   Verbose_ = iConfig.getParameter<bool>("Verbose");
+  OutPutFileName_ = iConfig.getParameter<std::string>("OutPutFileName");
 }
 
 
@@ -372,6 +380,9 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&gen_deltaR_Wp_Wm_, "gen_deltaR_Wp_Wm");
   AddBranch(&gen_deltaR_H1_H2_  , "gen_deltaR_H1_H2");
   
+  AddBranch(&genJetAK4_njets_, "genJetAK4_njets");
+  AddBranch(&genJetAK8_njets_, "genJetAK8_njets");
+
   
 }
 
@@ -437,6 +448,9 @@ void GenAnalyzer::Clear(){
   gen_deltaR_WmJ0_WmJ1_ = -999.0;
   gen_deltaR_Wp_Wm_ = -999.0;
   gen_deltaR_H1_H2_ = -999.0;
+  
+  genJetAK4_njets_ = -999;
+  genJetAK8_njets_ = -999;
 }
 
 
