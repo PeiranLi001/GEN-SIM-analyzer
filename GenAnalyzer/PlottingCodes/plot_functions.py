@@ -8,7 +8,7 @@ import argparse
 
 def getLegends(pos,ncol,nvar,fontsize):
     if pos == "tr":
-    	legend = ROOT.TLegend(.70-(0.15*(ncol-1)), 0.80-(0.02*(nvar/ncol-1)) ,.95 ,.920)
+    	legend = ROOT.TLegend(.50-(0.15*(ncol-1)), 0.80-(0.02*(nvar/ncol-1)) ,.95 ,.920)
     elif pos == "tl":
     	legend = ROOT.TLegend(0.11, 0.85-(0.02*(nvar/ncol-1)) ,.80+(0.15*(ncol-1)) ,.920)
     elif pos == "tc":
@@ -304,7 +304,7 @@ def aQGC_plotting (plot_info, aQGC_key, aQGC_val, outputNameString, skip):
 def CompHistFromTwoBranchSameFile (plot_info):
     c1 = getCanvas()
     setTDRStyle(c1, 1, 13, "No") 
-    legend = getLegends(plot_info["legPos"],2,len(plot_info["tree_var"]),plot_info["legFontSize"])
+    legend = getLegends(plot_info["legPos"],1,len(plot_info["tree_var"]),plot_info["legFontSize"])
 
     hist1 = []
     new_aQGC_val = []
