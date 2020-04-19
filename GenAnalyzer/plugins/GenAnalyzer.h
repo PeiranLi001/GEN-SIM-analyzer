@@ -54,6 +54,8 @@ public:
   
   static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
   static bool reorder(const TLorentzVector &a, const TLorentzVector &b);
+  //https://stackoverflow.com/a/26230635/2302094
+  static bool jetCleaning(const reco::GenJet  * genAK8jet,const vector<reco::GenJet>* genAK4_coll, const double r_seperation=0.8);
   
   void SetBranches();
   void Clear();
@@ -87,17 +89,17 @@ private:
   
   //std::vector<int> pdgID_;
   
-//  std::vector<std::string> LHEWeightIDs_;
-//  std::vector<double> LHEWeights_;
+  //  std::vector<std::string> LHEWeightIDs_;
+  //  std::vector<double> LHEWeights_;
   
   int nEVENT=-999;
   
-//  int		isMuMinus_ = -999;
-//  double 	LHELeptPt_ = -999.0;
-//  double 	LHELeptEta_ = -999.0;
-//  double 	LHELeptPhi_ = -999.0;
-//  double 	LHELeptM_ = -999.0;
-//  double 	LHELeptE_ = -999.0;
+  //  int		isMuMinus_ = -999;
+  //  double 	LHELeptPt_ = -999.0;
+  //  double 	LHELeptEta_ = -999.0;
+  //  double 	LHELeptPhi_ = -999.0;
+  //  double 	LHELeptM_ = -999.0;
+  //  double 	LHELeptE_ = -999.0;
   
   double gen_leading_photon_Pt_   = -999.0;
   double gen_leading_photon_Eta_  = -999.0;
@@ -157,9 +159,33 @@ private:
   double gen_deltaR_Wp_Wm_     = -999.0;
   double gen_deltaR_H1_H2_     = -999.0;
   
-  int genJetAK4_njets_ = -999;
-  int genJetAK8_njets_ = -999;
-
+  double genJetAK4_njets_ = -999.0;
+  double genJetAK4_leading_Pt_ = -999.0;
+  double genJetAK4_leading_Eta_ = -999.0;
+  double genJetAK4_leading_Phi_ = -999.0;
+  double genJetAK4_leading_M_ = -999.0;
+  double genJetAK4_leading_Energy_ = -999.0;
+  double genJetAK4_Subleading_Pt_ = -999.0;
+  double genJetAK4_Subleading_Eta_ = -999.0;
+  double genJetAK4_Subleading_Phi_ = -999.0;
+  double genJetAK4_Subleading_M_ = -999.0;
+  double genJetAK4_Subleading_Energy_ = -999.0;
+  
+  double genJetAK8_njets_ = -999.0;
+  double genJetAK8_MaxPt_Pt_ = -999.0;
+  double genJetAK8_MaxPt_Eta_ = -999.0;
+  double genJetAK8_MaxPt_Phi_ = -999.0;
+  double genJetAK8_MaxPt_M_   = -999.0;
+  double genJetAK8_MaxPt_deltaR_H1_ = -999.0;
+  double genJetAK8_MaxPt_deltaR_H2_ = -999.0;
+  
+  double genJetAK8_minDMass_Pt_ = -999.0;
+  double genJetAK8_minDMass_Eta_ = -999.0;
+  double genJetAK8_minDMass_Phi_ = -999.0;
+  double genJetAK8_minDMass_M_   = -999.0;
+  double genJetAK8_minDMass_deltaR_H1_ = -999.0;
+  double genJetAK8_minDMass_deltaR_H2_ = -999.0;
+  
 };
 
 //
@@ -312,15 +338,15 @@ void GenAnalyzer::computeAngles(TLorentzVector thep4H, TLorentzVector thep4Z1, T
 
 void GenAnalyzer::SetBranches(){
   //AddBranch(&pdgID_,	"pdgID");
-//  AddBranch(&isMuMinus_ , "isMuMinus");
-//  AddBranch(&LHELeptPt_ ,	"LHELeptPt");
-//  AddBranch(&LHELeptEta_ ,	"LHELeptEta");
-//  AddBranch(&LHELeptPhi_ ,	"LHELeptPhi");
-//  AddBranch(&LHELeptM_ ,	"LHELeptM");
-//  AddBranch(&LHELeptE_ ,	"LHELeptE");
-//
-//  AddBranch(&LHEWeightIDs_, "LHEWeightIDs");
-//  AddBranch(&LHEWeights_, "LHEWeights");
+  //  AddBranch(&isMuMinus_ , "isMuMinus");
+  //  AddBranch(&LHELeptPt_ ,	"LHELeptPt");
+  //  AddBranch(&LHELeptEta_ ,	"LHELeptEta");
+  //  AddBranch(&LHELeptPhi_ ,	"LHELeptPhi");
+  //  AddBranch(&LHELeptM_ ,	"LHELeptM");
+  //  AddBranch(&LHELeptE_ ,	"LHELeptE");
+  //
+  //  AddBranch(&LHEWeightIDs_, "LHEWeightIDs");
+  //  AddBranch(&LHEWeights_, "LHEWeights");
   
   AddBranch(&gen_leading_photon_Pt_, "gen_leading_photon_Pt");
   AddBranch(&gen_leading_photon_Eta_, "gen_leading_photon_Eta");
@@ -381,15 +407,40 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&gen_deltaR_H1_H2_  , "gen_deltaR_H1_H2");
   
   AddBranch(&genJetAK4_njets_, "genJetAK4_njets");
+  AddBranch(&genJetAK4_leading_Pt_, "genJetAK4_leading_Pt");
+  AddBranch(&genJetAK4_leading_Eta_, "genJetAK4_leading_Eta");
+  AddBranch(&genJetAK4_leading_Phi_, "genJetAK4_leading_Phi");
+  AddBranch(&genJetAK4_leading_M_, "genJetAK4_leading_M");
+  AddBranch(&genJetAK4_leading_Energy_, "genJetAK4_leading_Energy");
+  AddBranch(&genJetAK4_Subleading_Pt_, "genJetAK4_Subleading_Pt");
+  AddBranch(&genJetAK4_Subleading_Eta_, "genJetAK4_Subleading_Eta");
+  AddBranch(&genJetAK4_Subleading_Phi_, "genJetAK4_Subleading_Phi");
+  AddBranch(&genJetAK4_Subleading_M_, "genJetAK4_Subleading_M");
+  AddBranch(&genJetAK4_Subleading_Energy_, "genJetAK4_Subleading_Energy");
+  
   AddBranch(&genJetAK8_njets_, "genJetAK8_njets");
-
+  AddBranch(&genJetAK8_MaxPt_Pt_, "genJetAK8_MaxPt_Pt");
+  AddBranch(&genJetAK8_MaxPt_Eta_, "genJetAK8_MaxPt_Eta");
+  AddBranch(&genJetAK8_MaxPt_Phi_, "genJetAK8_MaxPt_Phi");
+  AddBranch(&genJetAK8_MaxPt_M_  , "genJetAK8_MaxPt_M");
+  
+  AddBranch(&genJetAK8_MaxPt_deltaR_H1_, "genJetAK8_MaxPt_deltaR_H1");
+  AddBranch(&genJetAK8_MaxPt_deltaR_H2_, "genJetAK8_MaxPt_deltaR_H2");
+  
+  AddBranch(&genJetAK8_minDMass_Pt_, "genJetAK8_minDMass_Pt");
+  AddBranch(&genJetAK8_minDMass_Eta_, "genJetAK8_minDMass_Eta");
+  AddBranch(&genJetAK8_minDMass_Phi_, "genJetAK8_minDMass_Phi");
+  AddBranch(&genJetAK8_minDMass_M_  , "genJetAK8_minDMass_M");
+  
+  AddBranch(&genJetAK8_minDMass_deltaR_H1_, "genJetAK8_minDMass_deltaR_H1");
+  AddBranch(&genJetAK8_minDMass_deltaR_H2_, "genJetAK8_minDMass_deltaR_H2");
   
 }
 
 void GenAnalyzer::Clear(){
   //pdgID_.clear();
-//  LHEWeightIDs_.clear();
-//  LHEWeights_.clear();
+  //  LHEWeightIDs_.clear();
+  //  LHEWeights_.clear();
   
   gen_leading_photon_Pt_ = -999.0;
   gen_leading_photon_Eta_ = -999.0;
@@ -449,12 +500,47 @@ void GenAnalyzer::Clear(){
   gen_deltaR_Wp_Wm_ = -999.0;
   gen_deltaR_H1_H2_ = -999.0;
   
-  genJetAK4_njets_ = -999;
-  genJetAK8_njets_ = -999;
+  genJetAK4_njets_ = -999.0;
+  genJetAK4_leading_Pt_ = -999.0;
+  genJetAK4_leading_Eta_ = -999.0;
+  genJetAK4_leading_Phi_ = -999.0;
+  genJetAK4_leading_M_ = -999.0;
+  genJetAK4_leading_Energy_ = -999.0;
+  genJetAK4_Subleading_Pt_ = -999.0;
+  genJetAK4_Subleading_Eta_ = -999.0;
+  genJetAK4_Subleading_Phi_ = -999.0;
+  genJetAK4_Subleading_M_ = -999.0;
+  genJetAK4_Subleading_Energy_ = -999.0;
+  
+  genJetAK8_njets_ = -999.0;
+  genJetAK8_MaxPt_Pt_ = -999.0;
+  genJetAK8_MaxPt_Eta_ = -999.0;
+  genJetAK8_MaxPt_Phi_ = -999.0;
+  genJetAK8_MaxPt_M_ = -999.0;
+  
+  genJetAK8_MaxPt_deltaR_H1_ = -999.0;
+  genJetAK8_MaxPt_deltaR_H2_ = -999.0;
+  
+  genJetAK8_minDMass_Pt_ = -999.0;
+  genJetAK8_minDMass_Eta_ = -999.0;
+  genJetAK8_minDMass_Phi_ = -999.0;
+  genJetAK8_minDMass_M_ = -999.0;
+  
+  genJetAK8_minDMass_deltaR_H1_ = -999.0;
+  genJetAK8_minDMass_deltaR_H2_ = -999.0;
 }
 
 
 bool GenAnalyzer::reorder(const TLorentzVector &a, const TLorentzVector &b)
 {
   return a.Pt() > b.Pt();
+}
+
+//bool jetCleaning(const std::vector<reco::GenJet>::const_iterator *genAK8jet,const std::vector<reco::GenJet> &genAK4_coll)
+bool GenAnalyzer::jetCleaning(const reco::GenJet  * genAK8jet,const vector<reco::GenJet>* genAK4_coll, const double r_seperation)
+{
+  for(vector<reco::GenJet>::const_iterator genjet = genAK4_coll->begin(); genjet != genAK4_coll->end(); genjet++) {
+    if (deltaR(genAK8jet->pt(), genAK8jet->eta(), genjet->pt(), genjet->eta()) < r_seperation) return false;
+  }
+  return true;
 }
