@@ -13,7 +13,7 @@ process.options = cms.untracked.PSet(
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 import FWCore.Utilities.FileUtils as FileUtils
-inputTxtFile='GF_HH_Benchmark11'
+inputTxtFile="GF_HH_Benchmark3"
 readFiles = cms.untracked.vstring(FileUtils.loadListFromFile('inputTxtFiles/'+inputTxtFile+'.txt'))
 #readFiles = cms.untracked.vstring(FileUtils.loadListFromFile('GF_HH_Benchmark3.txt'))
 #readFiles = cms.untracked.vstring(FileUtils.loadListFromFile('TEMP_NAME.txt'))

@@ -42,6 +42,8 @@
 #include "DataFormats/METReco/interface/GenMETCollection.h"
 #include "DataFormats/METReco/interface/GenMET.h"
 
+#include "TLorentzVector.h"
+
 using namespace edm;
 using namespace std;
 using namespace reco;
@@ -56,7 +58,7 @@ public:
   static bool reorder(const TLorentzVector &a, const TLorentzVector &b);
   //https://stackoverflow.com/a/26230635/2302094
   static bool jetCleaning(const reco::GenJet  * genAK8jet,const vector<reco::GenJet>* genAK4_coll, const double r_seperation=0.8);
-  
+
   void SetBranches();
   void Clear();
   
@@ -171,21 +173,126 @@ private:
   double genJetAK4_Subleading_M_ = -999.0;
   double genJetAK4_Subleading_Energy_ = -999.0;
   
-  double genJetAK8_njets_ = -999.0;
-  double genJetAK8_MaxPt_Pt_ = -999.0;
-  double genJetAK8_MaxPt_Eta_ = -999.0;
-  double genJetAK8_MaxPt_Phi_ = -999.0;
-  double genJetAK8_MaxPt_M_   = -999.0;
-  double genJetAK8_MaxPt_deltaR_H1_ = -999.0;
-  double genJetAK8_MaxPt_deltaR_H2_ = -999.0;
+  double AK8Gen_HiggsJet_njets_ = -999.0;
+  double AK8Gen_HiggsJet_MaxPt_Pt_ = -999.0;
+  double AK8Gen_HiggsJet_MaxPt_Eta_ = -999.0;
+  double AK8Gen_HiggsJet_MaxPt_Phi_ = -999.0;
+  double AK8Gen_HiggsJet_MaxPt_M_   = -999.0;
+  double AK8Gen_HiggsJet_MaxPt_deltaR_H1_ = -999.0;
+  double AK8Gen_HiggsJet_MaxPt_deltaR_H2_ = -999.0;
   
-  double genJetAK8_minDMass_Pt_ = -999.0;
-  double genJetAK8_minDMass_Eta_ = -999.0;
-  double genJetAK8_minDMass_Phi_ = -999.0;
-  double genJetAK8_minDMass_M_   = -999.0;
-  double genJetAK8_minDMass_deltaR_H1_ = -999.0;
-  double genJetAK8_minDMass_deltaR_H2_ = -999.0;
+  double AK8Gen_HiggsJet_minDMass_Pt_ = -999.0;
+  double AK8Gen_HiggsJet_minDMass_Eta_ = -999.0;
+  double AK8Gen_HiggsJet_minDMass_Phi_ = -999.0;
+  double AK8Gen_HiggsJet_minDMass_M_   = -999.0;
+  double AK8Gen_HiggsJet_minDMass_deltaR_H1_ = -999.0;
+  double AK8Gen_HiggsJet_minDMass_deltaR_H2_ = -999.0;
   
+  double AK8Gen_MergedWjets_MaxPt_Leading_Pt_ = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_Leading_Eta_ = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_Leading_Phi_ = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_Leading_M_ = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_Leading_deltaR_H1_ = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_Leading_deltaR_H2_ = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_SubLeading_Pt_ = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_SubLeading_Eta_ = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_SubLeading_Phi_ = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_SubLeading_M_ = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H1_ = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H2_ = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_LeadingSubLeading_DR_ = -999.0;
+
+  double AK8Gen_MergedWjets_minDMass_Leading_Pt_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_Leading_Eta_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_Leading_Phi_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_Leading_M_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_Leading_deltaR_H1_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_Leading_deltaR_H2_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_SubLeading_Pt_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_SubLeading_Eta_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_SubLeading_Phi_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_SubLeading_M_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H1_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H2_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_LeadingSubLeading_DR_   = -999.0;
+
+  double AK8Gen_MergedWjets_minWminHmass_Leading_Pt_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_Leading_Eta_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_Leading_Phi_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_Leading_M_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_Leading_deltaR_H1_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_Leading_deltaR_H2_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_SubLeading_Pt_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_SubLeading_Eta_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_SubLeading_Phi_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_SubLeading_M_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H1_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H2_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_LeadingSubLeading_DR_   = -999.0;
+
+  double AK4GEN_AllResolved_onShellJet1_Pt_ = -999.0;
+  double AK4GEN_AllResolved_onShellJet1_Eta_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet1_Phi_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet1_M_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet1_dR_q1_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet1_dR_q2_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet1_dR_q3_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet1_dR_q4_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet1_dR_g1_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet1_dR_g2_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet2_Pt_ = -999.0;
+  double AK4GEN_AllResolved_onShellJet2_Eta_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet2_Phi_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet2_M_  = -999.0;
+  double AK4GEN_AllResolved_onShellJets_dR_ = -999.0;
+  double AK4GEN_AllResolved_onShellJet2_dR_q1_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet2_dR_q2_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet2_dR_q3_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet2_dR_q4_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet2_dR_g1_  = -999.0;
+  double AK4GEN_AllResolved_onShellJet2_dR_g2_  = -999.0;
+  double AK4GEN_AllResolved_offShellJet1_Pt_  = -999.0;
+  double AK4GEN_AllResolved_offShellJet1_Eta_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet1_Phi_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet1_M_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet1_dR_q1_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet1_dR_q2_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet1_dR_q3_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet1_dR_q4_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet1_dR_g1_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet1_dR_g2_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet2_Pt_  = -999.0;
+  double AK4GEN_AllResolved_offShellJet2_Eta_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet2_Phi_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet2_M_ = -999.0;
+  double AK4GEN_AllResolved_offShellJets_dR_  = -999.0;
+  double AK4GEN_AllResolved_onShelloffShellJets_dR_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet2_dR_q1_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet2_dR_q2_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet2_dR_q3_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet2_dR_q4_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet2_dR_g1_ = -999.0;
+  double AK4GEN_AllResolved_offShellJet2_dR_g2_ = -999.0;
+
+  double AK4GEN_AllResolved_onShellWboson_Pt_ = -999.0;
+  double AK4GEN_AllResolved_onShellWboson_Eta_  = -999.0;
+  double AK4GEN_AllResolved_onShellWboson_Phi_  = -999.0;
+  double AK4GEN_AllResolved_onShellWboson_M_  = -999.0;
+  double AK4GEN_AllResolved_onShellWboson_dR_W0PID_ = -999.0;
+  double AK4GEN_AllResolved_onShellWboson_dR_W1PID_ = -999.0;
+  double AK4GEN_AllResolved_offShellWboson_Pt_  = -999.0;
+  double AK4GEN_AllResolved_offShellWboson_Eta_ = -999.0;
+  double AK4GEN_AllResolved_offShellWboson_Phi_ = -999.0;
+  double AK4GEN_AllResolved_offShellWboson_M_ = -999.0;
+  double AK4GEN_AllResolved_offShellWboson_dR_W0PID_  = -999.0;
+  double AK4GEN_AllResolved_offShellWboson_dR_W1PID_  = -999.0;
+  double AK4GEN_AllResolved_Higgs_Pt_ = -999.0;
+  double AK4GEN_AllResolved_Higgs_Eta_  = -999.0;
+  double AK4GEN_AllResolved_Higgs_Phi_  = -999.0;
+  double AK4GEN_AllResolved_Higgs_M_  = -999.0;
+  double AK4GEN_AllResolved_Higgs_DR_Higgs0PID_ = -999.0;
+  double AK4GEN_AllResolved_Higgs_DR_Higgs1PID_ = -999.0;
+
 };
 
 //
@@ -418,23 +525,128 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&genJetAK4_Subleading_M_, "genJetAK4_Subleading_M");
   AddBranch(&genJetAK4_Subleading_Energy_, "genJetAK4_Subleading_Energy");
   
-  AddBranch(&genJetAK8_njets_, "genJetAK8_njets");
-  AddBranch(&genJetAK8_MaxPt_Pt_, "genJetAK8_MaxPt_Pt");
-  AddBranch(&genJetAK8_MaxPt_Eta_, "genJetAK8_MaxPt_Eta");
-  AddBranch(&genJetAK8_MaxPt_Phi_, "genJetAK8_MaxPt_Phi");
-  AddBranch(&genJetAK8_MaxPt_M_  , "genJetAK8_MaxPt_M");
+  AddBranch(&AK8Gen_HiggsJet_njets_, "genJetAK8_njets");
+  AddBranch(&AK8Gen_HiggsJet_MaxPt_Pt_, "AK8Gen_HiggsJet_MaxPt_Pt");
+  AddBranch(&AK8Gen_HiggsJet_MaxPt_Eta_, "AK8Gen_HiggsJet_MaxPt_Eta");
+  AddBranch(&AK8Gen_HiggsJet_MaxPt_Phi_, "AK8Gen_HiggsJet_MaxPt_Phi");
+  AddBranch(&AK8Gen_HiggsJet_MaxPt_M_  , "AK8Gen_HiggsJet_MaxPt_M");
   
-  AddBranch(&genJetAK8_MaxPt_deltaR_H1_, "genJetAK8_MaxPt_deltaR_H1");
-  AddBranch(&genJetAK8_MaxPt_deltaR_H2_, "genJetAK8_MaxPt_deltaR_H2");
+  AddBranch(&AK8Gen_HiggsJet_MaxPt_deltaR_H1_, "AK8Gen_HiggsJet_MaxPt_deltaR_H1");
+  AddBranch(&AK8Gen_HiggsJet_MaxPt_deltaR_H2_, "AK8Gen_HiggsJet_MaxPt_deltaR_H2");
   
-  AddBranch(&genJetAK8_minDMass_Pt_, "genJetAK8_minDMass_Pt");
-  AddBranch(&genJetAK8_minDMass_Eta_, "genJetAK8_minDMass_Eta");
-  AddBranch(&genJetAK8_minDMass_Phi_, "genJetAK8_minDMass_Phi");
-  AddBranch(&genJetAK8_minDMass_M_  , "genJetAK8_minDMass_M");
+  AddBranch(&AK8Gen_HiggsJet_minDMass_Pt_, "AK8Gen_HiggsJet_minDMass_Pt");
+  AddBranch(&AK8Gen_HiggsJet_minDMass_Eta_, "AK8Gen_HiggsJet_minDMass_Eta");
+  AddBranch(&AK8Gen_HiggsJet_minDMass_Phi_, "AK8Gen_HiggsJet_minDMass_Phi");
+  AddBranch(&AK8Gen_HiggsJet_minDMass_M_  , "AK8Gen_HiggsJet_minDMass_M");
   
-  AddBranch(&genJetAK8_minDMass_deltaR_H1_, "genJetAK8_minDMass_deltaR_H1");
-  AddBranch(&genJetAK8_minDMass_deltaR_H2_, "genJetAK8_minDMass_deltaR_H2");
+  AddBranch(&AK8Gen_HiggsJet_minDMass_deltaR_H1_, "AK8Gen_HiggsJet_minDMass_deltaR_H1");
+  AddBranch(&AK8Gen_HiggsJet_minDMass_deltaR_H2_, "AK8Gen_HiggsJet_minDMass_deltaR_H2");
   
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_Leading_Pt_,"AK8Gen_MergedWjets_MaxPt_Leading_Pt");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_Leading_Eta_,"AK8Gen_MergedWjets_MaxPt_Leading_Eta");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_Leading_Phi_,"AK8Gen_MergedWjets_MaxPt_Leading_Phi");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_Leading_M_,"AK8Gen_MergedWjets_MaxPt_Leading_M");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_Leading_deltaR_H1_,"AK8Gen_MergedWjets_MaxPt_Leading_deltaR_H1");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_Leading_deltaR_H2_,"AK8Gen_MergedWjets_MaxPt_Leading_deltaR_H2");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_SubLeading_Pt_,"AK8Gen_MergedWjets_MaxPt_SubLeading_Pt");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_SubLeading_Eta_,"AK8Gen_MergedWjets_MaxPt_SubLeading_Eta");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_SubLeading_Phi_,"AK8Gen_MergedWjets_MaxPt_SubLeading_Phi");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_SubLeading_M_,"AK8Gen_MergedWjets_MaxPt_SubLeading_M");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H1_,"AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H1");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H2_,"AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H2");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_LeadingSubLeading_DR_,"AK8Gen_MergedWjets_MaxPt_LeadingSubLeading_DR");
+
+  AddBranch(&AK8Gen_MergedWjets_minDMass_Leading_Pt_,"AK8Gen_MergedWjets_minDMass_Leading_Pt");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_Leading_Eta_,"AK8Gen_MergedWjets_minDMass_Leading_Eta");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_Leading_Phi_,"AK8Gen_MergedWjets_minDMass_Leading_Phi");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_Leading_M_,"AK8Gen_MergedWjets_minDMass_Leading_M");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_Leading_deltaR_H1_,"AK8Gen_MergedWjets_minDMass_Leading_deltaR_H1");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_Leading_deltaR_H2_,"AK8Gen_MergedWjets_minDMass_Leading_deltaR_H2");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_SubLeading_Pt_,"AK8Gen_MergedWjets_minDMass_SubLeading_Pt");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_SubLeading_Eta_,"AK8Gen_MergedWjets_minDMass_SubLeading_Eta");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_SubLeading_Phi_,"AK8Gen_MergedWjets_minDMass_SubLeading_Phi");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_SubLeading_M_,"AK8Gen_MergedWjets_minDMass_SubLeading_M");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H1_,"AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H1");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H2_,"AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H2");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_LeadingSubLeading_DR_,"AK8Gen_MergedWjets_minDMass_LeadingSubLeading_DR");
+
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_Leading_Pt_,"AK8Gen_MergedWjets_minWminHmass_Leading_Pt");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_Leading_Eta_,"AK8Gen_MergedWjets_minWminHmass_Leading_Eta");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_Leading_Phi_,"AK8Gen_MergedWjets_minWminHmass_Leading_Phi");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_Leading_M_,"AK8Gen_MergedWjets_minWminHmass_Leading_M");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_Leading_deltaR_H1_,"AK8Gen_MergedWjets_minWminHmass_Leading_deltaR_H1");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_Leading_deltaR_H2_,"AK8Gen_MergedWjets_minWminHmass_Leading_deltaR_H2");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_SubLeading_Pt_,"AK8Gen_MergedWjets_minWminHmass_SubLeading_Pt");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_SubLeading_Eta_,"AK8Gen_MergedWjets_minWminHmass_SubLeading_Eta");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_SubLeading_Phi_,"AK8Gen_MergedWjets_minWminHmass_SubLeading_Phi");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_SubLeading_M_,"AK8Gen_MergedWjets_minWminHmass_SubLeading_M");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H1_,"AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H1");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H2_,"AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H2");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_LeadingSubLeading_DR_,"AK8Gen_MergedWjets_minWminHmass_LeadingSubLeading_DR");
+
+  AddBranch(&AK4GEN_AllResolved_onShellJet1_Pt_,"AK4GEN_AllResolved_onShellJet1_Pt");
+  AddBranch(&AK4GEN_AllResolved_onShellJet1_Eta_,"AK4GEN_AllResolved_onShellJet1_Eta");
+  AddBranch(&AK4GEN_AllResolved_onShellJet1_Phi_,"AK4GEN_AllResolved_onShellJet1_Phi");
+  AddBranch(&AK4GEN_AllResolved_onShellJet1_M_,"AK4GEN_AllResolved_onShellJet1_M");
+  AddBranch(&AK4GEN_AllResolved_onShellJet1_dR_q1_,"AK4GEN_AllResolved_onShellJet1_dR_q1");
+  AddBranch(&AK4GEN_AllResolved_onShellJet1_dR_q2_,"AK4GEN_AllResolved_onShellJet1_dR_q2");
+  AddBranch(&AK4GEN_AllResolved_onShellJet1_dR_q3_,"AK4GEN_AllResolved_onShellJet1_dR_q3");
+  AddBranch(&AK4GEN_AllResolved_onShellJet1_dR_q4_,"AK4GEN_AllResolved_onShellJet1_dR_q4");
+  AddBranch(&AK4GEN_AllResolved_onShellJet1_dR_g1_,"AK4GEN_AllResolved_onShellJet1_dR_g1");
+  AddBranch(&AK4GEN_AllResolved_onShellJet1_dR_g2_,"AK4GEN_AllResolved_onShellJet1_dR_g2");
+  AddBranch(&AK4GEN_AllResolved_onShellJet2_Pt_,"AK4GEN_AllResolved_onShellJet2_Pt");
+  AddBranch(&AK4GEN_AllResolved_onShellJet2_Eta_,"AK4GEN_AllResolved_onShellJet2_Eta");
+  AddBranch(&AK4GEN_AllResolved_onShellJet2_Phi_,"AK4GEN_AllResolved_onShellJet2_Phi");
+  AddBranch(&AK4GEN_AllResolved_onShellJet2_M_,"AK4GEN_AllResolved_onShellJet2_M");
+  AddBranch(&AK4GEN_AllResolved_onShellJets_dR_,"AK4GEN_AllResolved_onShellJets_dR");
+  AddBranch(&AK4GEN_AllResolved_onShellJet2_dR_q1_,"AK4GEN_AllResolved_onShellJet2_dR_q1");
+  AddBranch(&AK4GEN_AllResolved_onShellJet2_dR_q2_,"AK4GEN_AllResolved_onShellJet2_dR_q2");
+  AddBranch(&AK4GEN_AllResolved_onShellJet2_dR_q3_,"AK4GEN_AllResolved_onShellJet2_dR_q3");
+  AddBranch(&AK4GEN_AllResolved_onShellJet2_dR_q4_,"AK4GEN_AllResolved_onShellJet2_dR_q4");
+  AddBranch(&AK4GEN_AllResolved_onShellJet2_dR_g1_,"AK4GEN_AllResolved_onShellJet2_dR_g1");
+  AddBranch(&AK4GEN_AllResolved_onShellJet2_dR_g2_,"AK4GEN_AllResolved_onShellJet2_dR_g2");
+  AddBranch(&AK4GEN_AllResolved_offShellJet1_Pt_,"AK4GEN_AllResolved_offShellJet1_Pt");
+  AddBranch(&AK4GEN_AllResolved_offShellJet1_Eta_,"AK4GEN_AllResolved_offShellJet1_Eta");
+  AddBranch(&AK4GEN_AllResolved_offShellJet1_Phi_,"AK4GEN_AllResolved_offShellJet1_Phi");
+  AddBranch(&AK4GEN_AllResolved_offShellJet1_M_,"AK4GEN_AllResolved_offShellJet1_M");
+  AddBranch(&AK4GEN_AllResolved_offShellJet1_dR_q1_,"AK4GEN_AllResolved_offShellJet1_dR_q1");
+  AddBranch(&AK4GEN_AllResolved_offShellJet1_dR_q2_,"AK4GEN_AllResolved_offShellJet1_dR_q2");
+  AddBranch(&AK4GEN_AllResolved_offShellJet1_dR_q3_,"AK4GEN_AllResolved_offShellJet1_dR_q3");
+  AddBranch(&AK4GEN_AllResolved_offShellJet1_dR_q4_,"AK4GEN_AllResolved_offShellJet1_dR_q4");
+  AddBranch(&AK4GEN_AllResolved_offShellJet1_dR_g1_,"AK4GEN_AllResolved_offShellJet1_dR_g1");
+  AddBranch(&AK4GEN_AllResolved_offShellJet1_dR_g2_,"AK4GEN_AllResolved_offShellJet1_dR_g2");
+  AddBranch(&AK4GEN_AllResolved_offShellJet2_Pt_,"AK4GEN_AllResolved_offShellJet2_Pt");
+  AddBranch(&AK4GEN_AllResolved_offShellJet2_Eta_,"AK4GEN_AllResolved_offShellJet2_Eta");
+  AddBranch(&AK4GEN_AllResolved_offShellJet2_Phi_,"AK4GEN_AllResolved_offShellJet2_Phi");
+  AddBranch(&AK4GEN_AllResolved_offShellJet2_M_,"AK4GEN_AllResolved_offShellJet2_M");
+  AddBranch(&AK4GEN_AllResolved_offShellJets_dR_,"AK4GEN_AllResolved_offShellJets_dR");
+  AddBranch(&AK4GEN_AllResolved_onShelloffShellJets_dR_,"AK4GEN_AllResolved_onShelloffShellJets_dR");
+  AddBranch(&AK4GEN_AllResolved_offShellJet2_dR_q1_,"AK4GEN_AllResolved_offShellJet2_dR_q1");
+  AddBranch(&AK4GEN_AllResolved_offShellJet2_dR_q2_,"AK4GEN_AllResolved_offShellJet2_dR_q2");
+  AddBranch(&AK4GEN_AllResolved_offShellJet2_dR_q3_,"AK4GEN_AllResolved_offShellJet2_dR_q3");
+  AddBranch(&AK4GEN_AllResolved_offShellJet2_dR_q4_,"AK4GEN_AllResolved_offShellJet2_dR_q4");
+  AddBranch(&AK4GEN_AllResolved_offShellJet2_dR_g1_,"AK4GEN_AllResolved_offShellJet2_dR_g1");
+  AddBranch(&AK4GEN_AllResolved_offShellJet2_dR_g2_,"AK4GEN_AllResolved_offShellJet2_dR_g2");
+
+  AddBranch(&AK4GEN_AllResolved_onShellWboson_Pt_,"AK4GEN_AllResolved_onShellWboson_Pt");
+  AddBranch(&AK4GEN_AllResolved_onShellWboson_Eta_,"AK4GEN_AllResolved_onShellWboson_Eta");
+  AddBranch(&AK4GEN_AllResolved_onShellWboson_Phi_,"AK4GEN_AllResolved_onShellWboson_Phi");
+  AddBranch(&AK4GEN_AllResolved_onShellWboson_M_,"AK4GEN_AllResolved_onShellWboson_M");
+  AddBranch(&AK4GEN_AllResolved_onShellWboson_dR_W0PID_,"AK4GEN_AllResolved_onShellWboson_dR_W0PID");
+  AddBranch(&AK4GEN_AllResolved_onShellWboson_dR_W1PID_,"AK4GEN_AllResolved_onShellWboson_dR_W1PID");
+  AddBranch(&AK4GEN_AllResolved_offShellWboson_Pt_,"AK4GEN_AllResolved_offShellWboson_Pt");
+  AddBranch(&AK4GEN_AllResolved_offShellWboson_Eta_,"AK4GEN_AllResolved_offShellWboson_Eta");
+  AddBranch(&AK4GEN_AllResolved_offShellWboson_Phi_,"AK4GEN_AllResolved_offShellWboson_Phi");
+  AddBranch(&AK4GEN_AllResolved_offShellWboson_M_,"AK4GEN_AllResolved_offShellWboson_M");
+  AddBranch(&AK4GEN_AllResolved_offShellWboson_dR_W0PID_,"AK4GEN_AllResolved_offShellWboson_dR_W0PID");
+  AddBranch(&AK4GEN_AllResolved_offShellWboson_dR_W1PID_,"AK4GEN_AllResolved_offShellWboson_dR_W1PID");
+  AddBranch(&AK4GEN_AllResolved_Higgs_Pt_,"AK4GEN_AllResolved_Higgs_Pt");
+  AddBranch(&AK4GEN_AllResolved_Higgs_Eta_,"AK4GEN_AllResolved_Higgs_Eta");
+  AddBranch(&AK4GEN_AllResolved_Higgs_Phi_,"AK4GEN_AllResolved_Higgs_Phi");
+  AddBranch(&AK4GEN_AllResolved_Higgs_M_,"AK4GEN_AllResolved_Higgs_M");
+  AddBranch(&AK4GEN_AllResolved_Higgs_DR_Higgs0PID_,"AK4GEN_AllResolved_Higgs_DR_Higgs0PID");
+  AddBranch(&AK4GEN_AllResolved_Higgs_DR_Higgs1PID_,"AK4GEN_AllResolved_Higgs_DR_Higgs1PID");
+
 }
 
 void GenAnalyzer::Clear(){
@@ -512,22 +724,127 @@ void GenAnalyzer::Clear(){
   genJetAK4_Subleading_M_ = -999.0;
   genJetAK4_Subleading_Energy_ = -999.0;
   
-  genJetAK8_njets_ = -999.0;
-  genJetAK8_MaxPt_Pt_ = -999.0;
-  genJetAK8_MaxPt_Eta_ = -999.0;
-  genJetAK8_MaxPt_Phi_ = -999.0;
-  genJetAK8_MaxPt_M_ = -999.0;
+  AK8Gen_HiggsJet_njets_ = -999.0;
+  AK8Gen_HiggsJet_MaxPt_Pt_ = -999.0;
+  AK8Gen_HiggsJet_MaxPt_Eta_ = -999.0;
+  AK8Gen_HiggsJet_MaxPt_Phi_ = -999.0;
+  AK8Gen_HiggsJet_MaxPt_M_ = -999.0;
   
-  genJetAK8_MaxPt_deltaR_H1_ = -999.0;
-  genJetAK8_MaxPt_deltaR_H2_ = -999.0;
+  AK8Gen_HiggsJet_MaxPt_deltaR_H1_ = -999.0;
+  AK8Gen_HiggsJet_MaxPt_deltaR_H2_ = -999.0;
   
-  genJetAK8_minDMass_Pt_ = -999.0;
-  genJetAK8_minDMass_Eta_ = -999.0;
-  genJetAK8_minDMass_Phi_ = -999.0;
-  genJetAK8_minDMass_M_ = -999.0;
+  AK8Gen_HiggsJet_minDMass_Pt_ = -999.0;
+  AK8Gen_HiggsJet_minDMass_Eta_ = -999.0;
+  AK8Gen_HiggsJet_minDMass_Phi_ = -999.0;
+  AK8Gen_HiggsJet_minDMass_M_ = -999.0;
   
-  genJetAK8_minDMass_deltaR_H1_ = -999.0;
-  genJetAK8_minDMass_deltaR_H2_ = -999.0;
+  AK8Gen_HiggsJet_minDMass_deltaR_H1_ = -999.0;
+  AK8Gen_HiggsJet_minDMass_deltaR_H2_ = -999.0;
+
+  AK8Gen_MergedWjets_MaxPt_Leading_Pt_ = -999.0;
+  AK8Gen_MergedWjets_MaxPt_Leading_Eta_ = -999.0;
+  AK8Gen_MergedWjets_MaxPt_Leading_Phi_ = -999.0;
+  AK8Gen_MergedWjets_MaxPt_Leading_M_ = -999.0;
+  AK8Gen_MergedWjets_MaxPt_Leading_deltaR_H1_ = -999.0;
+  AK8Gen_MergedWjets_MaxPt_Leading_deltaR_H2_ = -999.0;
+  AK8Gen_MergedWjets_MaxPt_SubLeading_Pt_ = -999.0;
+  AK8Gen_MergedWjets_MaxPt_SubLeading_Eta_ = -999.0;
+  AK8Gen_MergedWjets_MaxPt_SubLeading_Phi_ = -999.0;
+  AK8Gen_MergedWjets_MaxPt_SubLeading_M_ = -999.0;
+  AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H1_ = -999.0;
+  AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H2_   = -999.0;
+  AK8Gen_MergedWjets_MaxPt_LeadingSubLeading_DR_ = -999.0;
+
+  AK8Gen_MergedWjets_minDMass_Leading_Pt_ = -999.0;
+  AK8Gen_MergedWjets_minDMass_Leading_Eta_ = -999.0;
+  AK8Gen_MergedWjets_minDMass_Leading_Phi_ = -999.0;
+  AK8Gen_MergedWjets_minDMass_Leading_M_ = -999.0;
+  AK8Gen_MergedWjets_minDMass_Leading_deltaR_H1_ = -999.0;
+  AK8Gen_MergedWjets_minDMass_Leading_deltaR_H2_ = -999.0;
+  AK8Gen_MergedWjets_minDMass_SubLeading_Pt_ = -999.0;
+  AK8Gen_MergedWjets_minDMass_SubLeading_Eta_ = -999.0;
+  AK8Gen_MergedWjets_minDMass_SubLeading_Phi_ = -999.0;
+  AK8Gen_MergedWjets_minDMass_SubLeading_M_ = -999.0;
+  AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H1_ = -999.0;
+  AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H2_ = -999.0;
+  AK8Gen_MergedWjets_minDMass_LeadingSubLeading_DR_  = -999.0;
+
+  AK8Gen_MergedWjets_minWminHmass_Leading_Pt_ = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_Leading_Eta_ = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_Leading_Phi_ = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_Leading_M_ = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_Leading_deltaR_H1_ = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_Leading_deltaR_H2_ = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_SubLeading_Pt_ = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_SubLeading_Eta_ = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_SubLeading_Phi_ = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_SubLeading_M_ = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H1_ = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H2_ = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_LeadingSubLeading_DR_   = -999.0;
+
+  AK4GEN_AllResolved_onShellJet1_Pt_  = -999.0;
+  AK4GEN_AllResolved_onShellJet1_Eta_ = -999.0;
+  AK4GEN_AllResolved_onShellJet1_Phi_ = -999.0;
+  AK4GEN_AllResolved_onShellJet1_M_ = -999.0;
+  AK4GEN_AllResolved_onShellJet1_dR_q1_ = -999.0;
+  AK4GEN_AllResolved_onShellJet1_dR_q2_ = -999.0;
+  AK4GEN_AllResolved_onShellJet1_dR_q3_ = -999.0;
+  AK4GEN_AllResolved_onShellJet1_dR_q4_ = -999.0;
+  AK4GEN_AllResolved_onShellJet1_dR_g1_ = -999.0;
+  AK4GEN_AllResolved_onShellJet1_dR_g2_ = -999.0;
+  AK4GEN_AllResolved_onShellJet2_Pt_  = -999.0;
+  AK4GEN_AllResolved_onShellJet2_Eta_ = -999.0;
+  AK4GEN_AllResolved_onShellJet2_Phi_ = -999.0;
+  AK4GEN_AllResolved_onShellJet2_M_ = -999.0;
+  AK4GEN_AllResolved_onShellJets_dR_  = -999.0;
+  AK4GEN_AllResolved_onShellJet2_dR_q1_ = -999.0;
+  AK4GEN_AllResolved_onShellJet2_dR_q2_ = -999.0;
+  AK4GEN_AllResolved_onShellJet2_dR_q3_ = -999.0;
+  AK4GEN_AllResolved_onShellJet2_dR_q4_ = -999.0;
+  AK4GEN_AllResolved_onShellJet2_dR_g1_ = -999.0;
+  AK4GEN_AllResolved_onShellJet2_dR_g2_ = -999.0;
+  AK4GEN_AllResolved_offShellJet1_Pt_ = -999.0;
+  AK4GEN_AllResolved_offShellJet1_Eta_  = -999.0;
+  AK4GEN_AllResolved_offShellJet1_Phi_  = -999.0;
+  AK4GEN_AllResolved_offShellJet1_M_  = -999.0;
+  AK4GEN_AllResolved_offShellJet1_dR_q1_  = -999.0;
+  AK4GEN_AllResolved_offShellJet1_dR_q2_  = -999.0;
+  AK4GEN_AllResolved_offShellJet1_dR_q3_  = -999.0;
+  AK4GEN_AllResolved_offShellJet1_dR_q4_  = -999.0;
+  AK4GEN_AllResolved_offShellJet1_dR_g1_  = -999.0;
+  AK4GEN_AllResolved_offShellJet1_dR_g2_  = -999.0;
+  AK4GEN_AllResolved_offShellJet2_Pt_ = -999.0;
+  AK4GEN_AllResolved_offShellJet2_Eta_  = -999.0;
+  AK4GEN_AllResolved_offShellJet2_Phi_  = -999.0;
+  AK4GEN_AllResolved_offShellJet2_M_  = -999.0;
+  AK4GEN_AllResolved_offShellJets_dR_ = -999.0;
+  AK4GEN_AllResolved_onShelloffShellJets_dR_  = -999.0;
+  AK4GEN_AllResolved_offShellJet2_dR_q1_  = -999.0;
+  AK4GEN_AllResolved_offShellJet2_dR_q2_  = -999.0;
+  AK4GEN_AllResolved_offShellJet2_dR_q3_  = -999.0;
+  AK4GEN_AllResolved_offShellJet2_dR_q4_  = -999.0;
+  AK4GEN_AllResolved_offShellJet2_dR_g1_  = -999.0;
+  AK4GEN_AllResolved_offShellJet2_dR_g2_  = -999.0;
+
+  AK4GEN_AllResolved_onShellWboson_Pt_  = -999.0;
+  AK4GEN_AllResolved_onShellWboson_Eta_ = -999.0;
+  AK4GEN_AllResolved_onShellWboson_Phi_ = -999.0;
+  AK4GEN_AllResolved_onShellWboson_M_ = -999.0;
+  AK4GEN_AllResolved_onShellWboson_dR_W0PID_  = -999.0;
+  AK4GEN_AllResolved_onShellWboson_dR_W1PID_  = -999.0;
+  AK4GEN_AllResolved_offShellWboson_Pt_ = -999.0;
+  AK4GEN_AllResolved_offShellWboson_Eta_  = -999.0;
+  AK4GEN_AllResolved_offShellWboson_Phi_  = -999.0;
+  AK4GEN_AllResolved_offShellWboson_M_  = -999.0;
+  AK4GEN_AllResolved_offShellWboson_dR_W0PID_ = -999.0;
+  AK4GEN_AllResolved_offShellWboson_dR_W1PID_ = -999.0;
+  AK4GEN_AllResolved_Higgs_Pt_  = -999.0;
+  AK4GEN_AllResolved_Higgs_Eta_ = -999.0;
+  AK4GEN_AllResolved_Higgs_Phi_ = -999.0;
+  AK4GEN_AllResolved_Higgs_M_ = -999.0;
+  AK4GEN_AllResolved_Higgs_DR_Higgs0PID_  = -999.0;
+  AK4GEN_AllResolved_Higgs_DR_Higgs1PID_  = -999.0;
 }
 
 
@@ -536,7 +853,7 @@ bool GenAnalyzer::reorder(const TLorentzVector &a, const TLorentzVector &b)
   return a.Pt() > b.Pt();
 }
 
-//bool jetCleaning(const std::vector<reco::GenJet>::const_iterator *genAK8jet,const std::vector<reco::GenJet> &genAK4_coll)
+
 bool GenAnalyzer::jetCleaning(const reco::GenJet  * genAK8jet,const vector<reco::GenJet>* genAK4_coll, const double r_seperation)
 {
   for(vector<reco::GenJet>::const_iterator genjet = genAK4_coll->begin(); genjet != genAK4_coll->end(); genjet++) {

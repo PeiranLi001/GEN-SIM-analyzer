@@ -235,56 +235,196 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     std::cout << "WARNING:: the condition 2 photons and 2 jets from each w's are not satisfied...." << std::endl;
   }
   
-  //genAK4_coll
+  /************************************************************************
+   *
+   *  Good AK4 jet selection
+   *  Selection Procedure: First two AK4 jets selected having min delta
+   *                        mass wrt the onshell higgs boson (i.e. 80 GeV)
+   *                        Then select another pair of AK4 jets that when
+   *                        combined with selected onshell AK4 jets and gives
+   *                        the minimum delta mass wrt the Higgs boson.
+   *
+   *************************************************************************/  
   int nAK4jets = 0;
-  double temp_AK4_jet_pt = 0.0;
-  TLorentzVector genJetAK4;
+  // double temp_AK4_jet_pt = 0.0;
+  TLorentzVector temp_genJetAK4;
   std::vector<TLorentzVector> Vec_genJetAK4;
-  //std::vector<ROOT::Math::XYZTVector> Vec_genJetAK4;
-  //std::vector<typename ROOT::Math::LorentzVector> Vec_genJetAK4;
-  //std::vector<const TLorentzVector &> Vec_genJetAK4;
   for(vector<reco::GenJet>::const_iterator genjet = genAK4_coll->begin(); genjet != genAK4_coll->end(); genjet++) {
-    if (deltaR(genjet->eta(),genjet->phi(), Vec_Photons[0].Eta(),Vec_Photons[0].Phi())>0.4 && deltaR(genjet->eta(),genjet->phi(), Vec_Photons[1].Eta(),Vec_Photons[1].Phi())>0.4 && genjet->pt()>10) {
-      nAK4jets++;
-      //std::cout << genjet->pt() << "\t"
-      //<< Vec_wpJET[0].Pt() << "\t" << Vec_wpJET[1].Pt() << "\t"<< Vec_wmJET[0].Pt() << "\t" << Vec_wmJET[1].Pt() << "\t" << deltaR(genjet->eta(),genjet->phi(), Vec_wpJET[0].Eta(),Vec_wpJET[0].Phi()) << "\t"
-      //<< deltaR(genjet->eta(),genjet->phi(), Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi()) << "\t"
-      //<< deltaR(genjet->eta(),genjet->phi(), Vec_wmJET[0].Eta(),Vec_wmJET[0].Phi()) << "\t"
-      //<< deltaR(genjet->eta(),genjet->phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi()) << std::endl;
-      //std::cout<<"====> " << typeid(genjet->p4()).name() << std::endl;
-      //std::cout<<"====> " << typeid(Vec_wmJET).name() << std::endl;
-      if (genjet->pt()>temp_AK4_jet_pt) {
-        genJetAK4.SetPtEtaPhiE(genjet->pt(), genjet->eta(), genjet->phi(), genjet->energy());
-        Vec_genJetAK4.push_back(genJetAK4);
-        //Vec_genJetAK4.push_back(genjet->p4());
-        temp_AK4_jet_pt = genjet->pt();
+    if (deltaR(genjet->eta(),genjet->phi(), Vec_Photons[0].Eta(),Vec_Photons[0].Phi())>0.4 && deltaR(genjet->eta(),genjet->phi(), Vec_Photons[1].Eta(),Vec_Photons[1].Phi())>0.4) {
+      if ( jetCleaning(&(*genjet), genAK8_coll ) ) {
+        nAK4jets++;
+        temp_genJetAK4.SetPtEtaPhiE(genjet->pt(), genjet->eta(), genjet->phi(), genjet->energy());
+        Vec_genJetAK4.push_back(temp_genJetAK4);
       }
     }
-    //    std::cout << genjet->pt() << std::endl;
   }
   /* Sort AK4 TLorentzVector */
-  //std::sort(Vec_genJetAK4.begin(), Vec_genJetAK4.end(), GenAnalyzer::reorder);
-  //std::cout << "Number of AK4 candidates = " << nAK4jets << std::endl;
-  
+  std::sort(Vec_genJetAK4.begin(), Vec_genJetAK4.end(), GenAnalyzer::reorder);
   genJetAK4_njets_ = nAK4jets;
+
+  if (Vec_genJetAK4.size()>4) {
+    // std::cout << "total number of AK4 jets is " << Vec_genJetAK4.size() << std::endl;
+
+  /**
+   * Loop over all AK4 jets and selects a pair of jets having 
+   * minimum delta mass wrt w-boson mass.
+   */
+  double tempMass1 = 9999.0;
+  int onshell_WBoson_index1 = -1;
+  int onshell_WBoson_index2 = -1;
+  for ( int ak4_jet1 = 0; ak4_jet1 < int(Vec_genJetAK4.size())-1; ++ak4_jet1)
+  {
+    for ( int ak4_jet2 = ak4_jet1+1; ak4_jet2 < int(Vec_genJetAK4.size()); ++ak4_jet2)
+    {
+      double mass = (Vec_genJetAK4[ak4_jet1] + Vec_genJetAK4[ak4_jet2]).M();      
+      if (abs(mass - 80.0) < tempMass1)
+      {
+        tempMass1 = abs(mass - 80.0);
+        onshell_WBoson_index1 = ak4_jet1;
+        onshell_WBoson_index2 = ak4_jet2;
+      }
+    }
+  }
   
-  //genJetAK4_leading_Pt_ = Vec_genJetAK4[0].Pt();
-  //genJetAK4_leading_Eta_ = Vec_genJetAK4[0].Eta();
-  //genJetAK4_leading_Phi_ = Vec_genJetAK4[0].Phi();
-  //genJetAK4_leading_M_ = Vec_genJetAK4[0].M();
-  //genJetAK4_leading_Energy_ = Vec_genJetAK4[0].Energy();
+  /**
+   *  Select another pair of AK4 jets that when combined with
+   *  the selected onshell AK4 jets gives min delta M wrt the 
+   *  Higgs boson.
+   */
+  double tempMass2 = 99999.0;
+  int offshell_WBoson_index1 = -1;
+  int offshell_WBoson_index2 = -1;
+  for ( int ak4_jet1 = 0; ak4_jet1 < int(Vec_genJetAK4.size())-1; ++ak4_jet1)
+  {
+    if (ak4_jet1 == onshell_WBoson_index1) continue;
+    if (ak4_jet1 == onshell_WBoson_index2) continue;
+    // std::cout << "ak4_jet1 : " << ak4_jet1 << std::endl;
+    for ( int ak4_jet2 = ak4_jet1+1; ak4_jet2 < int(Vec_genJetAK4.size()); ++ak4_jet2)
+    {
+      if (ak4_jet2 == onshell_WBoson_index1) continue;
+      if (ak4_jet2 == onshell_WBoson_index2) continue;
+    // std::cout << "ak4_jet2 : " << ak4_jet2 << std::endl;
+      double mass = (Vec_genJetAK4[ak4_jet1] + Vec_genJetAK4[ak4_jet2] + 
+                    Vec_genJetAK4[onshell_WBoson_index1] + Vec_genJetAK4[onshell_WBoson_index2]).M();      
+      // std::cout << "ak4_jet1: " << ak4_jet1 << ", ak4_jet2: " << ak4_jet2 << ", mass = " << mass << std::endl;
+      if (abs(mass - 125.0) < tempMass2)
+      {
+        tempMass2 = abs(mass - 125.0);
+        offshell_WBoson_index1 = ak4_jet1;
+        offshell_WBoson_index2 = ak4_jet2;
+      }
+    }
+  }
+  // std::cout << "onshell: " << onshell_WBoson_index1 << "\t" << onshell_WBoson_index2 << std::endl;
+  // std::cout << "offshell: " << offshell_WBoson_index1 << "\t" << offshell_WBoson_index2 << std::endl;
+  AK4GEN_AllResolved_onShellJet1_Pt_ = Vec_genJetAK4[onshell_WBoson_index1].Pt();
+  AK4GEN_AllResolved_onShellJet1_Eta_ = Vec_genJetAK4[onshell_WBoson_index1].Eta();
+  AK4GEN_AllResolved_onShellJet1_Phi_ = Vec_genJetAK4[onshell_WBoson_index1].Phi();
+  AK4GEN_AllResolved_onShellJet1_M_ = Vec_genJetAK4[onshell_WBoson_index1].M();
+  AK4GEN_AllResolved_onShellJet1_dR_q1_ = deltaR(Vec_genJetAK4[onshell_WBoson_index1].Eta(),Vec_genJetAK4[onshell_WBoson_index1].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi());
+  AK4GEN_AllResolved_onShellJet1_dR_q2_ = deltaR(Vec_genJetAK4[onshell_WBoson_index1].Eta(),Vec_genJetAK4[onshell_WBoson_index1].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi());
+  AK4GEN_AllResolved_onShellJet1_dR_q3_ = deltaR(Vec_genJetAK4[onshell_WBoson_index1].Eta(),Vec_genJetAK4[onshell_WBoson_index1].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi());
+  AK4GEN_AllResolved_onShellJet1_dR_q4_ = deltaR(Vec_genJetAK4[onshell_WBoson_index1].Eta(),Vec_genJetAK4[onshell_WBoson_index1].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi());
+  AK4GEN_AllResolved_onShellJet1_dR_g1_ = deltaR(Vec_genJetAK4[onshell_WBoson_index1].Eta(),Vec_genJetAK4[onshell_WBoson_index1].Phi(), Vec_Photons[0].Eta(), Vec_Photons[0].Phi());
+  AK4GEN_AllResolved_onShellJet1_dR_g2_ = deltaR(Vec_genJetAK4[onshell_WBoson_index1].Eta(),Vec_genJetAK4[onshell_WBoson_index1].Phi(), Vec_Photons[1].Eta(), Vec_Photons[1].Phi());
+
+  AK4GEN_AllResolved_onShellJet2_Pt_ = Vec_genJetAK4[onshell_WBoson_index2].Pt();
+  AK4GEN_AllResolved_onShellJet2_Eta_ = Vec_genJetAK4[onshell_WBoson_index2].Eta();
+  AK4GEN_AllResolved_onShellJet2_Phi_ = Vec_genJetAK4[onshell_WBoson_index2].Phi();
+  AK4GEN_AllResolved_onShellJet2_M_ = Vec_genJetAK4[onshell_WBoson_index2].M();
+  AK4GEN_AllResolved_onShellJets_dR_ = deltaR(Vec_genJetAK4[onshell_WBoson_index1].Eta(), Vec_genJetAK4[onshell_WBoson_index1].Phi(), Vec_genJetAK4[onshell_WBoson_index2].Eta(), Vec_genJetAK4[onshell_WBoson_index2].Phi());
+  AK4GEN_AllResolved_onShellJet2_dR_q1_ = deltaR(Vec_genJetAK4[onshell_WBoson_index2].Eta(),Vec_genJetAK4[onshell_WBoson_index2].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi());
+  AK4GEN_AllResolved_onShellJet2_dR_q2_ = deltaR(Vec_genJetAK4[onshell_WBoson_index2].Eta(),Vec_genJetAK4[onshell_WBoson_index2].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi());
+  AK4GEN_AllResolved_onShellJet2_dR_q3_ = deltaR(Vec_genJetAK4[onshell_WBoson_index2].Eta(),Vec_genJetAK4[onshell_WBoson_index2].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi());
+  AK4GEN_AllResolved_onShellJet2_dR_q4_ = deltaR(Vec_genJetAK4[onshell_WBoson_index2].Eta(),Vec_genJetAK4[onshell_WBoson_index2].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi());
+  AK4GEN_AllResolved_onShellJet2_dR_g1_ = deltaR(Vec_genJetAK4[onshell_WBoson_index2].Eta(),Vec_genJetAK4[onshell_WBoson_index2].Phi(), Vec_Photons[0].Eta(), Vec_Photons[0].Phi());
+  AK4GEN_AllResolved_onShellJet2_dR_g2_ = deltaR(Vec_genJetAK4[onshell_WBoson_index2].Eta(),Vec_genJetAK4[onshell_WBoson_index2].Phi(), Vec_Photons[1].Eta(), Vec_Photons[1].Phi());
+
+  AK4GEN_AllResolved_onShellWboson_Pt_ = (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Pt();
+  AK4GEN_AllResolved_onShellWboson_Eta_ = (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta();
+  AK4GEN_AllResolved_onShellWboson_Phi_ = (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi();
+  AK4GEN_AllResolved_onShellWboson_M_ = (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).M();
+  double tempDeltaR = deltaR ((Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta(),
+                              (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi(),
+                              Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
+  AK4GEN_AllResolved_onShellWboson_dR_W0PID_ = tempDeltaR;
+  tempDeltaR = deltaR ((Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta(),
+                              (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi(),
+                              Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());  
+  AK4GEN_AllResolved_onShellWboson_dR_W1PID_ = tempDeltaR;
+
+  AK4GEN_AllResolved_offShellJet1_Pt_ = Vec_genJetAK4[offshell_WBoson_index1].Pt();
+  AK4GEN_AllResolved_offShellJet1_Eta_ = Vec_genJetAK4[offshell_WBoson_index1].Eta();
+  AK4GEN_AllResolved_offShellJet1_Phi_ = Vec_genJetAK4[offshell_WBoson_index1].Phi();
+  AK4GEN_AllResolved_offShellJet1_M_ = Vec_genJetAK4[offshell_WBoson_index1].M();
+  AK4GEN_AllResolved_offShellJet1_dR_q1_ = deltaR(Vec_genJetAK4[offshell_WBoson_index1].Eta(),Vec_genJetAK4[offshell_WBoson_index1].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi());
+  AK4GEN_AllResolved_offShellJet1_dR_q2_ = deltaR(Vec_genJetAK4[offshell_WBoson_index1].Eta(),Vec_genJetAK4[offshell_WBoson_index1].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi());
+  AK4GEN_AllResolved_offShellJet1_dR_q3_ = deltaR(Vec_genJetAK4[offshell_WBoson_index1].Eta(),Vec_genJetAK4[offshell_WBoson_index1].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi());
+  AK4GEN_AllResolved_offShellJet1_dR_q4_ = deltaR(Vec_genJetAK4[offshell_WBoson_index1].Eta(),Vec_genJetAK4[offshell_WBoson_index1].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi());
+  AK4GEN_AllResolved_offShellJet1_dR_g1_ = deltaR(Vec_genJetAK4[offshell_WBoson_index1].Eta(),Vec_genJetAK4[offshell_WBoson_index1].Phi(), Vec_Photons[0].Eta(), Vec_Photons[0].Phi());
+  AK4GEN_AllResolved_offShellJet1_dR_g2_ = deltaR(Vec_genJetAK4[offshell_WBoson_index1].Eta(),Vec_genJetAK4[offshell_WBoson_index1].Phi(), Vec_Photons[1].Eta(), Vec_Photons[1].Phi());
+
+  AK4GEN_AllResolved_offShellJet2_Pt_ = Vec_genJetAK4[offshell_WBoson_index2].Pt();
+  AK4GEN_AllResolved_offShellJet2_Eta_ = Vec_genJetAK4[offshell_WBoson_index2].Eta();
+  AK4GEN_AllResolved_offShellJet2_Phi_ = Vec_genJetAK4[offshell_WBoson_index2].Phi();
+  AK4GEN_AllResolved_offShellJet2_M_ = Vec_genJetAK4[offshell_WBoson_index2].M();
+  AK4GEN_AllResolved_offShellJets_dR_ = deltaR(Vec_genJetAK4[offshell_WBoson_index1].Eta(), Vec_genJetAK4[offshell_WBoson_index1].Phi(), Vec_genJetAK4[offshell_WBoson_index2].Eta(), Vec_genJetAK4[offshell_WBoson_index2].Phi());
+  double deltaRonoff = ((Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Pt(),
+                        (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta(),
+                        (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Pt(),
+                        (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Eta());
+  AK4GEN_AllResolved_onShelloffShellJets_dR_ = deltaRonoff;
+  AK4GEN_AllResolved_offShellJet2_dR_q1_ = deltaR(Vec_genJetAK4[offshell_WBoson_index2].Eta(),Vec_genJetAK4[offshell_WBoson_index2].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi());
+  AK4GEN_AllResolved_offShellJet2_dR_q2_ = deltaR(Vec_genJetAK4[offshell_WBoson_index2].Eta(),Vec_genJetAK4[offshell_WBoson_index2].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi());
+  AK4GEN_AllResolved_offShellJet2_dR_q3_ = deltaR(Vec_genJetAK4[offshell_WBoson_index2].Eta(),Vec_genJetAK4[offshell_WBoson_index2].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi());
+  AK4GEN_AllResolved_offShellJet2_dR_q4_ = deltaR(Vec_genJetAK4[offshell_WBoson_index2].Eta(),Vec_genJetAK4[offshell_WBoson_index2].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi());
+  AK4GEN_AllResolved_offShellJet2_dR_g1_ = deltaR(Vec_genJetAK4[offshell_WBoson_index2].Eta(),Vec_genJetAK4[offshell_WBoson_index2].Phi(), Vec_Photons[0].Eta(), Vec_Photons[0].Phi());
+  AK4GEN_AllResolved_offShellJet2_dR_g2_ = deltaR(Vec_genJetAK4[offshell_WBoson_index2].Eta(),Vec_genJetAK4[offshell_WBoson_index2].Phi(), Vec_Photons[1].Eta(), Vec_Photons[1].Phi());
   
-  //genJetAK4_Subleading_Pt_ = Vec_genJetAK4[0].Pt();
-  //genJetAK4_Subleading_Eta_ = Vec_genJetAK4[0].Eta();
-  //genJetAK4_Subleading_Phi_ = Vec_genJetAK4[0].Phi();
-  //genJetAK4_Subleading_M_ = Vec_genJetAK4[0].M();
-  //genJetAK4_Subleading_Energy_ = Vec_genJetAK4[0].Energy();
-  
+
+  AK4GEN_AllResolved_offShellWboson_Pt_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Pt();
+  AK4GEN_AllResolved_offShellWboson_Eta_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Eta();
+  AK4GEN_AllResolved_offShellWboson_Phi_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Phi();
+  AK4GEN_AllResolved_offShellWboson_M_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).M();
+  tempDeltaR = deltaR ((Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Eta(),
+                              (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Phi(),
+                              Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
+  AK4GEN_AllResolved_offShellWboson_dR_W0PID_ = tempDeltaR;
+  tempDeltaR = deltaR ((Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Eta(),
+                              (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Phi(),
+                              Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());  
+  AK4GEN_AllResolved_offShellWboson_dR_W1PID_ = tempDeltaR;
+
+  AK4GEN_AllResolved_Higgs_Pt_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
+                                  Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Pt();
+  AK4GEN_AllResolved_Higgs_Eta_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
+                                  Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta();
+  AK4GEN_AllResolved_Higgs_Phi_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
+                                  Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi();
+  AK4GEN_AllResolved_Higgs_M_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
+                                  Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).M();
+  AK4GEN_AllResolved_Higgs_DR_Higgs0PID_ =((Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
+                                           Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta(),
+                                          (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
+                                           Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi(),
+                                          Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  AK4GEN_AllResolved_Higgs_DR_Higgs1PID_ =((Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
+                                           Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta(),
+                                          (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
+                                           Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi(),
+                                          Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+  }
+
+  /**********************************************************
+   * 
+   *              ak8 jet selection
+   * 
+   **********************************************************/
   int nAK8jets = 0;
   double temp_AK8jet_pt = -999.0;
   double temp_AK8jet_deltaM = 9999.0;
-  TLorentzVector genJetAK8;
-  TLorentzVector genJetAK8_minDMass;
+  TLorentzVector AK8Gen_HiggsJet_MaxPt;
+  TLorentzVector AK8Gen_HiggsJet_minDMass;
   for(vector<reco::GenJet>::const_iterator genjet = genAK8_coll->begin(); genjet != genAK8_coll->end(); genjet++) {
     if (deltaR(genjet->eta(),genjet->phi(), Vec_Photons[0].Eta(),Vec_Photons[0].Phi())>0.4 && deltaR(genjet->eta(),genjet->phi(), Vec_Photons[1].Eta(),Vec_Photons[1].Phi())>0.4) {
       if ( jetCleaning(&(*genjet), genAK4_coll ) )
@@ -297,35 +437,177 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         //<< deltaR(genjet->eta(),genjet->phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi()) << std::endl;
         
         if (genjet->pt()>temp_AK8jet_pt) {
-          genJetAK8.SetPtEtaPhiE(genjet->pt(), genjet->eta(), genjet->phi(), genjet->energy());
+          AK8Gen_HiggsJet_MaxPt.SetPtEtaPhiE(genjet->pt(), genjet->eta(), genjet->phi(), genjet->energy());
           temp_AK8jet_pt = genjet->pt();
         }
         if ( abs(genjet->mass() - 125.0) < temp_AK8jet_deltaM)
         {
-          genJetAK8_minDMass.SetPtEtaPhiE(genjet->pt(), genjet->eta(), genjet->phi(), genjet->energy());
+          AK8Gen_HiggsJet_minDMass.SetPtEtaPhiE(genjet->pt(), genjet->eta(), genjet->phi(), genjet->energy());
           temp_AK8jet_deltaM = abs(genjet->mass() - 125.0);
         }
       }
     }
   }
+  
   //std::cout << "Number of AK8 candidates = " << nAK8jets << std::endl;
   
-  genJetAK8_njets_ = nAK8jets;
-  genJetAK8_MaxPt_Pt_ = genJetAK8.Pt();
-  genJetAK8_MaxPt_Eta_ = genJetAK8.Eta();
-  genJetAK8_MaxPt_Phi_ = genJetAK8.Phi();
-  genJetAK8_MaxPt_M_ = genJetAK8.M();
-  genJetAK8_MaxPt_deltaR_H1_ = deltaR(genJetAK8.Eta(),genJetAK8.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
-  genJetAK8_MaxPt_deltaR_H2_ = deltaR(genJetAK8.Eta(),genJetAK8.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+  AK8Gen_HiggsJet_njets_ = nAK8jets;
+  AK8Gen_HiggsJet_MaxPt_Pt_ = AK8Gen_HiggsJet_MaxPt.Pt();
+  AK8Gen_HiggsJet_MaxPt_Eta_ = AK8Gen_HiggsJet_MaxPt.Eta();
+  AK8Gen_HiggsJet_MaxPt_Phi_ = AK8Gen_HiggsJet_MaxPt.Phi();
+  AK8Gen_HiggsJet_MaxPt_M_ = AK8Gen_HiggsJet_MaxPt.M();
+  AK8Gen_HiggsJet_MaxPt_deltaR_H1_ = deltaR(AK8Gen_HiggsJet_MaxPt.Eta(),AK8Gen_HiggsJet_MaxPt.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  AK8Gen_HiggsJet_MaxPt_deltaR_H2_ = deltaR(AK8Gen_HiggsJet_MaxPt.Eta(),AK8Gen_HiggsJet_MaxPt.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
   
-  genJetAK8_minDMass_Pt_ = genJetAK8_minDMass.Pt();
-  genJetAK8_minDMass_Eta_ = genJetAK8_minDMass.Eta();
-  genJetAK8_minDMass_Phi_ = genJetAK8_minDMass.Phi();
-  genJetAK8_minDMass_M_ = genJetAK8_minDMass.M();
-  genJetAK8_minDMass_deltaR_H1_ = deltaR(genJetAK8_minDMass.Eta(),genJetAK8_minDMass.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
-  genJetAK8_minDMass_deltaR_H2_ = deltaR(genJetAK8_minDMass.Eta(),genJetAK8_minDMass.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+  AK8Gen_HiggsJet_minDMass_Pt_ = AK8Gen_HiggsJet_minDMass.Pt();
+  AK8Gen_HiggsJet_minDMass_Eta_ = AK8Gen_HiggsJet_minDMass.Eta();
+  AK8Gen_HiggsJet_minDMass_Phi_ = AK8Gen_HiggsJet_minDMass.Phi();
+  AK8Gen_HiggsJet_minDMass_M_ = AK8Gen_HiggsJet_minDMass.M();
+  AK8Gen_HiggsJet_minDMass_deltaR_H1_ = deltaR(AK8Gen_HiggsJet_minDMass.Eta(),AK8Gen_HiggsJet_minDMass.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  AK8Gen_HiggsJet_minDMass_deltaR_H2_ = deltaR(AK8Gen_HiggsJet_minDMass.Eta(),AK8Gen_HiggsJet_minDMass.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
   
   
+  /************************************************************************
+   *
+   *  Two AK8 jet selection
+   *  The case where Higgs will be selected as two FAT jets
+   *  CASE: 1: Two leading AK8 jets are selected as W-boson jets
+   *
+   *************************************************************************/
+  TLorentzVector genJetResolvedAK8;
+  std::vector<TLorentzVector> Vec_AK8Gen_MergedWjets;
+  for(vector<reco::GenJet>::const_iterator genjet = genAK8_coll->begin(); genjet != genAK8_coll->end(); genjet++) {
+    if (deltaR(genjet->eta(),genjet->phi(), Vec_Photons[0].Eta(),Vec_Photons[0].Phi())>0.4 && deltaR(genjet->eta(),genjet->phi(), Vec_Photons[1].Eta(),Vec_Photons[1].Phi())>0.4) {
+      if ( jetCleaning(&(*genjet), genAK4_coll ) )
+      {
+        genJetResolvedAK8.SetPtEtaPhiE(genjet->pt(), genjet->eta(), genjet->phi(), genjet->energy());
+        Vec_AK8Gen_MergedWjets.push_back(genJetResolvedAK8);
+      }
+    }
+  }
+  std::sort(Vec_AK8Gen_MergedWjets.begin(), Vec_AK8Gen_MergedWjets.end(), GenAnalyzer::reorder);
+  
+  if (Vec_AK8Gen_MergedWjets.size()>=2)
+  {
+    AK8Gen_MergedWjets_MaxPt_Leading_Pt_ = Vec_AK8Gen_MergedWjets[0].Pt();
+    AK8Gen_MergedWjets_MaxPt_Leading_Eta_ = Vec_AK8Gen_MergedWjets[0].Eta();
+    AK8Gen_MergedWjets_MaxPt_Leading_Phi_ = Vec_AK8Gen_MergedWjets[0].Phi();
+    AK8Gen_MergedWjets_MaxPt_Leading_M_ = Vec_AK8Gen_MergedWjets[0].M();
+    AK8Gen_MergedWjets_MaxPt_Leading_deltaR_H1_ = deltaR(Vec_AK8Gen_MergedWjets[0].Eta(),Vec_AK8Gen_MergedWjets[0].Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+    AK8Gen_MergedWjets_MaxPt_Leading_deltaR_H2_ = deltaR(Vec_AK8Gen_MergedWjets[0].Eta(),Vec_AK8Gen_MergedWjets[0].Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+    
+    AK8Gen_MergedWjets_MaxPt_SubLeading_Pt_ = Vec_AK8Gen_MergedWjets[1].Pt();
+    AK8Gen_MergedWjets_MaxPt_SubLeading_Eta_ = Vec_AK8Gen_MergedWjets[1].Eta();
+    AK8Gen_MergedWjets_MaxPt_SubLeading_Phi_ = Vec_AK8Gen_MergedWjets[1].Phi();
+    AK8Gen_MergedWjets_MaxPt_SubLeading_M_ = Vec_AK8Gen_MergedWjets[1].M();
+    AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H1_ = deltaR(Vec_AK8Gen_MergedWjets[1].Eta(),Vec_AK8Gen_MergedWjets[1].Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+    AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H2_ = deltaR(Vec_AK8Gen_MergedWjets[1].Eta(),Vec_AK8Gen_MergedWjets[1].Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+    AK8Gen_MergedWjets_MaxPt_LeadingSubLeading_DR_ = deltaR(Vec_AK8Gen_MergedWjets[1].Eta(),Vec_AK8Gen_MergedWjets[1].Phi(),Vec_AK8Gen_MergedWjets[0].Eta(),Vec_AK8Gen_MergedWjets[0].Phi());
+  }
+  
+  /************************************************************************
+   *
+   *  Two AK8 jet selection
+   *  The case where Higgs will be selected as two FAT jets
+   *  CASE: 2: Two jets with min delta mass wrt Higgs are selected.
+   *
+   *************************************************************************/  
+  double temp_ResolvedJetAK8_deltaMass = 99999.0;
+  TLorentzVector temp_ReolvedJetAK8_LV1, temp_ReolvedJetAK8_LV2;
+  TLorentzVector LV_leadingWjet, LV_SubleadingWjet;
+  for(vector<reco::GenJet>::const_iterator genjet1 = genAK8_coll->begin(); genjet1 != genAK8_coll->end()-1; genjet1++) {
+      for(vector<reco::GenJet>::const_iterator genjet2 = genjet1+1; genjet2 != genAK8_coll->end(); genjet2++) {
+        temp_ReolvedJetAK8_LV1.SetPtEtaPhiE(genjet1->pt(), genjet1->eta(), genjet1->phi(), genjet1->energy());
+        temp_ReolvedJetAK8_LV2.SetPtEtaPhiE(genjet2->pt(), genjet2->eta(), genjet2->phi(), genjet2->energy());
+        // if (genjet1->pt() > temp_ResolvedJetAK8_pt1 || genjet2->pt() > temp_ResolvedJetAK8_pt2 || (abs((temp_ReolvedJetAK8_LV1+temp_ReolvedJetAK8_LV2).M() - 125.0) < temp_ResolvedJetAK8_deltaMass) ) {
+        if ( (abs((temp_ReolvedJetAK8_LV1+temp_ReolvedJetAK8_LV2).M() - 125.0) < temp_ResolvedJetAK8_deltaMass) ) {
+          temp_ResolvedJetAK8_deltaMass = abs((temp_ReolvedJetAK8_LV1+temp_ReolvedJetAK8_LV2).M() - 125.0);
+          if (genjet1->pt()>genjet2->pt())
+            LV_leadingWjet = temp_ReolvedJetAK8_LV1;
+          else
+            LV_SubleadingWjet = temp_ReolvedJetAK8_LV2;
+        }
+      }
+  }
+
+  AK8Gen_MergedWjets_minDMass_Leading_Pt_ = LV_leadingWjet.Pt();
+  AK8Gen_MergedWjets_minDMass_Leading_Eta_ = LV_leadingWjet.Eta();
+  AK8Gen_MergedWjets_minDMass_Leading_Phi_ = LV_leadingWjet.Phi();
+  AK8Gen_MergedWjets_minDMass_Leading_M_ = LV_leadingWjet.M();
+  AK8Gen_MergedWjets_minDMass_Leading_deltaR_H1_ = deltaR(LV_leadingWjet.Eta(),LV_leadingWjet.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  AK8Gen_MergedWjets_minDMass_Leading_deltaR_H2_ = deltaR(LV_leadingWjet.Eta(),LV_leadingWjet.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+  
+  AK8Gen_MergedWjets_minDMass_SubLeading_Pt_ = LV_SubleadingWjet.Pt();
+  AK8Gen_MergedWjets_minDMass_SubLeading_Eta_ = LV_SubleadingWjet.Eta();
+  AK8Gen_MergedWjets_minDMass_SubLeading_Phi_ = LV_SubleadingWjet.Phi();
+  AK8Gen_MergedWjets_minDMass_SubLeading_M_ = LV_SubleadingWjet.M();
+  AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H1_ = deltaR(LV_SubleadingWjet.Eta(),LV_SubleadingWjet.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H2_ = deltaR(LV_SubleadingWjet.Eta(),LV_SubleadingWjet.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+  AK8Gen_MergedWjets_minDMass_LeadingSubLeading_DR_ = deltaR(LV_SubleadingWjet.Eta(),LV_SubleadingWjet.Phi(),LV_leadingWjet.Eta(),LV_leadingWjet.Phi());
+
+  /************************************************************************
+   *
+   *  Two AK8 jet selection
+   *  The case where Higgs will be selected as two FAT jets
+   *  CASE: 3:  One of jets is selected having min delta M wrt W-boson mass
+   *            out of remaning another one is selected that forms min Higgs
+   *            mass with the one selected for w-boson.
+   *
+   *************************************************************************/  
+  double temp_minWBosonMass = 9999.0;
+  double temp_minHMass = 9999.0;
+  TLorentzVector temp_ReolvedJetAK8_LV1_a, temp_ReolvedJetAK8_LV2_a;
+  TLorentzVector LV_OnShell_WBoson;
+  TLorentzVector LV_OffShell_WBoson;  
+  int counter_of_selected_wjet=-1;
+  int temp_counter_of_selected_wjet=0;
+  /* Iterator over genAK8 jets for W-jet selection  */
+  for(vector<reco::GenJet>::const_iterator genjet1 = genAK8_coll->begin(); genjet1 != genAK8_coll->end(); genjet1++) {
+    temp_counter_of_selected_wjet++;
+    temp_ReolvedJetAK8_LV1_a.SetPtEtaPhiE(genjet1->pt(), genjet1->eta(), genjet1->phi(), genjet1->energy());
+    if ( abs(temp_ReolvedJetAK8_LV1_a.M() - 80.0) < temp_minWBosonMass) {      
+      LV_OnShell_WBoson = temp_ReolvedJetAK8_LV1_a;
+      counter_of_selected_wjet = temp_counter_of_selected_wjet;
+    }
+  }
+  /* Iterator for off-shell w-jet selection after on-shell w-jet selection  */
+  temp_counter_of_selected_wjet = 0;
+  for(vector<reco::GenJet>::const_iterator genjet1 = genAK8_coll->begin(); genjet1 != genAK8_coll->end(); genjet1++) {
+    temp_counter_of_selected_wjet++;
+    if (temp_counter_of_selected_wjet == counter_of_selected_wjet) continue;
+    temp_ReolvedJetAK8_LV2_a.SetPtEtaPhiE(genjet1->pt(), genjet1->eta(), genjet1->phi(), genjet1->energy());
+    if ( abs((temp_ReolvedJetAK8_LV2_a+LV_OnShell_WBoson).M() - 125.0) < temp_minHMass){
+      LV_OffShell_WBoson = temp_ReolvedJetAK8_LV2_a;
+    }
+  }
+
+  if (LV_OnShell_WBoson.Pt() > LV_OffShell_WBoson.Pt()) {
+    LV_leadingWjet = LV_OnShell_WBoson;
+    LV_SubleadingWjet = LV_OffShell_WBoson;
+  } else {
+    LV_leadingWjet = LV_OffShell_WBoson;
+    LV_SubleadingWjet = LV_OnShell_WBoson;
+  }
+
+  AK8Gen_MergedWjets_minWminHmass_Leading_Pt_ = LV_leadingWjet.Pt();
+  AK8Gen_MergedWjets_minWminHmass_Leading_Eta_ = LV_leadingWjet.Eta();
+  AK8Gen_MergedWjets_minWminHmass_Leading_Phi_ = LV_leadingWjet.Phi();
+  AK8Gen_MergedWjets_minWminHmass_Leading_M_ = LV_leadingWjet.M();
+  AK8Gen_MergedWjets_minWminHmass_Leading_deltaR_H1_ = deltaR(LV_leadingWjet.Eta(),LV_leadingWjet.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  AK8Gen_MergedWjets_minWminHmass_Leading_deltaR_H2_ = deltaR(LV_leadingWjet.Eta(),LV_leadingWjet.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+  
+  AK8Gen_MergedWjets_minWminHmass_SubLeading_Pt_ = LV_SubleadingWjet.Pt();
+  AK8Gen_MergedWjets_minWminHmass_SubLeading_Eta_ = LV_SubleadingWjet.Eta();
+  AK8Gen_MergedWjets_minWminHmass_SubLeading_Phi_ = LV_SubleadingWjet.Phi();
+  AK8Gen_MergedWjets_minWminHmass_SubLeading_M_ = LV_SubleadingWjet.M();
+  AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H1_ = deltaR(LV_SubleadingWjet.Eta(),LV_SubleadingWjet.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H2_ = deltaR(LV_SubleadingWjet.Eta(),LV_SubleadingWjet.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+  AK8Gen_MergedWjets_minWminHmass_LeadingSubLeading_DR_ = deltaR(LV_SubleadingWjet.Eta(),LV_SubleadingWjet.Phi(),LV_leadingWjet.Eta(),LV_leadingWjet.Phi());
+
+  // std::cout << "===================================================\n\n\n" << std::endl;
+
+
+
   tree->Fill();
   
   Vec_Wboson.clear();
