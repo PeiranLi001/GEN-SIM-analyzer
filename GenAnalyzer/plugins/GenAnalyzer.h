@@ -58,6 +58,7 @@ public:
   static bool reorder(const TLorentzVector &a, const TLorentzVector &b);
   //https://stackoverflow.com/a/26230635/2302094
   static bool jetCleaning(const reco::GenJet  * genAK8jet,const vector<reco::GenJet>* genAK4_coll, const double r_seperation=0.8);
+  static void SortedCleanedJetVector(const std::vector<reco::GenJet>* jetCollection1, const std::vector<reco::GenJet>* jetCollection2, const std::vector<TLorentzVector> &photons, std::vector<TLorentzVector> &outputLorentzVector, const double r_seperation=0.8);
 
   void SetBranches();
   void Clear();
@@ -202,6 +203,13 @@ private:
   double AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H2_ = -999.0;
   double AK8Gen_MergedWjets_MaxPt_LeadingSubLeading_DR_ = -999.0;
 
+  double AK8Gen_MergedWjets_MaxPt_Higgs_Pt_ = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_Higgs_Eta_ = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_Higgs_Phi_  = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_Higgs_M_  = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_Higgs_deltaR_H1_  = -999.0;
+  double AK8Gen_MergedWjets_MaxPt_Higgs_deltaR_H2_  = -999.0;
+
   double AK8Gen_MergedWjets_minDMass_Leading_Pt_ = -999.0;
   double AK8Gen_MergedWjets_minDMass_Leading_Eta_ = -999.0;
   double AK8Gen_MergedWjets_minDMass_Leading_Phi_ = -999.0;
@@ -216,6 +224,13 @@ private:
   double AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H2_ = -999.0;
   double AK8Gen_MergedWjets_minDMass_LeadingSubLeading_DR_   = -999.0;
 
+  double AK8Gen_MergedWjets_minDMass_Higgs_Pt_  = -999.0;
+  double AK8Gen_MergedWjets_minDMass_Higgs_Eta_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_Higgs_Phi_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_Higgs_M_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_Higgs_deltaR_H1_ = -999.0;
+  double AK8Gen_MergedWjets_minDMass_Higgs_deltaR_H2_ = -999.0;
+
   double AK8Gen_MergedWjets_minWminHmass_Leading_Pt_ = -999.0;
   double AK8Gen_MergedWjets_minWminHmass_Leading_Eta_ = -999.0;
   double AK8Gen_MergedWjets_minWminHmass_Leading_Phi_ = -999.0;
@@ -229,6 +244,13 @@ private:
   double AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H1_ = -999.0;
   double AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H2_ = -999.0;
   double AK8Gen_MergedWjets_minWminHmass_LeadingSubLeading_DR_   = -999.0;
+
+  double AK8Gen_MergedWjets_minWminHmass_Higgs_Pt_  = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_Higgs_Eta_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_Higgs_Phi_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_Higgs_M_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_Higgs_deltaR_H1_ = -999.0;
+  double AK8Gen_MergedWjets_minWminHmass_Higgs_deltaR_H2_ = -999.0;
 
   double AK4GEN_AllResolved_onShellJet1_Pt_ = -999.0;
   double AK4GEN_AllResolved_onShellJet1_Eta_  = -999.0;
@@ -556,6 +578,13 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H2_,"AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H2");
   AddBranch(&AK8Gen_MergedWjets_MaxPt_LeadingSubLeading_DR_,"AK8Gen_MergedWjets_MaxPt_LeadingSubLeading_DR");
 
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_Higgs_Pt_,"AK8Gen_MergedWjets_MaxPt_Higgs_Pt");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_Higgs_Eta_,"AK8Gen_MergedWjets_MaxPt_Higgs_Eta");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_Higgs_Phi_,"AK8Gen_MergedWjets_MaxPt_Higgs_Phi");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_Higgs_M_,"AK8Gen_MergedWjets_MaxPt_Higgs_M");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_Higgs_deltaR_H1_,"AK8Gen_MergedWjets_MaxPt_Higgs_deltaR_H1");
+  AddBranch(&AK8Gen_MergedWjets_MaxPt_Higgs_deltaR_H2_,"AK8Gen_MergedWjets_MaxPt_Higgs_deltaR_H2");
+
   AddBranch(&AK8Gen_MergedWjets_minDMass_Leading_Pt_,"AK8Gen_MergedWjets_minDMass_Leading_Pt");
   AddBranch(&AK8Gen_MergedWjets_minDMass_Leading_Eta_,"AK8Gen_MergedWjets_minDMass_Leading_Eta");
   AddBranch(&AK8Gen_MergedWjets_minDMass_Leading_Phi_,"AK8Gen_MergedWjets_minDMass_Leading_Phi");
@@ -570,6 +599,13 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H2_,"AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H2");
   AddBranch(&AK8Gen_MergedWjets_minDMass_LeadingSubLeading_DR_,"AK8Gen_MergedWjets_minDMass_LeadingSubLeading_DR");
 
+  AddBranch(&AK8Gen_MergedWjets_minDMass_Higgs_Pt_,"AK8Gen_MergedWjets_minDMass_Higgs_Pt");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_Higgs_Eta_,"AK8Gen_MergedWjets_minDMass_Higgs_Eta");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_Higgs_Phi_,"AK8Gen_MergedWjets_minDMass_Higgs_Phi");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_Higgs_M_,"AK8Gen_MergedWjets_minDMass_Higgs_M");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_Higgs_deltaR_H1_,"AK8Gen_MergedWjets_minDMass_Higgs_deltaR_H1");
+  AddBranch(&AK8Gen_MergedWjets_minDMass_Higgs_deltaR_H2_,"AK8Gen_MergedWjets_minDMass_Higgs_deltaR_H2");
+
   AddBranch(&AK8Gen_MergedWjets_minWminHmass_Leading_Pt_,"AK8Gen_MergedWjets_minWminHmass_Leading_Pt");
   AddBranch(&AK8Gen_MergedWjets_minWminHmass_Leading_Eta_,"AK8Gen_MergedWjets_minWminHmass_Leading_Eta");
   AddBranch(&AK8Gen_MergedWjets_minWminHmass_Leading_Phi_,"AK8Gen_MergedWjets_minWminHmass_Leading_Phi");
@@ -583,6 +619,13 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H1_,"AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H1");
   AddBranch(&AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H2_,"AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H2");
   AddBranch(&AK8Gen_MergedWjets_minWminHmass_LeadingSubLeading_DR_,"AK8Gen_MergedWjets_minWminHmass_LeadingSubLeading_DR");
+
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_Higgs_Pt_,"AK8Gen_MergedWjets_minWminHmass_Higgs_Pt");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_Higgs_Eta_,"AK8Gen_MergedWjets_minWminHmass_Higgs_Eta");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_Higgs_Phi_,"AK8Gen_MergedWjets_minWminHmass_Higgs_Phi");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_Higgs_M_,"AK8Gen_MergedWjets_minWminHmass_Higgs_M");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_Higgs_deltaR_H1_,"AK8Gen_MergedWjets_minWminHmass_Higgs_deltaR_H1");
+  AddBranch(&AK8Gen_MergedWjets_minWminHmass_Higgs_deltaR_H2_,"AK8Gen_MergedWjets_minWminHmass_Higgs_deltaR_H2");
 
   AddBranch(&AK4GEN_AllResolved_onShellJet1_Pt_,"AK4GEN_AllResolved_onShellJet1_Pt");
   AddBranch(&AK4GEN_AllResolved_onShellJet1_Eta_,"AK4GEN_AllResolved_onShellJet1_Eta");
@@ -755,6 +798,13 @@ void GenAnalyzer::Clear(){
   AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H2_   = -999.0;
   AK8Gen_MergedWjets_MaxPt_LeadingSubLeading_DR_ = -999.0;
 
+  AK8Gen_MergedWjets_MaxPt_Higgs_Pt_  = -999.0;
+  AK8Gen_MergedWjets_MaxPt_Higgs_Eta_ = -999.0;
+  AK8Gen_MergedWjets_MaxPt_Higgs_Phi_ = -999.0;
+  AK8Gen_MergedWjets_MaxPt_Higgs_M_ = -999.0;
+  AK8Gen_MergedWjets_MaxPt_Higgs_deltaR_H1_ = -999.0;
+  AK8Gen_MergedWjets_MaxPt_Higgs_deltaR_H2_ = -999.0;
+
   AK8Gen_MergedWjets_minDMass_Leading_Pt_ = -999.0;
   AK8Gen_MergedWjets_minDMass_Leading_Eta_ = -999.0;
   AK8Gen_MergedWjets_minDMass_Leading_Phi_ = -999.0;
@@ -769,6 +819,13 @@ void GenAnalyzer::Clear(){
   AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H2_ = -999.0;
   AK8Gen_MergedWjets_minDMass_LeadingSubLeading_DR_  = -999.0;
 
+  AK8Gen_MergedWjets_minDMass_Higgs_Pt_ = -999.0;
+  AK8Gen_MergedWjets_minDMass_Higgs_Eta_  = -999.0;
+  AK8Gen_MergedWjets_minDMass_Higgs_Phi_  = -999.0;
+  AK8Gen_MergedWjets_minDMass_Higgs_M_  = -999.0;
+  AK8Gen_MergedWjets_minDMass_Higgs_deltaR_H1_  = -999.0;
+  AK8Gen_MergedWjets_minDMass_Higgs_deltaR_H2_  = -999.0;
+
   AK8Gen_MergedWjets_minWminHmass_Leading_Pt_ = -999.0;
   AK8Gen_MergedWjets_minWminHmass_Leading_Eta_ = -999.0;
   AK8Gen_MergedWjets_minWminHmass_Leading_Phi_ = -999.0;
@@ -782,6 +839,13 @@ void GenAnalyzer::Clear(){
   AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H1_ = -999.0;
   AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H2_ = -999.0;
   AK8Gen_MergedWjets_minWminHmass_LeadingSubLeading_DR_   = -999.0;
+
+  AK8Gen_MergedWjets_minWminHmass_Higgs_Pt_ = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_Higgs_Eta_  = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_Higgs_Phi_  = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_Higgs_M_  = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_Higgs_deltaR_H1_  = -999.0;
+  AK8Gen_MergedWjets_minWminHmass_Higgs_deltaR_H2_  = -999.0;
 
   AK4GEN_AllResolved_onShellJet1_Pt_  = -999.0;
   AK4GEN_AllResolved_onShellJet1_Eta_ = -999.0;
@@ -861,3 +925,20 @@ bool GenAnalyzer::jetCleaning(const reco::GenJet  * genAK8jet,const vector<reco:
   }
   return true;
 }
+
+void GenAnalyzer::SortedCleanedJetVector(const std::vector<reco::GenJet>* genAK4_coll, const std::vector<reco::GenJet>* genAK8_coll, const std::vector<TLorentzVector> &Vec_Photons, std::vector<TLorentzVector> &local_Vec_genJetAK4, const double r_seperation)
+{
+  // int nAK4jets = 0;
+  TLorentzVector temp_genJetAK4;
+  for(vector<reco::GenJet>::const_iterator genjet = genAK4_coll->begin(); genjet != genAK4_coll->end(); genjet++) {
+    if (deltaR(genjet->eta(),genjet->phi(), Vec_Photons[0].Eta(),Vec_Photons[0].Phi())>0.4 && deltaR(genjet->eta(),genjet->phi(), Vec_Photons[1].Eta(),Vec_Photons[1].Phi())>0.4) {
+      if ( GenAnalyzer::jetCleaning(&(*genjet), genAK8_coll, r_seperation ) ) {
+        // nAK4jets++;
+        temp_genJetAK4.SetPtEtaPhiE(genjet->pt(), genjet->eta(), genjet->phi(), genjet->energy());
+        local_Vec_genJetAK4.push_back(temp_genJetAK4);
+        std::cout << "**> " << genjet->pt() << "\t" << genjet->eta() << "\t" << genjet->phi() << "\t" << genjet->energy()<< std::endl;
+      }
+    }
+  }
+}
+

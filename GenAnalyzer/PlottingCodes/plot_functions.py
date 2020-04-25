@@ -30,7 +30,7 @@ def getLegends(pos,ncol,nvar,fontsize):
 
 def getCanvas():
     H_ref = 600; 
-    W_ref = 600; 
+    W_ref = 800; 
     W = W_ref
     H = H_ref
 
@@ -45,7 +45,7 @@ def getCanvas():
     canvas.SetFrameFillStyle(0)
     canvas.SetFrameBorderMode(0)
     canvas.SetLeftMargin( L/W *0.6 )
-    canvas.SetRightMargin( R/W*5 )
+    canvas.SetRightMargin( R/W*11 )
     canvas.SetTopMargin( T/H )
     canvas.SetBottomMargin( B/H )
     canvas.SetTickx(0)

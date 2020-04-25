@@ -1,6 +1,8 @@
 import os, sys
 from runnning_plots import variables
 import runnning_plots2
+from datetime import datetime
+current_datetime = datetime.now()
 
 
 # Group of Different functions for different styles
@@ -17,6 +19,16 @@ class style():
     UNDERLINE = '\033[4m'
     RESET = '\033[0m'
 
+dirName =(str(current_datetime.year)[-2:]
+         +str(format(current_datetime.month,'02d'))
+         +str(format(current_datetime.day,'02d'))
+         +"_"
+         +str(format(current_datetime.hour,'02d'))
+         +str(format(current_datetime.minute,'02d'))
+         +str(format(current_datetime.second,'02d'))
+         )
+print dirName
+
 # print(style.YELLOW + "Hello, World!")# input_root_file = '/eos/uscms/store/user/rasharma/double-higgs/SignalSample/GEN_reducedNtuples/'
 
 # InputFileList = ['GF_HH_Benchmark1', 'GF_HH_Benchmark2', 'GF_HH_Benchmark3', 'GF_HH_Benchmark4', 'GF_HH_Benchmark5', 'GF_HH_Benchmark6', 'GF_HH_Benchmark7', 'GF_HH_Benchmark8', 'GF_HH_Benchmark9', 'GF_HH_Benchmark10', 'GF_HH_Benchmark11', 'GF_HH_Benchmark12', 'GF_HH_BenchmarkSM']
@@ -25,20 +37,37 @@ class style():
 input_root_file = '../'
 InputFileList = ['GF_HH_Benchmark3']
 
-singleVariable = True
-multipleVariable = False
+singleVariable = False
+multipleVariable = True
 multipleVariableDifferentFiles = False
+
+# CutToApply = 'AK8Gen_HiggsJet_MaxPt_Pt>400 && AK8Gen_HiggsJet_MaxPt_M>100 && AK8Gen_HiggsJet_MaxPt_M<160 && AK8Gen_HiggsJet_MaxPt_deltaR_H1<1.0'
+# CutToApply = 'AK8Gen_HiggsJet_minDMass_Pt>400 && AK8Gen_HiggsJet_minDMass_M>100 && AK8Gen_HiggsJet_minDMass_M<160 && AK8Gen_HiggsJet_minDMass_deltaR_H1<1.0'
+# CutToApply = 'AK8Gen_MergedWjets_MaxPt_Higgs_M>100 && AK8Gen_MergedWjets_MaxPt_Higgs_M<160'
+# CutToApply = 'AK8Gen_MergedWjets_MaxPt_Leading_Pt>200 && AK8Gen_MergedWjets_MaxPt_SubLeading_Pt>200'
+# CutToApply = 'AK8Gen_MergedWjets_MaxPt_Leading_M<105 && AK8Gen_MergedWjets_MaxPt_SubLeading_M < 105 && AK8Gen_MergedWjets_MaxPt_Higgs_M>100 && AK8Gen_MergedWjets_MaxPt_Higgs_M<160'
+CutToApply = 'AK4GEN_AllResolved_Higgs_M>100 && AK4GEN_AllResolved_Higgs_M<160 && AK4GEN_AllResolved_onShellWboson_M > 60 && AK4GEN_AllResolved_onShellWboson_M<105'
+# CutToApply = ''
+keyToUse = 'ak4_method1'
+
 
 if (singleVariable):
   for files in InputFileList:
-    for key in variables:
-      #print variables[key]
-      #python make_aQGC_plots.py -n ../GF_HH_Benchmark222.root --grid -v gen_leading_photon_Pt gen_Subleading_photon_Pt --leg "Leading" "Sub Leading" --xmin 0 --xmax 500 --xlabel "Photon p_{T}" -o photon_pt.png --legPos "tr" --nbin 51
-        print(style.RED+ '\n\n==> python make_aQGC_plots.py -n '+input_root_file +os.sep+files+'.root'+ ' --grid  -v "' + key + '" --leg "' + variables[key][1] +'" --xmin ' + str(variables[key][4]) + ' --xmax ' + str(variables[key][5]) + ' --xlabel "' + variables[key][1] + '" -o ' +'plots/'+files+'_'+ key + '.png  --legPos "tr"  --nbin ' + str(variables[key][3])+ style.RESET)
-        toPlot = 'python make_aQGC_plots.py -n '+input_root_file +os.sep+files+'.root'+ ' --grid  -v "' + key + '" --leg "' + variables[key][1] +'" --xmin ' + str(variables[key][4]) + ' --xmax ' + str(variables[key][5]) + ' --xlabel "' + variables[key][1] + '" -o ' +'plots/'+files+'_'+ key + '.png  --legPos "tr"  --nbin ' + str(variables[key][3])
-        os.system(toPlot)
+    for key2 in variables:
+      # print variables[key]
+      if key2 == keyToUse:
+        print(style.BLUE+ '='*51 + '\n=' +key2 + '\n'+ '='*51 +style.RESET)
+        os.system('mkdir -p '+key2 + os.sep + dirName)
+        newDict = variables[key2]
+        for key in newDict:
+          # print key
+          # print newDict[key]
+          toPlot = 'python make_aQGC_plots.py -n '+input_root_file +os.sep+files+'.root'+ ' --grid  -v "' + key + '" --leg "' + newDict[key][1] +'" --xmin ' + str(newDict[key][4]) + ' --xmax ' + str(newDict[key][5]) + ' --xlabel "' + newDict[key][1] + '" -o ' +key2 + os.sep + dirName+ os.sep +files+'_'+ key + '.png  --legPos "tr"  --nbin ' + str(newDict[key][3]) + '  --cut "' + CutToApply +'"'
+          print(style.RED + '\n\n==> ' + toPlot + style.RESET)
+          os.system(toPlot)
 
 if (multipleVariable):
+  newDict = variables[keyToUse]
   for var_arr in runnning_plots2.variables:
     varToAdd = ""
     legendToAdd = ""
@@ -46,11 +75,14 @@ if (multipleVariable):
     for local_var in var_arr:
       key = local_var
       varToAdd += '"' + local_var + '" '
-      legendToAdd += '"' + variables[key][1] + '" '
-    #print varToAdd
-    toPlot = 'python make_aQGC_plots.py -n '+input_root_file + ' --grid  -v ' + varToAdd + ' --leg ' + legendToAdd +' --xmin ' + str(variables[key][4]) + ' --xmax ' + str(variables[key][5]) + ' --xlabel "' + (variables[key][1]).replace('Leading','').replace('SubLeading','').replace('Sub','') + '" -o ' + key + '_multi.png  --legPos "tr"  --nbin ' + str(variables[key][3])
+      legendToAdd += '"' + newDict[key][1] + '" '
+    # print varToAdd
+    # twoDPlots' + os.sep +keyToUse + os.sep + dirName + os.sep+ key + '_multi.png 
+    os.system('mkdir -p twoDPlots'+os.sep+keyToUse+os.sep+dirName)
+    toPlot = 'python make_aQGC_plots.py -n '+input_root_file +InputFileList[0]+'.root'+ ' --grid  -v ' + varToAdd + ' --leg ' + legendToAdd +' --xmin ' + str(newDict[key][4]) + ' --xmax ' + str(newDict[key][5]) + ' --xlabel "' + (newDict[key][1]).replace('Leading','').replace('SubLeading','').replace('Sub','') + '" -o  twoDPlots' + os.sep +keyToUse + os.sep + dirName + os.sep+ key + '_multi.png  --legPos "tr"  --nbin ' + str(newDict[key][3]) + '  --cut "' + CutToApply +'" --logy'
     print "\n\n","*"*51
-    print toPlot
+    print var_arr
+    print(style.RED + toPlot + style.RESET)
     os.system(toPlot)
 
 if (multipleVariableDifferentFiles):
