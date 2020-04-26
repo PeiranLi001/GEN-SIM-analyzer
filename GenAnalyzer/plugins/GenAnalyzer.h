@@ -63,7 +63,6 @@ public:
   static void indexOfSelectedJet(const std::vector<TLorentzVector> &inputLorentzVector, double massComp, int &index1, int &index2, int in_index1=-1, int in_index2=-1);
   static TLorentzVector maxPtLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector);
   static TLorentzVector minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass);
-  static TLorentzVector minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass,int &position);
   static TLorentzVector minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass, int &position, bool skip);
   static void minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass, TLorentzVector &leadingJet, TLorentzVector &subleadingJet);
 
@@ -1017,33 +1016,8 @@ TLorentzVector GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVecto
  * @param  inputLorentzVector Input vector of TLorentzVector.
  * @param  mass               mass from which it will compare
  * @param  position           position of the vector that need to be skip from calculation
- * @return                    TLorentzVector having minimum mass difference w.r.t. specified mass.
- */
-TLorentzVector GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass, int &position) {
-  double temp_AK8jet_deltaM = 9999.0;
-  TLorentzVector AK8Gen_HiggsJet_MaxPt;
-  int counter = 0;
-  for (std::vector<TLorentzVector>::const_iterator jet = inputLorentzVector.begin(); jet != inputLorentzVector.end(); ++jet)
-  {
-    // std::cout << "counter : " << counter <<  "\t" << abs(jet->M()-mass) << "\t" << mass << "\t" << temp_AK8jet_deltaM << "\t" <<  jet->Pt() <<  std::endl;
-    if (abs(jet->M()-mass)<temp_AK8jet_deltaM)
-    {
-          AK8Gen_HiggsJet_MaxPt.SetPtEtaPhiE(jet->Pt(), jet->Eta(), jet->Phi(), jet->Energy());
-          temp_AK8jet_deltaM = abs(jet->M()-mass);
-          position = counter; 
-    }
-    counter++;
-  }
-  return AK8Gen_HiggsJet_MaxPt;
-}
-
-/**
- * thi
- * @param  inputLorentzVector [description]
- * @param  mass               [description]
- * @param  position           [description]
  * @param  skip               [description]
- * @return                    [description]
+ * @return                    TLorentzVector having minimum mass difference w.r.t. specified mass.
  */
 TLorentzVector GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass, int &position, bool skip) {
   double temp_AK8jet_deltaM = 9999.0;
@@ -1054,13 +1028,20 @@ TLorentzVector GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVecto
   {
     counter++;
     // std::cout << "==> " << counter << "\t" << position << std::endl;
-    if (skip)
+    if (skip) 
+    {
       if (counter == position) continue;
-    // std::cout << counter << "\t" << position << jet->Pt() <<  "\t" << abs(jet->M()-mass) << "\t" << temp_AK8jet_deltaM<< std::endl;
+    }
+    std::cout << counter << "\t" << position << "\t" << jet->Pt() <<  "\t" << abs(jet->M()-mass) << "\t" << temp_AK8jet_deltaM<< std::endl;
     if (abs(jet->M()-mass)<temp_AK8jet_deltaM)
     {
-          AK8Gen_HiggsJet_MaxPt.SetPtEtaPhiE(jet->Pt(), jet->Eta(), jet->Phi(), jet->Energy());
-          temp_AK8jet_deltaM = abs(jet->M()-mass);
+      AK8Gen_HiggsJet_MaxPt.SetPtEtaPhiE(jet->Pt(), jet->Eta(), jet->Phi(), jet->Energy());
+      temp_AK8jet_deltaM = abs(jet->M()-mass);
+      if (!skip) 
+      {
+        position = counter;
+        std::cout << "position : " << position << std::endl;
+      }
     }
   }
   return AK8Gen_HiggsJet_MaxPt;

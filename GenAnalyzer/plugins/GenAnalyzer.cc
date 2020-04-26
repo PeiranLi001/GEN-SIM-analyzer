@@ -274,7 +274,8 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     indexOfSelectedJet(Vec_genJetAK4, 125.0, offshell_WBoson_index1, offshell_WBoson_index2,  onshell_WBoson_index1,  onshell_WBoson_index2);
 
 
-
+    if (onshell_WBoson_index1!=-1 && onshell_WBoson_index2 !=-1 && offshell_WBoson_index2!= -1 && offshell_WBoson_index1 != -1)
+    {
     // std::cout << "onshell: " << onshell_WBoson_index1 << "\t" << onshell_WBoson_index2 << std::endl;
     // std::cout << "offshell: " << offshell_WBoson_index1 << "\t" << offshell_WBoson_index2 << std::endl;
     AK4GEN_AllResolved_onShellJet1_Pt_ = Vec_genJetAK4[onshell_WBoson_index1].Pt();
@@ -305,12 +306,12 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     AK4GEN_AllResolved_onShellWboson_Phi_ = (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi();
     AK4GEN_AllResolved_onShellWboson_M_ = (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).M();
     double tempDeltaR = deltaR ((Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta(),
-      (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi(),
-      Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
+                                (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi(),
+                                Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
     AK4GEN_AllResolved_onShellWboson_dR_W0PID_ = tempDeltaR;
     tempDeltaR = deltaR ((Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta(),
-      (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi(),
-      Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());  
+                         (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi(),
+                         Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());  
     AK4GEN_AllResolved_onShellWboson_dR_W1PID_ = tempDeltaR;
 
     AK4GEN_AllResolved_offShellJet1_Pt_ = Vec_genJetAK4[offshell_WBoson_index1].Pt();
@@ -330,9 +331,9 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     AK4GEN_AllResolved_offShellJet2_M_ = Vec_genJetAK4[offshell_WBoson_index2].M();
     AK4GEN_AllResolved_offShellJets_dR_ = deltaR(Vec_genJetAK4[offshell_WBoson_index1].Eta(), Vec_genJetAK4[offshell_WBoson_index1].Phi(), Vec_genJetAK4[offshell_WBoson_index2].Eta(), Vec_genJetAK4[offshell_WBoson_index2].Phi());
     double deltaRonoff = ((Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Pt(),
-      (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta(),
-      (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Pt(),
-      (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Eta());
+                          (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta(),
+                          (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Pt(),
+                          (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Eta());
     AK4GEN_AllResolved_onShelloffShellJets_dR_ = deltaRonoff;
     AK4GEN_AllResolved_offShellJet2_dR_q1_ = deltaR(Vec_genJetAK4[offshell_WBoson_index2].Eta(),Vec_genJetAK4[offshell_WBoson_index2].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi());
     AK4GEN_AllResolved_offShellJet2_dR_q2_ = deltaR(Vec_genJetAK4[offshell_WBoson_index2].Eta(),Vec_genJetAK4[offshell_WBoson_index2].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi());
@@ -347,32 +348,33 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     AK4GEN_AllResolved_offShellWboson_Phi_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Phi();
     AK4GEN_AllResolved_offShellWboson_M_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).M();
     tempDeltaR = deltaR ((Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Eta(),
-      (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Phi(),
-      Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
+                         (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Phi(),
+                         Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
     AK4GEN_AllResolved_offShellWboson_dR_W0PID_ = tempDeltaR;
     tempDeltaR = deltaR ((Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Eta(),
-      (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Phi(),
-      Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());  
+                         (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Phi(),
+                         Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());  
     AK4GEN_AllResolved_offShellWboson_dR_W1PID_ = tempDeltaR;
 
     AK4GEN_AllResolved_Higgs_Pt_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
-      Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Pt();
+                                    Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Pt();
     AK4GEN_AllResolved_Higgs_Eta_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
-      Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta();
+                                     Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta();
     AK4GEN_AllResolved_Higgs_Phi_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
-      Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi();
+                                     Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi();
     AK4GEN_AllResolved_Higgs_M_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
-      Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).M();
+                                   Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).M();
     AK4GEN_AllResolved_Higgs_DR_Higgs0PID_ =((Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
-     Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta(),
+                                              Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta(),
     (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
      Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi(),
     Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
     AK4GEN_AllResolved_Higgs_DR_Higgs1PID_ =((Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
-     Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta(),
+                                              Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta(),
     (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
      Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi(),
     Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+    }
   }
 
   /**********************************************************
@@ -493,7 +495,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    * Select on-shell W-boson
    */
   int tempPos = -1;
-  TLorentzVector LV_OnShell_WBoson =  minMassLorentzVector(Vec_genJetAK8, 80.0, tempPos);
+  TLorentzVector LV_OnShell_WBoson =  minMassLorentzVector(Vec_genJetAK8, 80.0, tempPos, false);
   /**
    * Select off-shell W-boson from cleaned AK8 jets LV by skipping the on-shell w-boson.
    */
