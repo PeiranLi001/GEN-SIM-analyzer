@@ -57,8 +57,15 @@ public:
   static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
   static bool reorder(const TLorentzVector &a, const TLorentzVector &b);
   //https://stackoverflow.com/a/26230635/2302094
-  static bool jetCleaning(const reco::GenJet  * genAK8jet,const vector<reco::GenJet>* genAK4_coll, const double r_seperation=0.8);
+  static bool jetCleaning(const reco::GenJet  * genAK8jet,const vector<reco::GenJet>* firstJetCollection, const double r_seperation=0.8);
   static void SortedCleanedJetVector(const std::vector<reco::GenJet>* jetCollection1, const std::vector<reco::GenJet>* jetCollection2, const std::vector<TLorentzVector> &photons, std::vector<TLorentzVector> &outputLorentzVector, const double r_seperation=0.8);
+  static void indexOfSelectedJet(const std::vector<TLorentzVector> &inputLorentzVector, int &index1, int &index2);
+  static void indexOfSelectedJet(const std::vector<TLorentzVector> &inputLorentzVector, double massComp, int &index1, int &index2, int in_index1=-1, int in_index2=-1);
+  static TLorentzVector maxPtLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector);
+  static TLorentzVector minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass);
+  static TLorentzVector minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass,int &position);
+  static TLorentzVector minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass, int &position, bool skip);
+  static void minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass, TLorentzVector &leadingJet, TLorentzVector &subleadingJet);
 
   void SetBranches();
   void Clear();
@@ -911,32 +918,235 @@ void GenAnalyzer::Clear(){
   AK4GEN_AllResolved_Higgs_DR_Higgs1PID_  = -999.0;
 }
 
-
+/**
+ * This helps to identify the higher pT lorentzVector.
+ * @param  a first lorentz vector
+ * @param  b second lorentz vector
+ * @return   [bool] True if first LV has higher pT than second otherwise False.
+ */
 bool GenAnalyzer::reorder(const TLorentzVector &a, const TLorentzVector &b)
 {
   return a.Pt() > b.Pt();
 }
 
-
-bool GenAnalyzer::jetCleaning(const reco::GenJet  * genAK8jet,const vector<reco::GenJet>* genAK4_coll, const double r_seperation)
+/**
+ * This takes one AK4 (AK8) jet and checks from AK8 (AK4) jet collection if its cleaned or not.
+ * @param  genAK8jet          [reco::GenJet] one gen jet
+ * @param  firstJetCollection [const vector<reco::GenJet>] vector of genJet collection 
+ * @param  r_seperation       [double] this is the value of delta R     
+ * @return                    [bool] returns true if jet is cleaned else false.
+ */
+bool GenAnalyzer::jetCleaning(const reco::GenJet  * genAK8jet,const vector<reco::GenJet>* firstJetCollection, const double r_seperation)
 {
-  for(vector<reco::GenJet>::const_iterator genjet = genAK4_coll->begin(); genjet != genAK4_coll->end(); genjet++) {
+  for(vector<reco::GenJet>::const_iterator genjet = firstJetCollection->begin(); genjet != firstJetCollection->end(); genjet++) {
     if (deltaR(genAK8jet->pt(), genAK8jet->eta(), genjet->pt(), genjet->eta()) < r_seperation) return false;
   }
   return true;
 }
 
-void GenAnalyzer::SortedCleanedJetVector(const std::vector<reco::GenJet>* genAK4_coll, const std::vector<reco::GenJet>* genAK8_coll, const std::vector<TLorentzVector> &Vec_Photons, std::vector<TLorentzVector> &local_Vec_genJetAK4, const double r_seperation)
+/**
+ * This function returns the sorted TLorentzVector that contains information from first
+ * passed jetCollection.
+ * @param firstJetCollection         first genjetCollection whose information will be passed to 
+ *                            TLorentzVector local_Vec_genJetAK5
+ * @param secondJetCollection         Another genjetCollection which from which the first jet
+ *                            collection is going to be cleaned.
+ * @param Vec_Photons         Sorted TLorentzVector that contains the photon collection.
+ * @param local_Vec_genJetAK4 vector of TLorentzVector that we need
+ * @param r_seperation        This is the delta-R seperation distance beetween the two 
+ *                            jets.
+ */
+void GenAnalyzer::SortedCleanedJetVector(const std::vector<reco::GenJet>* firstJetCollection, const std::vector<reco::GenJet>* secondJetCollection, const std::vector<TLorentzVector> &Vec_Photons, std::vector<TLorentzVector> &local_Vec_genJetAK4, const double r_seperation)
 {
   // int nAK4jets = 0;
   TLorentzVector temp_genJetAK4;
-  for(vector<reco::GenJet>::const_iterator genjet = genAK4_coll->begin(); genjet != genAK4_coll->end(); genjet++) {
+  for(vector<reco::GenJet>::const_iterator genjet = firstJetCollection->begin(); genjet != firstJetCollection->end(); genjet++) {
     if (deltaR(genjet->eta(),genjet->phi(), Vec_Photons[0].Eta(),Vec_Photons[0].Phi())>0.4 && deltaR(genjet->eta(),genjet->phi(), Vec_Photons[1].Eta(),Vec_Photons[1].Phi())>0.4) {
-      if ( GenAnalyzer::jetCleaning(&(*genjet), genAK8_coll, r_seperation ) ) {
-        // nAK4jets++;
+      if ( GenAnalyzer::jetCleaning(&(*genjet), secondJetCollection, r_seperation ) ) {
         temp_genJetAK4.SetPtEtaPhiE(genjet->pt(), genjet->eta(), genjet->phi(), genjet->energy());
         local_Vec_genJetAK4.push_back(temp_genJetAK4);
-        std::cout << "**> " << genjet->pt() << "\t" << genjet->eta() << "\t" << genjet->phi() << "\t" << genjet->energy()<< std::endl;
+        // std::cout << "**> " << genjet->pt() << "\t" << genjet->eta() << "\t" << genjet->phi() << "\t" << genjet->energy()<< std::endl;
+      }
+    }
+  }
+  std::sort(local_Vec_genJetAK4.begin(), local_Vec_genJetAK4.end(), GenAnalyzer::reorder);
+}
+
+/**
+ * This takes a vector of TLorentzVector and give a TLorentzVector having highest pT
+ * @param  inputLorentzVector Vector of TLorentzVector
+ * @return                    TLorentzVector having highest pT
+ */
+TLorentzVector GenAnalyzer::maxPtLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector) {
+  double temp_pt = -999.0;
+  TLorentzVector AK8Gen_HiggsJet_MaxPt;
+  for (std::vector<TLorentzVector>::const_iterator jet = inputLorentzVector.begin(); jet != inputLorentzVector.end(); ++jet)
+  {
+    if (jet->Pt()>temp_pt)
+    {
+          AK8Gen_HiggsJet_MaxPt.SetPtEtaPhiE(jet->Pt(), jet->Eta(), jet->Phi(), jet->Energy());
+          temp_pt = jet->Pt();      
+    }
+  }
+  return AK8Gen_HiggsJet_MaxPt;
+}
+
+/**
+ * This takes a vector of TLorentzVector and gives a TLorentzVector having minimum mass difference from the specified mass.
+ * @param  inputLorentzVector [TLorentzVector] Input vector of TLorentzVector
+ * @param  mass               [double] mass from which it will compare.
+ * @return                    TLorentzVector having minimum mass difference w.r.t. specified mass.
+ */
+TLorentzVector GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass) {
+  double temp_AK8jet_deltaM = 9999.0;
+  TLorentzVector AK8Gen_HiggsJet_MaxPt;
+  for (std::vector<TLorentzVector>::const_iterator jet = inputLorentzVector.begin(); jet != inputLorentzVector.end(); ++jet)
+  {
+    if (abs(jet->M()-mass)<temp_AK8jet_deltaM)
+    {
+          AK8Gen_HiggsJet_MaxPt.SetPtEtaPhiE(jet->Pt(), jet->Eta(), jet->Phi(), jet->Energy());
+          temp_AK8jet_deltaM = abs(jet->M()-mass);
+    }
+  }
+  return AK8Gen_HiggsJet_MaxPt;
+}
+
+/**
+ * This takes a vector of TLorentzVector and returns a TLorentzVector having minimum delta mass w.r.t. the 
+ * specified mass. Also, it takes a input positional arguments. It just skip that while checking.
+ * @param  inputLorentzVector Input vector of TLorentzVector.
+ * @param  mass               mass from which it will compare
+ * @param  position           position of the vector that need to be skip from calculation
+ * @return                    TLorentzVector having minimum mass difference w.r.t. specified mass.
+ */
+TLorentzVector GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass, int &position) {
+  double temp_AK8jet_deltaM = 9999.0;
+  TLorentzVector AK8Gen_HiggsJet_MaxPt;
+  int counter = 0;
+  for (std::vector<TLorentzVector>::const_iterator jet = inputLorentzVector.begin(); jet != inputLorentzVector.end(); ++jet)
+  {
+    // std::cout << "counter : " << counter <<  "\t" << abs(jet->M()-mass) << "\t" << mass << "\t" << temp_AK8jet_deltaM << "\t" <<  jet->Pt() <<  std::endl;
+    if (abs(jet->M()-mass)<temp_AK8jet_deltaM)
+    {
+          AK8Gen_HiggsJet_MaxPt.SetPtEtaPhiE(jet->Pt(), jet->Eta(), jet->Phi(), jet->Energy());
+          temp_AK8jet_deltaM = abs(jet->M()-mass);
+          position = counter; 
+    }
+    counter++;
+  }
+  return AK8Gen_HiggsJet_MaxPt;
+}
+
+/**
+ * thi
+ * @param  inputLorentzVector [description]
+ * @param  mass               [description]
+ * @param  position           [description]
+ * @param  skip               [description]
+ * @return                    [description]
+ */
+TLorentzVector GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass, int &position, bool skip) {
+  double temp_AK8jet_deltaM = 9999.0;
+  TLorentzVector AK8Gen_HiggsJet_MaxPt;
+  int counter = -1;
+  // std::cout << "===================" << position << std::endl;
+  for (std::vector<TLorentzVector>::const_iterator jet = inputLorentzVector.begin(); jet != inputLorentzVector.end(); ++jet)
+  {
+    counter++;
+    // std::cout << "==> " << counter << "\t" << position << std::endl;
+    if (skip)
+      if (counter == position) continue;
+    // std::cout << counter << "\t" << position << jet->Pt() <<  "\t" << abs(jet->M()-mass) << "\t" << temp_AK8jet_deltaM<< std::endl;
+    if (abs(jet->M()-mass)<temp_AK8jet_deltaM)
+    {
+          AK8Gen_HiggsJet_MaxPt.SetPtEtaPhiE(jet->Pt(), jet->Eta(), jet->Phi(), jet->Energy());
+          temp_AK8jet_deltaM = abs(jet->M()-mass);
+    }
+  }
+  return AK8Gen_HiggsJet_MaxPt;
+}
+
+/**
+ * [GenAnalyzer::minMassLorentzVector description]
+ * @param inputLorentzVector [description]
+ * @param mass               [description]
+ * @param leadingJet         [description]
+ * @param subleadingJet      [description]
+ */
+void GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass, TLorentzVector &leadingJet, TLorentzVector &subleadingJet) {
+  double temp_AK8jet_deltaM = 9999.0;
+  for (std::vector<TLorentzVector>::const_iterator jet = inputLorentzVector.begin(); jet != inputLorentzVector.end()-1; ++jet)
+    for (std::vector<TLorentzVector>::const_iterator jet1 = jet+1; jet1 != inputLorentzVector.end(); ++jet1)
+    {
+      if (abs((*jet+*jet1).M()-mass)<temp_AK8jet_deltaM)
+      {
+        temp_AK8jet_deltaM = abs((*jet+*jet1).M() - mass);
+        if (jet->Pt()>jet1->Pt()) {
+          leadingJet.SetPtEtaPhiE((jet)->Pt(), (jet)->Eta(), (jet)->Phi(), (jet)->Energy());          
+          subleadingJet.SetPtEtaPhiE((jet1)->Pt(), (jet1)->Eta(), (jet1)->Phi(), (jet1)->Energy());          
+        } else {
+          leadingJet.SetPtEtaPhiE((jet1)->Pt(), (jet1)->Eta(), (jet1)->Phi(), (jet1)->Energy());   
+          subleadingJet.SetPtEtaPhiE((jet)->Pt(), (jet)->Eta(), (jet)->Phi(), (jet)->Energy());          
+        }
+      }
+    }
+}
+
+
+/**
+ * Returns the two index from jet collection that satisfies condition abs(mass-80) minimum.
+ * @param inputLorentzVector Input TLorentzVector that contains AK8 jet information
+ * @param index1             Index of first on-shell selected jet
+ * @param index2             Index of second on-shell selected jet
+ */
+void GenAnalyzer::indexOfSelectedJet(const std::vector<TLorentzVector> &inputLorentzVector, int &index1, int &index2) {
+  double tempMass1 = 9999.0;
+  for ( int ak4_jet1 = 0; ak4_jet1 < int(inputLorentzVector.size())-1; ++ak4_jet1)
+  {
+    for ( int ak4_jet2 = ak4_jet1+1; ak4_jet2 < int(inputLorentzVector.size()); ++ak4_jet2)
+    {
+      double mass = (inputLorentzVector[ak4_jet1] + inputLorentzVector[ak4_jet2]).M();      
+      if (abs(mass - 80.0) < tempMass1)
+      {
+        tempMass1 = abs(mass - 80.0);
+        index1 = ak4_jet1;
+        index2 = ak4_jet2;
+      }
+    }
+  }
+}
+
+/**
+ * Return the two index from the jet collection vector of type TLorentzVector.
+ * @param inputLorentzVector Input TLorentzVector that contains jet information
+ * @param massComp           Value of mass for which the minimum delta mass is going to be calculated.
+ * @param index1             Index of first selected jet.
+ * @param index2             Index of second selected jet.
+ * @param in_index1          Index of fist jet to be ignored.
+ * @param in_index2          Index of second jet to be ignored.
+ */
+void GenAnalyzer::indexOfSelectedJet(const std::vector<TLorentzVector> &inputLorentzVector, double massComp, int &index1, int &index2, int in_index1, int in_index2) {
+  double tempMass1 = 9999.0;
+  for ( int ak4_jet1 = 0; ak4_jet1 < int(inputLorentzVector.size())-1; ++ak4_jet1)
+  {
+    double mass = 0.0;
+    if (ak4_jet1 == in_index1) continue;
+    if (ak4_jet1 == in_index2) continue;
+    for ( int ak4_jet2 = ak4_jet1+1; ak4_jet2 < int(inputLorentzVector.size()); ++ak4_jet2)
+    {
+      if (ak4_jet2 == in_index1) continue;
+      if (ak4_jet2 == in_index2) continue;
+      if (in_index1 == -1 && in_index2 == -1) {
+          mass = (inputLorentzVector[ak4_jet1] + inputLorentzVector[ak4_jet2]).M();      
+      } else {
+          mass = (inputLorentzVector[ak4_jet1] + inputLorentzVector[ak4_jet2] + 
+          inputLorentzVector[in_index1] + inputLorentzVector[in_index2]).M();
+      }
+      if (abs(mass - massComp) < tempMass1)
+      {
+        tempMass1 = abs(mass - massComp);
+        index1 = ak4_jet1;
+        index2 = ak4_jet2;
       }
     }
   }
