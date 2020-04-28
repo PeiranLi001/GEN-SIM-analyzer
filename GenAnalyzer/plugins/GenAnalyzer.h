@@ -65,6 +65,7 @@ public:
   static TLorentzVector minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass);
   static TLorentzVector minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass, int &position, bool skip);
   static void minMassLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector, const double mass, TLorentzVector &leadingJet, TLorentzVector &subleadingJet);
+  static std::vector<TLorentzVector> minMassLorentzVector(const std::vector<TLorentzVector> &input_AK4LorentzVector, const std::vector<TLorentzVector> &input_AK8LorentzVector);
 
   void SetBranches();
   void Clear();
@@ -320,6 +321,88 @@ private:
   double AK4GEN_AllResolved_Higgs_M_  = -999.0;
   double AK4GEN_AllResolved_Higgs_DR_Higgs0PID_ = -999.0;
   double AK4GEN_AllResolved_Higgs_DR_Higgs1PID_ = -999.0;
+
+  double OneAK8TwoAK4_pTMax_AK8_Pt_ = -999.0;
+  double OneAK8TwoAK4_pTMax_AK8_Eta_  = -999.0;
+  double OneAK8TwoAK4_pTMax_AK8_Phi_  = -999.0;
+  double OneAK8TwoAK4_pTMax_AK8_M_  = -999.0;
+  double OneAK8TwoAK4_pTMax_AK8_dR_W1_  = -999.0;
+  double OneAK8TwoAK4_pTMax_AK8_dR_W2_  = -999.0;
+  double OneAK8TwoAK4_pTMax_AK8_dR_H1_  = -999.0;
+  double OneAK8TwoAK4_pTMax_AK8_dR_H2_  = -999.0;
+  double OneAK8TwoAK4_pTMax_leadingAK4_Pt_  = -999.0;
+  double OneAK8TwoAK4_pTMax_leadingAK4_Eta_ = -999.0;
+  double OneAK8TwoAK4_pTMax_leadingAK4_Phi_ = -999.0;
+  double OneAK8TwoAK4_pTMax_leadingAK4_M_ = -999.0;
+  double OneAK8TwoAK4_pTMax_leadingAK4_dR_W1_ = -999.0;
+  double OneAK8TwoAK4_pTMax_leadingAK4_dR_W2_ = -999.0;
+  double OneAK8TwoAK4_pTMax_leadingAK4_dR_H1_ = -999.0;
+  double OneAK8TwoAK4_pTMax_leadingAK4_dR_H2_ = -999.0;
+  double OneAK8TwoAK4_pTMax_subleadingAK4_Pt_ = -999.0;
+  double OneAK8TwoAK4_pTMax_subleadingAK4_Eta_  = -999.0;
+  double OneAK8TwoAK4_pTMax_subleadingAK4_Phi_  = -999.0;
+  double OneAK8TwoAK4_pTMax_subleadingAK4_M_  = -999.0;
+  double OneAK8TwoAK4_pTMax_subleadingAK4_dR_W1_  = -999.0;
+  double OneAK8TwoAK4_pTMax_subleadingAK4_dR_W2_  = -999.0;
+  double OneAK8TwoAK4_pTMax_subleadingAK4_dR_H1_  = -999.0;
+  double OneAK8TwoAK4_pTMax_subleadingAK4_dR_H2_  = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsW_AK4_Pt_ = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsW_AK4_Eta_  = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsW_AK4_Phi_  = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsW_AK4_M_  = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_W1_  = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_W2_  = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_H1_  = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_H2_  = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsH_Pt_ = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsH_Eta_  = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsH_Phi_  = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsH_M_  = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsH_dR_W1_  = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsH_dR_W2_  = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsH_dR_H1_  = -999.0;
+  double OneAK8TwoAK4_pTMax_ReconsH_dR_H2_  = -999.0;
+
+  double OneAK8TwoAK4_minMass_AK8_Pt_ = -999.0;
+  double OneAK8TwoAK4_minMass_AK8_Eta_  = -999.0;
+  double OneAK8TwoAK4_minMass_AK8_Phi_  = -999.0;
+  double OneAK8TwoAK4_minMass_AK8_M_  = -999.0;
+  double OneAK8TwoAK4_minMass_AK8_dR_W1_  = -999.0;
+  double OneAK8TwoAK4_minMass_AK8_dR_W2_  = -999.0;
+  double OneAK8TwoAK4_minMass_AK8_dR_H1_  = -999.0;
+  double OneAK8TwoAK4_minMass_AK8_dR_H2_  = -999.0;
+  double OneAK8TwoAK4_minMass_leadingAK4_Pt_  = -999.0;
+  double OneAK8TwoAK4_minMass_leadingAK4_Eta_ = -999.0;
+  double OneAK8TwoAK4_minMass_leadingAK4_Phi_ = -999.0;
+  double OneAK8TwoAK4_minMass_leadingAK4_M_ = -999.0;
+  double OneAK8TwoAK4_minMass_leadingAK4_dR_W1_ = -999.0;
+  double OneAK8TwoAK4_minMass_leadingAK4_dR_W2_ = -999.0;
+  double OneAK8TwoAK4_minMass_leadingAK4_dR_H1_ = -999.0;
+  double OneAK8TwoAK4_minMass_leadingAK4_dR_H2_ = -999.0;
+  double OneAK8TwoAK4_minMass_subleadingAK4_Pt_ = -999.0;
+  double OneAK8TwoAK4_minMass_subleadingAK4_Eta_  = -999.0;
+  double OneAK8TwoAK4_minMass_subleadingAK4_Phi_  = -999.0;
+  double OneAK8TwoAK4_minMass_subleadingAK4_M_  = -999.0;
+  double OneAK8TwoAK4_minMass_subleadingAK4_dR_W1_  = -999.0;
+  double OneAK8TwoAK4_minMass_subleadingAK4_dR_W2_  = -999.0;
+  double OneAK8TwoAK4_minMass_subleadingAK4_dR_H1_  = -999.0;
+  double OneAK8TwoAK4_minMass_subleadingAK4_dR_H2_  = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsW_AK4_Pt_ = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsW_AK4_Eta_  = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsW_AK4_Phi_  = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsW_AK4_M_  = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W1_  = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W2_  = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsW_AK4_dR_H1_  = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsW_AK4_dR_H2_  = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsH_Pt_ = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsH_Eta_  = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsH_Phi_  = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsH_M_  = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsH_dR_W1_  = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsH_dR_W2_  = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsH_dR_H1_  = -999.0;
+  double OneAK8TwoAK4_minMass_ReconsH_dR_H2_  = -999.0;
 
 };
 
@@ -696,6 +779,88 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&AK4GEN_AllResolved_Higgs_DR_Higgs0PID_,"AK4GEN_AllResolved_Higgs_DR_Higgs0PID");
   AddBranch(&AK4GEN_AllResolved_Higgs_DR_Higgs1PID_,"AK4GEN_AllResolved_Higgs_DR_Higgs1PID");
 
+  AddBranch(&OneAK8TwoAK4_pTMax_AK8_Pt_,"OneAK8TwoAK4_pTMax_AK8_Pt");
+  AddBranch(&OneAK8TwoAK4_pTMax_AK8_Eta_,"OneAK8TwoAK4_pTMax_AK8_Eta");
+  AddBranch(&OneAK8TwoAK4_pTMax_AK8_Phi_,"OneAK8TwoAK4_pTMax_AK8_Phi");
+  AddBranch(&OneAK8TwoAK4_pTMax_AK8_M_,"OneAK8TwoAK4_pTMax_AK8_M");
+  AddBranch(&OneAK8TwoAK4_pTMax_AK8_dR_W1_,"OneAK8TwoAK4_pTMax_AK8_dR_W1");
+  AddBranch(&OneAK8TwoAK4_pTMax_AK8_dR_W2_,"OneAK8TwoAK4_pTMax_AK8_dR_W2");
+  AddBranch(&OneAK8TwoAK4_pTMax_AK8_dR_H1_,"OneAK8TwoAK4_pTMax_AK8_dR_H1");
+  AddBranch(&OneAK8TwoAK4_pTMax_AK8_dR_H2_,"OneAK8TwoAK4_pTMax_AK8_dR_H2");
+  AddBranch(&OneAK8TwoAK4_pTMax_leadingAK4_Pt_,"OneAK8TwoAK4_pTMax_leadingAK4_Pt");
+  AddBranch(&OneAK8TwoAK4_pTMax_leadingAK4_Eta_,"OneAK8TwoAK4_pTMax_leadingAK4_Eta");
+  AddBranch(&OneAK8TwoAK4_pTMax_leadingAK4_Phi_,"OneAK8TwoAK4_pTMax_leadingAK4_Phi");
+  AddBranch(&OneAK8TwoAK4_pTMax_leadingAK4_M_,"OneAK8TwoAK4_pTMax_leadingAK4_M");
+  AddBranch(&OneAK8TwoAK4_pTMax_leadingAK4_dR_W1_,"OneAK8TwoAK4_pTMax_leadingAK4_dR_W1");
+  AddBranch(&OneAK8TwoAK4_pTMax_leadingAK4_dR_W2_,"OneAK8TwoAK4_pTMax_leadingAK4_dR_W2");
+  AddBranch(&OneAK8TwoAK4_pTMax_leadingAK4_dR_H1_,"OneAK8TwoAK4_pTMax_leadingAK4_dR_H1");
+  AddBranch(&OneAK8TwoAK4_pTMax_leadingAK4_dR_H2_,"OneAK8TwoAK4_pTMax_leadingAK4_dR_H2");
+  AddBranch(&OneAK8TwoAK4_pTMax_subleadingAK4_Pt_,"OneAK8TwoAK4_pTMax_subleadingAK4_Pt");
+  AddBranch(&OneAK8TwoAK4_pTMax_subleadingAK4_Eta_,"OneAK8TwoAK4_pTMax_subleadingAK4_Eta");
+  AddBranch(&OneAK8TwoAK4_pTMax_subleadingAK4_Phi_,"OneAK8TwoAK4_pTMax_subleadingAK4_Phi");
+  AddBranch(&OneAK8TwoAK4_pTMax_subleadingAK4_M_,"OneAK8TwoAK4_pTMax_subleadingAK4_M");
+  AddBranch(&OneAK8TwoAK4_pTMax_subleadingAK4_dR_W1_,"OneAK8TwoAK4_pTMax_subleadingAK4_dR_W1");
+  AddBranch(&OneAK8TwoAK4_pTMax_subleadingAK4_dR_W2_,"OneAK8TwoAK4_pTMax_subleadingAK4_dR_W2");
+  AddBranch(&OneAK8TwoAK4_pTMax_subleadingAK4_dR_H1_,"OneAK8TwoAK4_pTMax_subleadingAK4_dR_H1");
+  AddBranch(&OneAK8TwoAK4_pTMax_subleadingAK4_dR_H2_,"OneAK8TwoAK4_pTMax_subleadingAK4_dR_H2");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsW_AK4_Pt_,"OneAK8TwoAK4_pTMax_ReconsW_AK4_Pt");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsW_AK4_Eta_,"OneAK8TwoAK4_pTMax_ReconsW_AK4_Eta");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsW_AK4_Phi_,"OneAK8TwoAK4_pTMax_ReconsW_AK4_Phi");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsW_AK4_M_,"OneAK8TwoAK4_pTMax_ReconsW_AK4_M");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_W1_,"OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_W1");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_W2_,"OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_W2");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_H1_,"OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_H1");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_H2_,"OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_H2");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsH_Pt_,"OneAK8TwoAK4_pTMax_ReconsH_Pt");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsH_Eta_,"OneAK8TwoAK4_pTMax_ReconsH_Eta");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsH_Phi_,"OneAK8TwoAK4_pTMax_ReconsH_Phi");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsH_M_,"OneAK8TwoAK4_pTMax_ReconsH_M");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsH_dR_W1_,"OneAK8TwoAK4_pTMax_ReconsH_dR_W1");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsH_dR_W2_,"OneAK8TwoAK4_pTMax_ReconsH_dR_W2");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsH_dR_H1_,"OneAK8TwoAK4_pTMax_ReconsH_dR_H1");
+  AddBranch(&OneAK8TwoAK4_pTMax_ReconsH_dR_H2_,"OneAK8TwoAK4_pTMax_ReconsH_dR_H2");
+
+  AddBranch(&OneAK8TwoAK4_minMass_AK8_Pt_,"OneAK8TwoAK4_minMass_AK8_Pt");
+  AddBranch(&OneAK8TwoAK4_minMass_AK8_Eta_,"OneAK8TwoAK4_minMass_AK8_Eta");
+  AddBranch(&OneAK8TwoAK4_minMass_AK8_Phi_,"OneAK8TwoAK4_minMass_AK8_Phi");
+  AddBranch(&OneAK8TwoAK4_minMass_AK8_M_,"OneAK8TwoAK4_minMass_AK8_M");
+  AddBranch(&OneAK8TwoAK4_minMass_AK8_dR_W1_,"OneAK8TwoAK4_minMass_AK8_dR_W1");
+  AddBranch(&OneAK8TwoAK4_minMass_AK8_dR_W2_,"OneAK8TwoAK4_minMass_AK8_dR_W2");
+  AddBranch(&OneAK8TwoAK4_minMass_AK8_dR_H1_,"OneAK8TwoAK4_minMass_AK8_dR_H1");
+  AddBranch(&OneAK8TwoAK4_minMass_AK8_dR_H2_,"OneAK8TwoAK4_minMass_AK8_dR_H2");
+  AddBranch(&OneAK8TwoAK4_minMass_leadingAK4_Pt_,"OneAK8TwoAK4_minMass_leadingAK4_Pt");
+  AddBranch(&OneAK8TwoAK4_minMass_leadingAK4_Eta_,"OneAK8TwoAK4_minMass_leadingAK4_Eta");
+  AddBranch(&OneAK8TwoAK4_minMass_leadingAK4_Phi_,"OneAK8TwoAK4_minMass_leadingAK4_Phi");
+  AddBranch(&OneAK8TwoAK4_minMass_leadingAK4_M_,"OneAK8TwoAK4_minMass_leadingAK4_M");
+  AddBranch(&OneAK8TwoAK4_minMass_leadingAK4_dR_W1_,"OneAK8TwoAK4_minMass_leadingAK4_dR_W1");
+  AddBranch(&OneAK8TwoAK4_minMass_leadingAK4_dR_W2_,"OneAK8TwoAK4_minMass_leadingAK4_dR_W2");
+  AddBranch(&OneAK8TwoAK4_minMass_leadingAK4_dR_H1_,"OneAK8TwoAK4_minMass_leadingAK4_dR_H1");
+  AddBranch(&OneAK8TwoAK4_minMass_leadingAK4_dR_H2_,"OneAK8TwoAK4_minMass_leadingAK4_dR_H2");
+  AddBranch(&OneAK8TwoAK4_minMass_subleadingAK4_Pt_,"OneAK8TwoAK4_minMass_subleadingAK4_Pt");
+  AddBranch(&OneAK8TwoAK4_minMass_subleadingAK4_Eta_,"OneAK8TwoAK4_minMass_subleadingAK4_Eta");
+  AddBranch(&OneAK8TwoAK4_minMass_subleadingAK4_Phi_,"OneAK8TwoAK4_minMass_subleadingAK4_Phi");
+  AddBranch(&OneAK8TwoAK4_minMass_subleadingAK4_M_,"OneAK8TwoAK4_minMass_subleadingAK4_M");
+  AddBranch(&OneAK8TwoAK4_minMass_subleadingAK4_dR_W1_,"OneAK8TwoAK4_minMass_subleadingAK4_dR_W1");
+  AddBranch(&OneAK8TwoAK4_minMass_subleadingAK4_dR_W2_,"OneAK8TwoAK4_minMass_subleadingAK4_dR_W2");
+  AddBranch(&OneAK8TwoAK4_minMass_subleadingAK4_dR_H1_,"OneAK8TwoAK4_minMass_subleadingAK4_dR_H1");
+  AddBranch(&OneAK8TwoAK4_minMass_subleadingAK4_dR_H2_,"OneAK8TwoAK4_minMass_subleadingAK4_dR_H2");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsW_AK4_Pt_,"OneAK8TwoAK4_minMass_ReconsW_AK4_Pt");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsW_AK4_Eta_,"OneAK8TwoAK4_minMass_ReconsW_AK4_Eta");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsW_AK4_Phi_,"OneAK8TwoAK4_minMass_ReconsW_AK4_Phi");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsW_AK4_M_,"OneAK8TwoAK4_minMass_ReconsW_AK4_M");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W1_,"OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W1");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W2_,"OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W2");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsW_AK4_dR_H1_,"OneAK8TwoAK4_minMass_ReconsW_AK4_dR_H1");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsW_AK4_dR_H2_,"OneAK8TwoAK4_minMass_ReconsW_AK4_dR_H2");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsH_Pt_,"OneAK8TwoAK4_minMass_ReconsH_Pt");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsH_Eta_,"OneAK8TwoAK4_minMass_ReconsH_Eta");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsH_Phi_,"OneAK8TwoAK4_minMass_ReconsH_Phi");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsH_M_,"OneAK8TwoAK4_minMass_ReconsH_M");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsH_dR_W1_,"OneAK8TwoAK4_minMass_ReconsH_dR_W1");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsH_dR_W2_,"OneAK8TwoAK4_minMass_ReconsH_dR_W2");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsH_dR_H1_,"OneAK8TwoAK4_minMass_ReconsH_dR_H1");
+  AddBranch(&OneAK8TwoAK4_minMass_ReconsH_dR_H2_,"OneAK8TwoAK4_minMass_ReconsH_dR_H2");
+
 }
 
 void GenAnalyzer::Clear(){
@@ -915,6 +1080,89 @@ void GenAnalyzer::Clear(){
   AK4GEN_AllResolved_Higgs_M_ = -999.0;
   AK4GEN_AllResolved_Higgs_DR_Higgs0PID_  = -999.0;
   AK4GEN_AllResolved_Higgs_DR_Higgs1PID_  = -999.0;
+
+  OneAK8TwoAK4_pTMax_AK8_Pt_  = -999.0;
+  OneAK8TwoAK4_pTMax_AK8_Eta_ = -999.0;
+  OneAK8TwoAK4_pTMax_AK8_Phi_ = -999.0;
+  OneAK8TwoAK4_pTMax_AK8_M_ = -999.0;
+  OneAK8TwoAK4_pTMax_AK8_dR_W1_ = -999.0;
+  OneAK8TwoAK4_pTMax_AK8_dR_W2_ = -999.0;
+  OneAK8TwoAK4_pTMax_AK8_dR_H1_ = -999.0;
+  OneAK8TwoAK4_pTMax_AK8_dR_H2_ = -999.0;
+  OneAK8TwoAK4_pTMax_leadingAK4_Pt_ = -999.0;
+  OneAK8TwoAK4_pTMax_leadingAK4_Eta_  = -999.0;
+  OneAK8TwoAK4_pTMax_leadingAK4_Phi_  = -999.0;
+  OneAK8TwoAK4_pTMax_leadingAK4_M_  = -999.0;
+  OneAK8TwoAK4_pTMax_leadingAK4_dR_W1_  = -999.0;
+  OneAK8TwoAK4_pTMax_leadingAK4_dR_W2_  = -999.0;
+  OneAK8TwoAK4_pTMax_leadingAK4_dR_H1_  = -999.0;
+  OneAK8TwoAK4_pTMax_leadingAK4_dR_H2_  = -999.0;
+  OneAK8TwoAK4_pTMax_subleadingAK4_Pt_  = -999.0;
+  OneAK8TwoAK4_pTMax_subleadingAK4_Eta_ = -999.0;
+  OneAK8TwoAK4_pTMax_subleadingAK4_Phi_ = -999.0;
+  OneAK8TwoAK4_pTMax_subleadingAK4_M_ = -999.0;
+  OneAK8TwoAK4_pTMax_subleadingAK4_dR_W1_ = -999.0;
+  OneAK8TwoAK4_pTMax_subleadingAK4_dR_W2_ = -999.0;
+  OneAK8TwoAK4_pTMax_subleadingAK4_dR_H1_ = -999.0;
+  OneAK8TwoAK4_pTMax_subleadingAK4_dR_H2_ = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_Pt_  = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_Eta_ = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_Phi_ = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_M_ = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_W1_ = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_W2_ = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_H1_ = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_H2_ = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsH_Pt_  = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsH_Eta_ = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsH_Phi_ = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsH_M_ = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsH_dR_W1_ = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsH_dR_W2_ = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsH_dR_H1_ = -999.0;
+  OneAK8TwoAK4_pTMax_ReconsH_dR_H2_   = -999.0;
+
+  OneAK8TwoAK4_minMass_AK8_Pt_  = -999.0;
+  OneAK8TwoAK4_minMass_AK8_Eta_ = -999.0;
+  OneAK8TwoAK4_minMass_AK8_Phi_ = -999.0;
+  OneAK8TwoAK4_minMass_AK8_M_ = -999.0;
+  OneAK8TwoAK4_minMass_AK8_dR_W1_ = -999.0;
+  OneAK8TwoAK4_minMass_AK8_dR_W2_ = -999.0;
+  OneAK8TwoAK4_minMass_AK8_dR_H1_ = -999.0;
+  OneAK8TwoAK4_minMass_AK8_dR_H2_ = -999.0;
+  OneAK8TwoAK4_minMass_leadingAK4_Pt_ = -999.0;
+  OneAK8TwoAK4_minMass_leadingAK4_Eta_  = -999.0;
+  OneAK8TwoAK4_minMass_leadingAK4_Phi_  = -999.0;
+  OneAK8TwoAK4_minMass_leadingAK4_M_  = -999.0;
+  OneAK8TwoAK4_minMass_leadingAK4_dR_W1_  = -999.0;
+  OneAK8TwoAK4_minMass_leadingAK4_dR_W2_  = -999.0;
+  OneAK8TwoAK4_minMass_leadingAK4_dR_H1_  = -999.0;
+  OneAK8TwoAK4_minMass_leadingAK4_dR_H2_  = -999.0;
+  OneAK8TwoAK4_minMass_subleadingAK4_Pt_  = -999.0;
+  OneAK8TwoAK4_minMass_subleadingAK4_Eta_ = -999.0;
+  OneAK8TwoAK4_minMass_subleadingAK4_Phi_ = -999.0;
+  OneAK8TwoAK4_minMass_subleadingAK4_M_ = -999.0;
+  OneAK8TwoAK4_minMass_subleadingAK4_dR_W1_ = -999.0;
+  OneAK8TwoAK4_minMass_subleadingAK4_dR_W2_ = -999.0;
+  OneAK8TwoAK4_minMass_subleadingAK4_dR_H1_ = -999.0;
+  OneAK8TwoAK4_minMass_subleadingAK4_dR_H2_ = -999.0;
+  OneAK8TwoAK4_minMass_ReconsW_AK4_Pt_  = -999.0;
+  OneAK8TwoAK4_minMass_ReconsW_AK4_Eta_ = -999.0;
+  OneAK8TwoAK4_minMass_ReconsW_AK4_Phi_ = -999.0;
+  OneAK8TwoAK4_minMass_ReconsW_AK4_M_ = -999.0;
+  OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W1_ = -999.0;
+  OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W2_ = -999.0;
+  OneAK8TwoAK4_minMass_ReconsW_AK4_dR_H1_ = -999.0;
+  OneAK8TwoAK4_minMass_ReconsW_AK4_dR_H2_ = -999.0;
+  OneAK8TwoAK4_minMass_ReconsH_Pt_  = -999.0;
+  OneAK8TwoAK4_minMass_ReconsH_Eta_ = -999.0;
+  OneAK8TwoAK4_minMass_ReconsH_Phi_ = -999.0;
+  OneAK8TwoAK4_minMass_ReconsH_M_ = -999.0;
+  OneAK8TwoAK4_minMass_ReconsH_dR_W1_ = -999.0;
+  OneAK8TwoAK4_minMass_ReconsH_dR_W2_ = -999.0;
+  OneAK8TwoAK4_minMass_ReconsH_dR_H1_ = -999.0;
+  OneAK8TwoAK4_minMass_ReconsH_dR_H2_ = -999.0;
+
 }
 
 /**
@@ -1032,7 +1280,7 @@ TLorentzVector GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVecto
     {
       if (counter == position) continue;
     }
-    std::cout << counter << "\t" << position << "\t" << jet->Pt() <<  "\t" << abs(jet->M()-mass) << "\t" << temp_AK8jet_deltaM<< std::endl;
+    // std::cout << counter << "\t" << position << "\t" << jet->Pt() <<  "\t" << abs(jet->M()-mass) << "\t" << temp_AK8jet_deltaM<< std::endl;
     if (abs(jet->M()-mass)<temp_AK8jet_deltaM)
     {
       AK8Gen_HiggsJet_MaxPt.SetPtEtaPhiE(jet->Pt(), jet->Eta(), jet->Phi(), jet->Energy());
@@ -1040,7 +1288,7 @@ TLorentzVector GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVecto
       if (!skip) 
       {
         position = counter;
-        std::cout << "position : " << position << std::endl;
+        // std::cout << "position : " << position << std::endl;
       }
     }
   }
@@ -1133,3 +1381,45 @@ void GenAnalyzer::indexOfSelectedJet(const std::vector<TLorentzVector> &inputLor
   }
 }
 
+
+/**
+ * @brief      Selection of two AK4 jet and one AK8 jet. This selection is done
+ *             by searching the combination of two AK4 and one AK8 which gives 
+ *             us the minimum delta mass w.r.t. the Higgs mass.
+ *
+ * @param      input_AK4LorentzVector  The input vector of AK4 lorentz vector
+ * @param      input_AK8LorentzVector  The input vector of AK8 lorentz vector
+ *
+ * @return     Returns the vector of TLorentzVector having size 3. Whose first two elements
+ *             contains information about the AK4 jets and the third element contains 
+ *             information of AK8 jet.
+ */
+std::vector<TLorentzVector> GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVector> &input_AK4LorentzVector, const std::vector<TLorentzVector> &input_AK8LorentzVector)
+{
+  std::vector<TLorentzVector> outputLorentzVector;
+  double tempMass1 = 9999.0;
+
+  for (std::vector<TLorentzVector>::const_iterator i = input_AK4LorentzVector.begin(); i != input_AK4LorentzVector.end()-1; ++i)
+  {
+    for (std::vector<TLorentzVector>::const_iterator j = i+1; j != input_AK4LorentzVector.end(); ++j)
+    {
+      for (std::vector<TLorentzVector>::const_iterator k = input_AK8LorentzVector.begin(); k != input_AK8LorentzVector.end(); ++k)
+      {
+        double mass = (*i + *j + *k).M();
+        if (abs(mass - 125.0) < tempMass1)
+        {
+          outputLorentzVector.clear();
+          outputLorentzVector.push_back(*i);
+          outputLorentzVector.push_back(*j);
+          outputLorentzVector.push_back(*k);
+        }
+      }      
+    }
+  }
+  if (outputLorentzVector.size()>3) 
+  {
+    std::cout << "size of output vector seems more than three... please check the code." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+  return outputLorentzVector;
+}

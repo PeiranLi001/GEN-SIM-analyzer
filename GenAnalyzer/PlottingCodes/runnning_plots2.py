@@ -54,21 +54,27 @@ variables =  [
 # ['AK8Gen_MergedWjets_minWminHmass_LeadingSubLeading_DR'],
 
 
-# # All resolved category distributions
-['AK4GEN_AllResolved_onShellJet1_Pt','AK4GEN_AllResolved_onShellJet2_Pt','AK4GEN_AllResolved_offShellJet1_Pt','AK4GEN_AllResolved_offShellJet2_Pt'],
-['AK4GEN_AllResolved_onShellJet1_Eta','AK4GEN_AllResolved_onShellJet2_Eta','AK4GEN_AllResolved_offShellJet1_Eta','AK4GEN_AllResolved_offShellJet2_Eta'],
-['AK4GEN_AllResolved_onShellJet1_Phi','AK4GEN_AllResolved_onShellJet2_Phi','AK4GEN_AllResolved_offShellJet1_Phi','AK4GEN_AllResolved_offShellJet2_Phi'],
-['AK4GEN_AllResolved_onShellJet1_M','AK4GEN_AllResolved_onShellJet2_M','AK4GEN_AllResolved_offShellJet1_M','AK4GEN_AllResolved_offShellJet2_M'],
+# # # All resolved category distributions
+# ['AK4GEN_AllResolved_onShellJet1_Pt','AK4GEN_AllResolved_onShellJet2_Pt','AK4GEN_AllResolved_offShellJet1_Pt','AK4GEN_AllResolved_offShellJet2_Pt'],
+# ['AK4GEN_AllResolved_onShellJet1_Eta','AK4GEN_AllResolved_onShellJet2_Eta','AK4GEN_AllResolved_offShellJet1_Eta','AK4GEN_AllResolved_offShellJet2_Eta'],
+# ['AK4GEN_AllResolved_onShellJet1_Phi','AK4GEN_AllResolved_onShellJet2_Phi','AK4GEN_AllResolved_offShellJet1_Phi','AK4GEN_AllResolved_offShellJet2_Phi'],
+# ['AK4GEN_AllResolved_onShellJet1_M','AK4GEN_AllResolved_onShellJet2_M','AK4GEN_AllResolved_offShellJet1_M','AK4GEN_AllResolved_offShellJet2_M'],
 
-['AK4GEN_AllResolved_offShellJet2_dR_q1','AK4GEN_AllResolved_offShellJet2_dR_q2','AK4GEN_AllResolved_offShellJet2_dR_q3','AK4GEN_AllResolved_offShellJet2_dR_q4','AK4GEN_AllResolved_offShellJet2_dR_g1','AK4GEN_AllResolved_offShellJet2_dR_g2'],
-['AK4GEN_AllResolved_offShellJet1_dR_q1','AK4GEN_AllResolved_offShellJet1_dR_q2','AK4GEN_AllResolved_offShellJet1_dR_q3','AK4GEN_AllResolved_offShellJet1_dR_q4','AK4GEN_AllResolved_offShellJet1_dR_g1','AK4GEN_AllResolved_offShellJet1_dR_g2'],
-['AK4GEN_AllResolved_onShellJet1_dR_q1','AK4GEN_AllResolved_onShellJet1_dR_q2','AK4GEN_AllResolved_onShellJet1_dR_q3','AK4GEN_AllResolved_onShellJet1_dR_q4','AK4GEN_AllResolved_onShellJet1_dR_g1','AK4GEN_AllResolved_onShellJet1_dR_g2'],
-['AK4GEN_AllResolved_onShellJet2_dR_q1','AK4GEN_AllResolved_onShellJet2_dR_q2','AK4GEN_AllResolved_onShellJet2_dR_q3','AK4GEN_AllResolved_onShellJet2_dR_q4','AK4GEN_AllResolved_onShellJet2_dR_g1','AK4GEN_AllResolved_onShellJet2_dR_g2'],
+# ['AK4GEN_AllResolved_offShellJet2_dR_q1','AK4GEN_AllResolved_offShellJet2_dR_q2','AK4GEN_AllResolved_offShellJet2_dR_q3','AK4GEN_AllResolved_offShellJet2_dR_q4','AK4GEN_AllResolved_offShellJet2_dR_g1','AK4GEN_AllResolved_offShellJet2_dR_g2'],
+# ['AK4GEN_AllResolved_offShellJet1_dR_q1','AK4GEN_AllResolved_offShellJet1_dR_q2','AK4GEN_AllResolved_offShellJet1_dR_q3','AK4GEN_AllResolved_offShellJet1_dR_q4','AK4GEN_AllResolved_offShellJet1_dR_g1','AK4GEN_AllResolved_offShellJet1_dR_g2'],
+# ['AK4GEN_AllResolved_onShellJet1_dR_q1','AK4GEN_AllResolved_onShellJet1_dR_q2','AK4GEN_AllResolved_onShellJet1_dR_q3','AK4GEN_AllResolved_onShellJet1_dR_q4','AK4GEN_AllResolved_onShellJet1_dR_g1','AK4GEN_AllResolved_onShellJet1_dR_g2'],
+# ['AK4GEN_AllResolved_onShellJet2_dR_q1','AK4GEN_AllResolved_onShellJet2_dR_q2','AK4GEN_AllResolved_onShellJet2_dR_q3','AK4GEN_AllResolved_onShellJet2_dR_q4','AK4GEN_AllResolved_onShellJet2_dR_g1','AK4GEN_AllResolved_onShellJet2_dR_g2'],
 
-['AK4GEN_AllResolved_onShellWboson_Pt','AK4GEN_AllResolved_offShellWboson_Pt','AK4GEN_AllResolved_Higgs_Pt'],
-['AK4GEN_AllResolved_onShellWboson_Eta','AK4GEN_AllResolved_offShellWboson_Eta','AK4GEN_AllResolved_Higgs_Eta'],
-['AK4GEN_AllResolved_onShellWboson_Phi','AK4GEN_AllResolved_offShellWboson_Phi','AK4GEN_AllResolved_Higgs_Phi'],
-['AK4GEN_AllResolved_onShellWboson_M','AK4GEN_AllResolved_offShellWboson_M','AK4GEN_AllResolved_Higgs_M'],
+# ['AK4GEN_AllResolved_onShellWboson_Pt','AK4GEN_AllResolved_offShellWboson_Pt','AK4GEN_AllResolved_Higgs_Pt'],
+# ['AK4GEN_AllResolved_onShellWboson_Eta','AK4GEN_AllResolved_offShellWboson_Eta','AK4GEN_AllResolved_Higgs_Eta'],
+# ['AK4GEN_AllResolved_onShellWboson_Phi','AK4GEN_AllResolved_offShellWboson_Phi','AK4GEN_AllResolved_Higgs_Phi'],
+# ['AK4GEN_AllResolved_onShellWboson_M','AK4GEN_AllResolved_offShellWboson_M','AK4GEN_AllResolved_Higgs_M'],
+
+
+['OneAK8TwoAK4_pTMax_AK8_Pt','OneAK8TwoAK4_pTMax_leadingAK4_Pt','OneAK8TwoAK4_pTMax_subleadingAK4_Pt','OneAK8TwoAK4_pTMax_ReconsW_AK4_Pt','OneAK8TwoAK4_pTMax_ReconsH_Pt'],
+['OneAK8TwoAK4_pTMax_AK8_Eta','OneAK8TwoAK4_pTMax_leadingAK4_Eta','OneAK8TwoAK4_pTMax_subleadingAK4_Eta','OneAK8TwoAK4_pTMax_ReconsW_AK4_Eta','OneAK8TwoAK4_pTMax_ReconsH_Eta'],
+['OneAK8TwoAK4_pTMax_AK8_Phi','OneAK8TwoAK4_pTMax_leadingAK4_Phi','OneAK8TwoAK4_pTMax_subleadingAK4_Phi','OneAK8TwoAK4_pTMax_ReconsW_AK4_Phi','OneAK8TwoAK4_pTMax_ReconsH_Phi'],
+['OneAK8TwoAK4_pTMax_AK8_M','OneAK8TwoAK4_pTMax_ReconsW_AK4_M','OneAK8TwoAK4_pTMax_ReconsH_M'],
 
 
 ]

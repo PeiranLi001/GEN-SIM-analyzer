@@ -489,7 +489,6 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    *
    *************************************************************************/  
 
-  //minMassLorentzVector(Vec_genJetAK8, 125.0, LV_leadingWjet, LV_SubleadingWjet);
   
   /**
    * Select on-shell W-boson
@@ -537,6 +536,108 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   }
 
 
+  /**
+   *  3-jet category:
+   *    - One AK8 jet and two AK4 jets.
+   *    - Select one highest pT AK8 jets and two highest pT AK4 jets.
+   */
+  
+  /* AK4 jets */
+  // Vec_genJetAK4: sorted vector of TLorentzVector 
+  /* AK8 jet */
+  // AK8Gen_HiggsJet_MaxPt: highest pT AK8 jet of type TLorentzVector
+  OneAK8TwoAK4_pTMax_AK8_Pt_ = AK8Gen_HiggsJet_MaxPt.Pt();
+  OneAK8TwoAK4_pTMax_AK8_Eta_ = AK8Gen_HiggsJet_MaxPt.Eta();
+  OneAK8TwoAK4_pTMax_AK8_Phi_ = AK8Gen_HiggsJet_MaxPt.Phi();
+  OneAK8TwoAK4_pTMax_AK8_M_ = AK8Gen_HiggsJet_MaxPt.M();
+  OneAK8TwoAK4_pTMax_AK8_dR_W1_ = deltaR(AK8Gen_HiggsJet_MaxPt.Eta(), AK8Gen_HiggsJet_MaxPt.Phi(), Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
+  OneAK8TwoAK4_pTMax_AK8_dR_W2_ = deltaR(AK8Gen_HiggsJet_MaxPt.Eta(), AK8Gen_HiggsJet_MaxPt.Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
+  OneAK8TwoAK4_pTMax_AK8_dR_H1_ = deltaR(AK8Gen_HiggsJet_MaxPt.Eta(), AK8Gen_HiggsJet_MaxPt.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  OneAK8TwoAK4_pTMax_AK8_dR_H2_ = deltaR(AK8Gen_HiggsJet_MaxPt.Eta(), AK8Gen_HiggsJet_MaxPt.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+    // gen_deltaR_Wp_Wm_    = deltaR(Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
+
+  OneAK8TwoAK4_pTMax_leadingAK4_Pt_ = Vec_genJetAK4[0].Pt();
+  OneAK8TwoAK4_pTMax_leadingAK4_Eta_ = Vec_genJetAK4[0].Eta();
+  OneAK8TwoAK4_pTMax_leadingAK4_Phi_ = Vec_genJetAK4[0].Phi();
+  OneAK8TwoAK4_pTMax_leadingAK4_M_ = Vec_genJetAK4[0].M();
+  OneAK8TwoAK4_pTMax_leadingAK4_dR_W1_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
+  OneAK8TwoAK4_pTMax_leadingAK4_dR_W2_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
+  OneAK8TwoAK4_pTMax_leadingAK4_dR_H1_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  OneAK8TwoAK4_pTMax_leadingAK4_dR_H2_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+
+  OneAK8TwoAK4_pTMax_subleadingAK4_Pt_ = Vec_genJetAK4[1].Pt();
+  OneAK8TwoAK4_pTMax_subleadingAK4_Eta_ = Vec_genJetAK4[1].Eta();
+  OneAK8TwoAK4_pTMax_subleadingAK4_Phi_ = Vec_genJetAK4[1].Phi();
+  OneAK8TwoAK4_pTMax_subleadingAK4_M_ = Vec_genJetAK4[1].M();
+  OneAK8TwoAK4_pTMax_subleadingAK4_dR_W1_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
+  OneAK8TwoAK4_pTMax_subleadingAK4_dR_W2_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
+  OneAK8TwoAK4_pTMax_subleadingAK4_dR_H1_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  OneAK8TwoAK4_pTMax_subleadingAK4_dR_H2_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_Pt_ = (Vec_genJetAK4[0] + Vec_genJetAK4[1]).Pt();
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_Eta_ = (Vec_genJetAK4[0] + Vec_genJetAK4[1]).Eta();
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_Phi_ = (Vec_genJetAK4[0] + Vec_genJetAK4[1]).Phi();
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_M_ = (Vec_genJetAK4[0] + Vec_genJetAK4[1]).M();
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_W1_ = deltaR((Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_W2_ = deltaR((Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_H1_ = deltaR((Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_H2_ = deltaR((Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+
+  OneAK8TwoAK4_pTMax_ReconsH_Pt_ = (AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[0] + Vec_genJetAK4[1]).Pt();
+  OneAK8TwoAK4_pTMax_ReconsH_Eta_ = (AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[0] + Vec_genJetAK4[1]).Eta();
+  OneAK8TwoAK4_pTMax_ReconsH_Phi_ = (AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[0] + Vec_genJetAK4[1]).Phi();
+  OneAK8TwoAK4_pTMax_ReconsH_M_ = (AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[0] + Vec_genJetAK4[1]).M();
+  OneAK8TwoAK4_pTMax_ReconsH_dR_W1_ = deltaR((AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
+  OneAK8TwoAK4_pTMax_ReconsH_dR_W2_ = deltaR((AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
+  OneAK8TwoAK4_pTMax_ReconsH_dR_H1_ = deltaR((AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  OneAK8TwoAK4_pTMax_ReconsH_dR_H2_ = deltaR((AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+
+  /**
+   * Selection of two AK4 jet and a AK8 jet. 
+   */
+  
+  std::vector<TLorentzVector> jetsss = minMassLorentzVector(Vec_genJetAK4, Vec_genJetAK8);
+
+  OneAK8TwoAK4_minMass_AK8_Pt_ = jetsss[2].Pt();
+  OneAK8TwoAK4_minMass_AK8_Eta_ = jetsss[2].Eta();
+  OneAK8TwoAK4_minMass_AK8_Phi_ = jetsss[2].Phi();
+  OneAK8TwoAK4_minMass_AK8_M_ = jetsss[2].M();
+  OneAK8TwoAK4_minMass_AK8_dR_W1_ = deltaR(jetsss[2].Eta(), jetsss[2].Phi(), Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
+  OneAK8TwoAK4_minMass_AK8_dR_W2_ = deltaR(jetsss[2].Eta(), jetsss[2].Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
+  OneAK8TwoAK4_minMass_AK8_dR_H1_ = deltaR(jetsss[2].Eta(), jetsss[2].Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  OneAK8TwoAK4_minMass_AK8_dR_H2_ = deltaR(jetsss[2].Eta(), jetsss[2].Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+  OneAK8TwoAK4_minMass_leadingAK4_Pt_ = jetsss[0].Pt();
+  OneAK8TwoAK4_minMass_leadingAK4_Eta_ = jetsss[0].Eta();
+  OneAK8TwoAK4_minMass_leadingAK4_Phi_ = jetsss[0].Phi();
+  OneAK8TwoAK4_minMass_leadingAK4_M_ = jetsss[0].M();
+  OneAK8TwoAK4_minMass_leadingAK4_dR_W1_ = deltaR(jetsss[0].Eta(), jetsss[0].Phi(), Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
+  OneAK8TwoAK4_minMass_leadingAK4_dR_W2_ = deltaR(jetsss[0].Eta(), jetsss[0].Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
+  OneAK8TwoAK4_minMass_leadingAK4_dR_H1_ = deltaR(jetsss[0].Eta(), jetsss[0].Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  OneAK8TwoAK4_minMass_leadingAK4_dR_H2_ = deltaR(jetsss[0].Eta(), jetsss[0].Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+  OneAK8TwoAK4_minMass_subleadingAK4_Pt_ = jetsss[1].Pt();
+  OneAK8TwoAK4_minMass_subleadingAK4_Eta_ = jetsss[1].Eta();
+  OneAK8TwoAK4_minMass_subleadingAK4_Phi_ = jetsss[1].Phi();
+  OneAK8TwoAK4_minMass_subleadingAK4_M_ = jetsss[1].M();
+  OneAK8TwoAK4_minMass_subleadingAK4_dR_W1_ = deltaR(jetsss[1].Eta(), jetsss[1].Phi(), Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
+  OneAK8TwoAK4_minMass_subleadingAK4_dR_W2_ = deltaR(jetsss[1].Eta(), jetsss[1].Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
+  OneAK8TwoAK4_minMass_subleadingAK4_dR_H1_ = deltaR(jetsss[1].Eta(), jetsss[1].Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  OneAK8TwoAK4_minMass_subleadingAK4_dR_H2_ = deltaR(jetsss[1].Eta(), jetsss[1].Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+  OneAK8TwoAK4_minMass_ReconsW_AK4_Pt_ = (jetsss[0] + jetsss[1]).Pt();
+  OneAK8TwoAK4_minMass_ReconsW_AK4_Eta_ = (jetsss[0] + jetsss[1]).Eta();
+  OneAK8TwoAK4_minMass_ReconsW_AK4_Phi_ = (jetsss[0] + jetsss[1]).Phi();
+  OneAK8TwoAK4_minMass_ReconsW_AK4_M_ = (jetsss[0] + jetsss[1]).M();
+  OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W1_ = deltaR((jetsss[1] + jetsss[0]).Eta(), (jetsss[1] + jetsss[0]).Phi(), Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
+  OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W2_ = deltaR((jetsss[1] + jetsss[0]).Eta(), (jetsss[1] + jetsss[0]).Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
+  OneAK8TwoAK4_minMass_ReconsW_AK4_dR_H1_ = deltaR((jetsss[1] + jetsss[0]).Eta(), (jetsss[1] + jetsss[0]).Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  OneAK8TwoAK4_minMass_ReconsW_AK4_dR_H2_ = deltaR((jetsss[1] + jetsss[0]).Eta(), (jetsss[1] + jetsss[0]).Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+  OneAK8TwoAK4_minMass_ReconsH_Pt_ = (jetsss[2] + jetsss[0] + jetsss[1]).Pt();
+  OneAK8TwoAK4_minMass_ReconsH_Eta_ = (jetsss[2] + jetsss[0] + jetsss[1]).Eta();
+  OneAK8TwoAK4_minMass_ReconsH_Phi_ = (jetsss[2] + jetsss[0] + jetsss[1]).Phi();
+  OneAK8TwoAK4_minMass_ReconsH_M_ = (jetsss[2] + jetsss[0] + jetsss[1]).M();
+  OneAK8TwoAK4_minMass_ReconsH_dR_W1_ = deltaR((jetsss[2] + jetsss[1] + jetsss[0]).Eta(), (jetsss[2] + jetsss[1] + jetsss[0]).Phi(), Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
+  OneAK8TwoAK4_minMass_ReconsH_dR_W2_ = deltaR((jetsss[2] + jetsss[1] + jetsss[0]).Eta(), (jetsss[2] + jetsss[1] + jetsss[0]).Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
+  OneAK8TwoAK4_minMass_ReconsH_dR_H1_ = deltaR((jetsss[2] + jetsss[1] + jetsss[0]).Eta(), (jetsss[2] + jetsss[1] + jetsss[0]).Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
+  OneAK8TwoAK4_minMass_ReconsH_dR_H2_ = deltaR((jetsss[2] + jetsss[1] + jetsss[0]).Eta(), (jetsss[2] + jetsss[1] + jetsss[0]).Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
 
 
   tree->Fill();

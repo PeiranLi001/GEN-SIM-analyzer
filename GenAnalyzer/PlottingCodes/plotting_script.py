@@ -35,10 +35,10 @@ print dirName
 # InputFileList = ['GF_HH_Benchmark1', 'GF_HH_Benchmark7', 'GF_HH_Benchmark11', 'GF_HH_BenchmarkSM']
 
 input_root_file = '../'
-InputFileList = ['GF_HH_Benchmark3']
+InputFileList = ['GF_HH_Benchmark1']
 
-singleVariable = False
-multipleVariable = True
+singleVariable = True
+multipleVariable = False
 multipleVariableDifferentFiles = False
 
 # CutToApply = 'AK8Gen_HiggsJet_MaxPt_Pt>400 && AK8Gen_HiggsJet_MaxPt_M>100 && AK8Gen_HiggsJet_MaxPt_M<160 && AK8Gen_HiggsJet_MaxPt_deltaR_H1<1.0'
@@ -46,9 +46,10 @@ multipleVariableDifferentFiles = False
 # CutToApply = 'AK8Gen_MergedWjets_MaxPt_Higgs_M>100 && AK8Gen_MergedWjets_MaxPt_Higgs_M<160'
 # CutToApply = 'AK8Gen_MergedWjets_MaxPt_Leading_Pt>200 && AK8Gen_MergedWjets_MaxPt_SubLeading_Pt>200'
 # CutToApply = 'AK8Gen_MergedWjets_MaxPt_Leading_M<105 && AK8Gen_MergedWjets_MaxPt_SubLeading_M < 105 && AK8Gen_MergedWjets_MaxPt_Higgs_M>100 && AK8Gen_MergedWjets_MaxPt_Higgs_M<160'
-CutToApply = 'AK4GEN_AllResolved_Higgs_M>100 && AK4GEN_AllResolved_Higgs_M<160 && AK4GEN_AllResolved_onShellWboson_M > 60 && AK4GEN_AllResolved_onShellWboson_M<105'
+# CutToApply = 'AK4GEN_AllResolved_Higgs_M>100 && AK4GEN_AllResolved_Higgs_M<160 && AK4GEN_AllResolved_onShellWboson_M > 60 && AK4GEN_AllResolved_onShellWboson_M<105'
+CutToApply = 'OneAK8TwoAK4_pTMax_ReconsH_M>100 && OneAK8TwoAK4_pTMax_ReconsH_M<160 && OneAK8TwoAK4_pTMax_AK8_Pt>100'
 # CutToApply = ''
-keyToUse = 'ak4_method1'
+keyToUse = 'oneAK8twoAK4_pTmax'
 
 
 if (singleVariable):
