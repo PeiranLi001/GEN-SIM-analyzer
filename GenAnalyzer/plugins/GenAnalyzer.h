@@ -85,8 +85,8 @@ private:
   
   edm::EDGetTokenT<reco::GenParticleCollection> genParticlesToken;
   edm::EDGetTokenT<LHEEventProduct> LHEEventToken;
-  edm::EDGetTokenT<reco::GenJetCollection> genAK4jetToken;
-  edm::EDGetTokenT<reco::GenJetCollection> genAK8jetToken;
+  // edm::EDGetTokenT<reco::GenJetCollection> genAK4jetToken;
+  // edm::EDGetTokenT<reco::GenJetCollection> genAK8jetToken;
   edm::EDGetTokenT<reco::GenMETCollection> genMetCaloToken;
   
   bool	Verbose_;
@@ -424,8 +424,8 @@ GenAnalyzer::GenAnalyzer(const edm::ParameterSet& iConfig)
   usesResource("TFileService");
   LHEEventToken = consumes<LHEEventProduct>(iConfig.getParameter<edm::InputTag>("LHEEventInputTag"));
   genParticlesToken = consumes<reco::GenParticleCollection>(iConfig.getParameter<edm::InputTag>("genParticlesInputTag"));
-  genAK4jetToken = consumes<reco::GenJetCollection>(iConfig.getParameter<edm::InputTag>("ak4GenJetsInputTag"));
-  genAK8jetToken = consumes<reco::GenJetCollection>(iConfig.getParameter<edm::InputTag>("ak8GenJetsInputTag"));
+  // genAK4jetToken = consumes<reco::GenJetCollection>(iConfig.getParameter<edm::InputTag>("ak4GenJetsInputTag"));
+  // genAK8jetToken = consumes<reco::GenJetCollection>(iConfig.getParameter<edm::InputTag>("ak8GenJetsInputTag"));
   Verbose_ = iConfig.getParameter<bool>("Verbose");
   OutPutFileName_ = iConfig.getParameter<std::string>("OutPutFileName");
 }
