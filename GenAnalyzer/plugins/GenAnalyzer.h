@@ -49,11 +49,11 @@ using namespace std;
 using namespace reco;
 using namespace ROOT::Math::VectorUtil;
 
-class GenAnalyzer : public edm::one::EDAnalyzer<edm::one::SharedResources>  {                                                                  
+class GenAnalyzer : public edm::one::EDAnalyzer<edm::one::SharedResources>  {
 public:
   explicit GenAnalyzer(const edm::ParameterSet&);
   ~GenAnalyzer();
-  
+
   static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
   static bool reorder(const TLorentzVector &a, const TLorentzVector &b);
   //https://stackoverflow.com/a/26230635/2302094
@@ -69,12 +69,12 @@ public:
 
   void SetBranches();
   void Clear();
-  
+
 private:
   virtual void beginJob() override;
   virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
   virtual void endJob() override;
-  
+
   // ----------member data ---------------------------
   virtual void AddBranch(std::vector<std::string>*, std::string name);
   virtual void AddBranch(std::vector<double>*, std::string name);
@@ -82,35 +82,36 @@ private:
   virtual void AddBranch(int* vec, std::string name);
   virtual void AddBranch(double* vec, std::string name);
   virtual void computeAngles(TLorentzVector thep4H, TLorentzVector thep4Z1, TLorentzVector thep4M11, TLorentzVector thep4M12, TLorentzVector thep4Z2, TLorentzVector thep4M21, TLorentzVector thep4M22, double& costheta1, double& costheta2, double& Phi, double& costhetastar, double& Phi1);
-  
+
   edm::EDGetTokenT<reco::GenParticleCollection> genParticlesToken;
   edm::EDGetTokenT<LHEEventProduct> LHEEventToken;
   edm::EDGetTokenT<reco::GenJetCollection> genAK4jetToken;
   edm::EDGetTokenT<reco::GenJetCollection> genAK8jetToken;
   edm::EDGetTokenT<reco::GenMETCollection> genMetCaloToken;
-  
+
   bool	Verbose_;
   TString OutPutFileName_;
-  
+
   edm::Service<TFileService> fs;
   TFile * outputFile_;
   TTree* tree;
   std::ofstream file1;
-  
-  //std::vector<int> pdgID_;
-  
+
+  std::vector<int> pdgID_;
+
   //  std::vector<std::string> LHEWeightIDs_;
   //  std::vector<double> LHEWeights_;
-  
+
   int nEVENT=-999;
-  
+
   //  int		isMuMinus_ = -999;
   //  double 	LHELeptPt_ = -999.0;
   //  double 	LHELeptEta_ = -999.0;
   //  double 	LHELeptPhi_ = -999.0;
   //  double 	LHELeptM_ = -999.0;
   //  double 	LHELeptE_ = -999.0;
-  
+
+
   double gen_leading_photon_Pt_   = -999.0;
   double gen_leading_photon_Eta_  = -999.0;
   double gen_leading_photon_Phi_  = -999.0;
@@ -168,7 +169,7 @@ private:
   double gen_deltaR_WmJ0_WmJ1_     = -999.0;
   double gen_deltaR_Wp_Wm_     = -999.0;
   double gen_deltaR_H1_H2_     = -999.0;
-  
+
   double genJetAK4_njets_ = -999.0;
   double genJetAK4_leading_Pt_ = -999.0;
   double genJetAK4_leading_Eta_ = -999.0;
@@ -180,7 +181,7 @@ private:
   double genJetAK4_Subleading_Phi_ = -999.0;
   double genJetAK4_Subleading_M_ = -999.0;
   double genJetAK4_Subleading_Energy_ = -999.0;
-  
+
   double AK8Gen_HiggsJet_njets_ = -999.0;
   double AK8Gen_HiggsJet_MaxPt_Pt_ = -999.0;
   double AK8Gen_HiggsJet_MaxPt_Eta_ = -999.0;
@@ -188,14 +189,14 @@ private:
   double AK8Gen_HiggsJet_MaxPt_M_   = -999.0;
   double AK8Gen_HiggsJet_MaxPt_deltaR_H1_ = -999.0;
   double AK8Gen_HiggsJet_MaxPt_deltaR_H2_ = -999.0;
-  
+
   double AK8Gen_HiggsJet_minDMass_Pt_ = -999.0;
   double AK8Gen_HiggsJet_minDMass_Eta_ = -999.0;
   double AK8Gen_HiggsJet_minDMass_Phi_ = -999.0;
   double AK8Gen_HiggsJet_minDMass_M_   = -999.0;
   double AK8Gen_HiggsJet_minDMass_deltaR_H1_ = -999.0;
   double AK8Gen_HiggsJet_minDMass_deltaR_H2_ = -999.0;
-  
+
   double AK8Gen_MergedWjets_MaxPt_Leading_Pt_ = -999.0;
   double AK8Gen_MergedWjets_MaxPt_Leading_Eta_ = -999.0;
   double AK8Gen_MergedWjets_MaxPt_Leading_Phi_ = -999.0;
@@ -468,7 +469,7 @@ void GenAnalyzer::computeAngles(TLorentzVector thep4H, TLorentzVector thep4Z1, T
   ///////////////////////////////////////////////
   TLorentzVector p4H, p4Z1, p4M11, p4M12, p4Z2, p4M21, p4M22;
   p4H = thep4H;
-  
+
   p4Z1 = thep4Z1; p4M11 = thep4M11; p4M12 = thep4M12;
   p4Z2 = thep4Z2; p4M21 = thep4M21; p4M22 = thep4M22;
   //// costhetastar
@@ -480,7 +481,7 @@ void GenAnalyzer::computeAngles(TLorentzVector thep4H, TLorentzVector thep4Z1, T
   TVector3 theZ1X_p3 = TVector3( thep4Z1inXFrame.X(), thep4Z1inXFrame.Y(), thep4Z1inXFrame.Z() );
   TVector3 theZ2X_p3 = TVector3( thep4Z2inXFrame.X(), thep4Z2inXFrame.Y(), thep4Z2inXFrame.Z() );
   costhetastar = theZ1X_p3.CosTheta();
-  
+
   //// --------------------------- costheta1
   TVector3 boostV1 = -(thep4Z1.BoostVector());
   TLorentzVector p4M11_BV1( p4M11 );
@@ -491,11 +492,11 @@ void GenAnalyzer::computeAngles(TLorentzVector thep4H, TLorentzVector thep4Z1, T
   p4M12_BV1.Boost( boostV1 );
   p4M21_BV1.Boost( boostV1 );
   p4M22_BV1.Boost( boostV1 );
-  
+
   TLorentzVector p4V2_BV1 = p4M21_BV1 + p4M22_BV1;
   //// costheta1
   costheta1 = -p4V2_BV1.Vect().Dot( p4M11_BV1.Vect() )/p4V2_BV1.Vect().Mag()/p4M11_BV1.Vect().Mag();
-  
+
   //// --------------------------- costheta2
   TVector3 boostV2 = -(thep4Z2.BoostVector());
   TLorentzVector p4M11_BV2( p4M11 );
@@ -506,48 +507,48 @@ void GenAnalyzer::computeAngles(TLorentzVector thep4H, TLorentzVector thep4Z1, T
   p4M12_BV2.Boost( boostV2 );
   p4M21_BV2.Boost( boostV2 );
   p4M22_BV2.Boost( boostV2 );
-  
+
   TLorentzVector p4V1_BV2 = p4M11_BV2 + p4M12_BV2;
   //// costheta2
   costheta2 = -p4V1_BV2.Vect().Dot( p4M21_BV2.Vect() )/p4V1_BV2.Vect().Mag()/p4M21_BV2.Vect().Mag();
-  
+
   //// --------------------------- Phi and Phi1
   //    TVector3 boostX = -(thep4H.BoostVector());
   TLorentzVector p4M11_BX( p4M11 );
   TLorentzVector p4M12_BX( p4M12 );
   TLorentzVector p4M21_BX( p4M21 );
   TLorentzVector p4M22_BX( p4M22 );
-  
+
   p4M11_BX.Boost( boostX );
   p4M12_BX.Boost( boostX );
   p4M21_BX.Boost( boostX );
   p4M22_BX.Boost( boostX );
-  
+
   TVector3 tmp1 = p4M11_BX.Vect().Cross( p4M12_BX.Vect() );
   TVector3 tmp2 = p4M21_BX.Vect().Cross( p4M22_BX.Vect() );
-  
+
   TVector3 normal1_BX( tmp1.X()/tmp1.Mag(), tmp1.Y()/tmp1.Mag(), tmp1.Z()/tmp1.Mag() );
   TVector3 normal2_BX( tmp2.X()/tmp2.Mag(), tmp2.Y()/tmp2.Mag(), tmp2.Z()/tmp2.Mag() );
-  
+
   //// Phi
   TLorentzVector p4Z1_BX = p4M11_BX + p4M12_BX;
   double tmpSgnPhi = p4Z1_BX.Vect().Dot( normal1_BX.Cross( normal2_BX) );
   double sgnPhi = tmpSgnPhi/fabs(tmpSgnPhi);
   Phi = sgnPhi * acos( -1.*normal1_BX.Dot( normal2_BX) );
-  
+
   //////////////
   TVector3 beamAxis(0,0,1);
   TVector3 tmp3 = (p4M11_BX + p4M12_BX).Vect();
-  
+
   TVector3 p3V1_BX( tmp3.X()/tmp3.Mag(), tmp3.Y()/tmp3.Mag(), tmp3.Z()/tmp3.Mag() );
   TVector3 tmp4 = beamAxis.Cross( p3V1_BX );
   TVector3 normalSC_BX( tmp4.X()/tmp4.Mag(), tmp4.Y()/tmp4.Mag(), tmp4.Z()/tmp4.Mag() );
-  
+
   //// Phi1
   double tmpSgnPhi1 = p4Z1_BX.Vect().Dot( normal1_BX.Cross( normalSC_BX) );
   double sgnPhi1 = tmpSgnPhi1/fabs(tmpSgnPhi1);
   Phi1 = sgnPhi1 * acos( normal1_BX.Dot( normalSC_BX) );
-  
+
   //    std::cout << "extractAngles: " << std::endl;
   //    std::cout << "costhetastar = " << costhetastar << ", costheta1 = " << costheta1 << ", costheta2 = " << costheta2 << std::endl;
   //    std::cout << "Phi = " << Phi << ", Phi1 = " << Phi1 << std::endl;
@@ -555,7 +556,7 @@ void GenAnalyzer::computeAngles(TLorentzVector thep4H, TLorentzVector thep4Z1, T
 
 
 void GenAnalyzer::SetBranches(){
-  //AddBranch(&pdgID_,	"pdgID");
+  AddBranch(&pdgID_,	"pdgID");
   //  AddBranch(&isMuMinus_ , "isMuMinus");
   //  AddBranch(&LHELeptPt_ ,	"LHELeptPt");
   //  AddBranch(&LHELeptEta_ ,	"LHELeptEta");
@@ -565,7 +566,7 @@ void GenAnalyzer::SetBranches(){
   //
   //  AddBranch(&LHEWeightIDs_, "LHEWeightIDs");
   //  AddBranch(&LHEWeights_, "LHEWeights");
-  
+
   AddBranch(&gen_leading_photon_Pt_, "gen_leading_photon_Pt");
   AddBranch(&gen_leading_photon_Eta_, "gen_leading_photon_Eta");
   AddBranch(&gen_leading_photon_Phi_, "gen_leading_photon_Phi");
@@ -623,7 +624,7 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&gen_deltaR_WmJ0_WmJ1_, "gen_deltaR_WmJ0_WmJ1");
   AddBranch(&gen_deltaR_Wp_Wm_, "gen_deltaR_Wp_Wm");
   AddBranch(&gen_deltaR_H1_H2_  , "gen_deltaR_H1_H2");
-  
+
   AddBranch(&genJetAK4_njets_, "genJetAK4_njets");
   AddBranch(&genJetAK4_leading_Pt_, "genJetAK4_leading_Pt");
   AddBranch(&genJetAK4_leading_Eta_, "genJetAK4_leading_Eta");
@@ -635,24 +636,24 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&genJetAK4_Subleading_Phi_, "genJetAK4_Subleading_Phi");
   AddBranch(&genJetAK4_Subleading_M_, "genJetAK4_Subleading_M");
   AddBranch(&genJetAK4_Subleading_Energy_, "genJetAK4_Subleading_Energy");
-  
+
   AddBranch(&AK8Gen_HiggsJet_njets_, "genJetAK8_njets");
   AddBranch(&AK8Gen_HiggsJet_MaxPt_Pt_, "AK8Gen_HiggsJet_MaxPt_Pt");
   AddBranch(&AK8Gen_HiggsJet_MaxPt_Eta_, "AK8Gen_HiggsJet_MaxPt_Eta");
   AddBranch(&AK8Gen_HiggsJet_MaxPt_Phi_, "AK8Gen_HiggsJet_MaxPt_Phi");
   AddBranch(&AK8Gen_HiggsJet_MaxPt_M_  , "AK8Gen_HiggsJet_MaxPt_M");
-  
+
   AddBranch(&AK8Gen_HiggsJet_MaxPt_deltaR_H1_, "AK8Gen_HiggsJet_MaxPt_deltaR_H1");
   AddBranch(&AK8Gen_HiggsJet_MaxPt_deltaR_H2_, "AK8Gen_HiggsJet_MaxPt_deltaR_H2");
-  
+
   AddBranch(&AK8Gen_HiggsJet_minDMass_Pt_, "AK8Gen_HiggsJet_minDMass_Pt");
   AddBranch(&AK8Gen_HiggsJet_minDMass_Eta_, "AK8Gen_HiggsJet_minDMass_Eta");
   AddBranch(&AK8Gen_HiggsJet_minDMass_Phi_, "AK8Gen_HiggsJet_minDMass_Phi");
   AddBranch(&AK8Gen_HiggsJet_minDMass_M_  , "AK8Gen_HiggsJet_minDMass_M");
-  
+
   AddBranch(&AK8Gen_HiggsJet_minDMass_deltaR_H1_, "AK8Gen_HiggsJet_minDMass_deltaR_H1");
   AddBranch(&AK8Gen_HiggsJet_minDMass_deltaR_H2_, "AK8Gen_HiggsJet_minDMass_deltaR_H2");
-  
+
   AddBranch(&AK8Gen_MergedWjets_MaxPt_Leading_Pt_,"AK8Gen_MergedWjets_MaxPt_Leading_Pt");
   AddBranch(&AK8Gen_MergedWjets_MaxPt_Leading_Eta_,"AK8Gen_MergedWjets_MaxPt_Leading_Eta");
   AddBranch(&AK8Gen_MergedWjets_MaxPt_Leading_Phi_,"AK8Gen_MergedWjets_MaxPt_Leading_Phi");
@@ -864,10 +865,10 @@ void GenAnalyzer::SetBranches(){
 }
 
 void GenAnalyzer::Clear(){
-  //pdgID_.clear();
+  pdgID_.clear();
   //  LHEWeightIDs_.clear();
   //  LHEWeights_.clear();
-  
+
   gen_leading_photon_Pt_ = -999.0;
   gen_leading_photon_Eta_ = -999.0;
   gen_leading_photon_Phi_ = -999.0;
@@ -925,7 +926,7 @@ void GenAnalyzer::Clear(){
   gen_deltaR_WmJ0_WmJ1_ = -999.0;
   gen_deltaR_Wp_Wm_ = -999.0;
   gen_deltaR_H1_H2_ = -999.0;
-  
+
   genJetAK4_njets_ = -999.0;
   genJetAK4_leading_Pt_ = -999.0;
   genJetAK4_leading_Eta_ = -999.0;
@@ -937,21 +938,21 @@ void GenAnalyzer::Clear(){
   genJetAK4_Subleading_Phi_ = -999.0;
   genJetAK4_Subleading_M_ = -999.0;
   genJetAK4_Subleading_Energy_ = -999.0;
-  
+
   AK8Gen_HiggsJet_njets_ = -999.0;
   AK8Gen_HiggsJet_MaxPt_Pt_ = -999.0;
   AK8Gen_HiggsJet_MaxPt_Eta_ = -999.0;
   AK8Gen_HiggsJet_MaxPt_Phi_ = -999.0;
   AK8Gen_HiggsJet_MaxPt_M_ = -999.0;
-  
+
   AK8Gen_HiggsJet_MaxPt_deltaR_H1_ = -999.0;
   AK8Gen_HiggsJet_MaxPt_deltaR_H2_ = -999.0;
-  
+
   AK8Gen_HiggsJet_minDMass_Pt_ = -999.0;
   AK8Gen_HiggsJet_minDMass_Eta_ = -999.0;
   AK8Gen_HiggsJet_minDMass_Phi_ = -999.0;
   AK8Gen_HiggsJet_minDMass_M_ = -999.0;
-  
+
   AK8Gen_HiggsJet_minDMass_deltaR_H1_ = -999.0;
   AK8Gen_HiggsJet_minDMass_deltaR_H2_ = -999.0;
 
@@ -1179,8 +1180,8 @@ bool GenAnalyzer::reorder(const TLorentzVector &a, const TLorentzVector &b)
 /**
  * This takes one AK4 (AK8) jet and checks from AK8 (AK4) jet collection if its cleaned or not.
  * @param  genAK8jet          [reco::GenJet] one gen jet
- * @param  firstJetCollection [const vector<reco::GenJet>] vector of genJet collection 
- * @param  r_seperation       [double] this is the value of delta R     
+ * @param  firstJetCollection [const vector<reco::GenJet>] vector of genJet collection
+ * @param  r_seperation       [double] this is the value of delta R
  * @return                    [bool] returns true if jet is cleaned else false.
  */
 bool GenAnalyzer::jetCleaning(const reco::GenJet  * genAK8jet,const vector<reco::GenJet>* firstJetCollection, const double r_seperation)
@@ -1194,13 +1195,13 @@ bool GenAnalyzer::jetCleaning(const reco::GenJet  * genAK8jet,const vector<reco:
 /**
  * This function returns the sorted TLorentzVector that contains information from first
  * passed jetCollection.
- * @param firstJetCollection         first genjetCollection whose information will be passed to 
+ * @param firstJetCollection         first genjetCollection whose information will be passed to
  *                            TLorentzVector local_Vec_genJetAK5
  * @param secondJetCollection         Another genjetCollection which from which the first jet
  *                            collection is going to be cleaned.
  * @param Vec_Photons         Sorted TLorentzVector that contains the photon collection.
  * @param local_Vec_genJetAK4 vector of TLorentzVector that we need
- * @param r_seperation        This is the delta-R seperation distance beetween the two 
+ * @param r_seperation        This is the delta-R seperation distance beetween the two
  *                            jets.
  */
 void GenAnalyzer::SortedCleanedJetVector(const std::vector<reco::GenJet>* firstJetCollection, const std::vector<reco::GenJet>* secondJetCollection, const std::vector<TLorentzVector> &Vec_Photons, std::vector<TLorentzVector> &local_Vec_genJetAK4, const double r_seperation)
@@ -1232,7 +1233,7 @@ TLorentzVector GenAnalyzer::maxPtLorentzVector(const std::vector<TLorentzVector>
     if (jet->Pt()>temp_pt)
     {
           AK8Gen_HiggsJet_MaxPt.SetPtEtaPhiE(jet->Pt(), jet->Eta(), jet->Phi(), jet->Energy());
-          temp_pt = jet->Pt();      
+          temp_pt = jet->Pt();
     }
   }
   return AK8Gen_HiggsJet_MaxPt;
@@ -1259,7 +1260,7 @@ TLorentzVector GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVecto
 }
 
 /**
- * This takes a vector of TLorentzVector and returns a TLorentzVector having minimum delta mass w.r.t. the 
+ * This takes a vector of TLorentzVector and returns a TLorentzVector having minimum delta mass w.r.t. the
  * specified mass. Also, it takes a input positional arguments. It just skip that while checking.
  * @param  inputLorentzVector Input vector of TLorentzVector.
  * @param  mass               mass from which it will compare
@@ -1276,7 +1277,7 @@ TLorentzVector GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVecto
   {
     counter++;
     // std::cout << "==> " << counter << "\t" << position << std::endl;
-    if (skip) 
+    if (skip)
     {
       if (counter == position) continue;
     }
@@ -1285,7 +1286,7 @@ TLorentzVector GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVecto
     {
       AK8Gen_HiggsJet_MaxPt.SetPtEtaPhiE(jet->Pt(), jet->Eta(), jet->Phi(), jet->Energy());
       temp_AK8jet_deltaM = abs(jet->M()-mass);
-      if (!skip) 
+      if (!skip)
       {
         position = counter;
         // std::cout << "position : " << position << std::endl;
@@ -1311,11 +1312,11 @@ void GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVector> &inputL
       {
         temp_AK8jet_deltaM = abs((*jet+*jet1).M() - mass);
         if (jet->Pt()>jet1->Pt()) {
-          leadingJet.SetPtEtaPhiE((jet)->Pt(), (jet)->Eta(), (jet)->Phi(), (jet)->Energy());          
-          subleadingJet.SetPtEtaPhiE((jet1)->Pt(), (jet1)->Eta(), (jet1)->Phi(), (jet1)->Energy());          
+          leadingJet.SetPtEtaPhiE((jet)->Pt(), (jet)->Eta(), (jet)->Phi(), (jet)->Energy());
+          subleadingJet.SetPtEtaPhiE((jet1)->Pt(), (jet1)->Eta(), (jet1)->Phi(), (jet1)->Energy());
         } else {
-          leadingJet.SetPtEtaPhiE((jet1)->Pt(), (jet1)->Eta(), (jet1)->Phi(), (jet1)->Energy());   
-          subleadingJet.SetPtEtaPhiE((jet)->Pt(), (jet)->Eta(), (jet)->Phi(), (jet)->Energy());          
+          leadingJet.SetPtEtaPhiE((jet1)->Pt(), (jet1)->Eta(), (jet1)->Phi(), (jet1)->Energy());
+          subleadingJet.SetPtEtaPhiE((jet)->Pt(), (jet)->Eta(), (jet)->Phi(), (jet)->Energy());
         }
       }
     }
@@ -1334,7 +1335,7 @@ void GenAnalyzer::indexOfSelectedJet(const std::vector<TLorentzVector> &inputLor
   {
     for ( int ak4_jet2 = ak4_jet1+1; ak4_jet2 < int(inputLorentzVector.size()); ++ak4_jet2)
     {
-      double mass = (inputLorentzVector[ak4_jet1] + inputLorentzVector[ak4_jet2]).M();      
+      double mass = (inputLorentzVector[ak4_jet1] + inputLorentzVector[ak4_jet2]).M();
       if (abs(mass - 80.0) < tempMass1)
       {
         tempMass1 = abs(mass - 80.0);
@@ -1366,9 +1367,9 @@ void GenAnalyzer::indexOfSelectedJet(const std::vector<TLorentzVector> &inputLor
       if (ak4_jet2 == in_index1) continue;
       if (ak4_jet2 == in_index2) continue;
       if (in_index1 == -1 && in_index2 == -1) {
-          mass = (inputLorentzVector[ak4_jet1] + inputLorentzVector[ak4_jet2]).M();      
+          mass = (inputLorentzVector[ak4_jet1] + inputLorentzVector[ak4_jet2]).M();
       } else {
-          mass = (inputLorentzVector[ak4_jet1] + inputLorentzVector[ak4_jet2] + 
+          mass = (inputLorentzVector[ak4_jet1] + inputLorentzVector[ak4_jet2] +
           inputLorentzVector[in_index1] + inputLorentzVector[in_index2]).M();
       }
       if (abs(mass - massComp) < tempMass1)
@@ -1384,19 +1385,27 @@ void GenAnalyzer::indexOfSelectedJet(const std::vector<TLorentzVector> &inputLor
 
 /**
  * @brief      Selection of two AK4 jet and one AK8 jet. This selection is done
- *             by searching the combination of two AK4 and one AK8 which gives 
+ *             by searching the combination of two AK4 and one AK8 which gives
  *             us the minimum delta mass w.r.t. the Higgs mass.
  *
  * @param      input_AK4LorentzVector  The input vector of AK4 lorentz vector
  * @param      input_AK8LorentzVector  The input vector of AK8 lorentz vector
  *
  * @return     Returns the vector of TLorentzVector having size 3. Whose first two elements
- *             contains information about the AK4 jets and the third element contains 
+ *             contains information about the AK4 jets and the third element contains
  *             information of AK8 jet.
  */
 std::vector<TLorentzVector> GenAnalyzer::minMassLorentzVector(const std::vector<TLorentzVector> &input_AK4LorentzVector, const std::vector<TLorentzVector> &input_AK8LorentzVector)
 {
   std::vector<TLorentzVector> outputLorentzVector;
+  /**
+   * Fill the outputLorentzVector with three blank TLorentzVector
+   * So, that if it did not get any element it won't crash.
+   */
+  outputLorentzVector.push_back(TLorentzVector(0,0,0,0));
+  outputLorentzVector.push_back(TLorentzVector(0,0,0,0));
+  outputLorentzVector.push_back(TLorentzVector(0,0,0,0));
+
   double tempMass1 = 9999.0;
 
   for (std::vector<TLorentzVector>::const_iterator i = input_AK4LorentzVector.begin(); i != input_AK4LorentzVector.end()-1; ++i)
@@ -1406,17 +1415,20 @@ std::vector<TLorentzVector> GenAnalyzer::minMassLorentzVector(const std::vector<
       for (std::vector<TLorentzVector>::const_iterator k = input_AK8LorentzVector.begin(); k != input_AK8LorentzVector.end(); ++k)
       {
         double mass = (*i + *j + *k).M();
+        if ((*i).Pt()<20 || (*j).Pt()<20) continue;
+        if ((*k).Pt()<30) continue;
         if (abs(mass - 125.0) < tempMass1)
         {
           outputLorentzVector.clear();
           outputLorentzVector.push_back(*i);
           outputLorentzVector.push_back(*j);
           outputLorentzVector.push_back(*k);
+          tempMass1 = abs(mass - 125.0);
         }
-      }      
+      }
     }
   }
-  if (outputLorentzVector.size()>3) 
+  if (outputLorentzVector.size()>3)
   {
     std::cout << "size of output vector seems more than three... please check the code." << std::endl;
     exit(EXIT_FAILURE);

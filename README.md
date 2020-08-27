@@ -1,7 +1,7 @@
 # How To Use
 
-	cmsrel CMSSW_8_0_11
-	cd CMSSW_8_0_11/src
+	cmsrel CMSSW_10_2_22
+	cd CMSSW_10_2_22/src
 	cmsenv
 	git clone git@github.com:ram1123/GEN-SIM-analyzer.git
 	scramv1 b -j 8

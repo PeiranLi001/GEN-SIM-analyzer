@@ -2,11 +2,11 @@
 //
 // Package:    GenAnalyzerNew/GenAnalyzer
 // Class:      GenAnalyzer
-// 
+//
 /**\class GenAnalyzer GenAnalyzer.cc GenAnalyzerNew/GenAnalyzer/plugins/GenAnalyzer.cc
- 
+
  Description: Read the GENSIM file
- 
+
  Implementation:
  [Notes on implementation]
  */
@@ -65,24 +65,24 @@ void
 GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
   using namespace edm;
-  
+
   edm::Handle<reco::GenParticleCollection> genpsHandle;
   iEvent.getByToken(genParticlesToken, genpsHandle);
-  
+
   edm::Handle<reco::GenJetCollection> genAK4jetHandle;
   iEvent.getByToken(genAK4jetToken, genAK4jetHandle);
-  
+
   edm::Handle<reco::GenJetCollection> genAK8jetHandle;
   iEvent.getByToken(genAK8jetToken, genAK8jetHandle);
-  
+
   const vector<reco::GenParticle>* genps_coll = genpsHandle.product();
   const vector<reco::GenJet>* genAK4_coll = genAK4jetHandle.product();
   const vector<reco::GenJet>* genAK8_coll = genAK8jetHandle.product();
-  
+
   if (Verbose_)  std::cout<<"===================\n\n"<<endl;
-  
+
   int nGenParticle=0;
-  
+
   TLorentzVector PHO;
   TLorentzVector Wpquarks;
   TLorentzVector Wmquarks;
@@ -90,55 +90,57 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   TLorentzVector Wboson2;
   TLorentzVector Higgs1;
   TLorentzVector Higgs2;
-  
+
   std::vector<TLorentzVector> Vec_Photons;
   std::vector<TLorentzVector> Vec_wpJET;
   std::vector<TLorentzVector> Vec_wmJET;
   std::vector<TLorentzVector> Vec_Wboson;
   std::vector<TLorentzVector> Vec_Higgs;
-  
+
   //  std::cout << "Size = " << genps_coll->size() << std::endl;
-  
+
   for(vector<reco::GenParticle>::const_iterator genps_it = genps_coll->begin(); genps_it != genps_coll->end(); genps_it++)
   {
     nGenParticle++;
-    
+
     /*	Photon selection */
     if ( abs(genps_it->pdgId())==22 && (abs(genps_it->mother()->pdgId())==25) && genps_it->isHardProcess() && (genps_it->status()==23 || genps_it->status()==1) ) {
       if (Verbose_) std::cout << "inphoton if condition" << std::endl;
-      
+
       PHO.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
       Vec_Photons.push_back(PHO);
     } /* End if conditon for photon selection */
-    
+
     /*	Quarks from W-boson	*/
     if ( abs(genps_it->pdgId())<7 && (genps_it->mother()->pdgId()==24) && genps_it->status()==23 && genps_it->isHardProcess() ) {
       if (Verbose_) std::cout << "In W+ loop... " << std::endl;
       Wpquarks.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
       Vec_wpJET.push_back(Wpquarks);
+      pdgID_.push_back(genps_it->pdgId());
     } /* END if condition of wjETs */
-    
+
     /*  Quarks from W- boson  */
     if ( abs(genps_it->pdgId())<7 && (genps_it->mother()->pdgId()==-24) && genps_it->status()==23 && genps_it->isHardProcess() ) {
       if (Verbose_) std::cout << "In W- loop... " << std::endl;
       Wmquarks.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
       Vec_wmJET.push_back(Wmquarks);
+      pdgID_.push_back(genps_it->pdgId());
     } /* END if condition of wjETs */
   }
-  
+
   if (Vec_Photons.size()==2 &&  Vec_wpJET.size()==2 && Vec_wmJET.size()==2)
   {
     if (Verbose_) cout<<"Event selected"<<nEVENT<<endl;
     nEVENT++;
-    
+
     /*  Form the W-bosons 4-Vectors   */
     Vec_Wboson.push_back(Vec_wmJET[0]+Vec_wmJET[1]);
     Vec_Wboson.push_back(Vec_wpJET[0]+Vec_wpJET[1]);
-    
+
     /*  Form the Higgs 4-Vectors  */
     Vec_Higgs.push_back(Vec_Wboson[0]+Vec_Wboson[1]);
     Vec_Higgs.push_back(Vec_Photons[0]+Vec_Photons[1]);
-    
+
     /*  Sort each TLorentzVectors */
     std::sort(Vec_Photons.begin(), Vec_Photons.end(), GenAnalyzer::reorder);
     std::sort(Vec_wpJET.begin(), Vec_wpJET.end(), GenAnalyzer::reorder);
@@ -146,7 +148,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     std::sort(Vec_Wboson.begin(), Vec_Wboson.end(), GenAnalyzer::reorder);
     /*	We did not sort the Higgs boson as I need to know which Higgs is reconstructed from W-boson and which one from photons	*/
     //std::sort(Vec_Higgs.begin(), Vec_Higgs.end(), GenAnalyzer::reorder);
-    
+
     /************************************************************************
      **
      **         Get 4-moment for all final state GenParticles
@@ -156,85 +158,85 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     gen_leading_photon_Eta_ 	= Vec_Photons[0].Eta();
     gen_leading_photon_Phi_ 	= Vec_Photons[0].Phi();
     gen_leading_photon_M_ 	= Vec_Photons[0].M() ;
-    
+
     gen_Subleading_photon_Pt_  = Vec_Photons[1].Pt() ;
     gen_Subleading_photon_Eta_     = Vec_Photons[1].Eta();
     gen_Subleading_photon_Phi_     = Vec_Photons[1].Phi();
     gen_Subleading_photon_M_   = Vec_Photons[1].M() ;
-    
+
     gen_leading_WpJets_Pt_  = Vec_wpJET[0].Pt();
     gen_leading_WpJets_Eta_  = Vec_wpJET[0].Eta();
     gen_leading_WpJets_Phi_  = Vec_wpJET[0].Phi();
     gen_leading_WpJets_M_  = Vec_wpJET[0].M();
-    
+
     gen_Subleading_WpJets_Pt_  = Vec_wpJET[1].Pt();
     gen_Subleading_WpJets_Eta_  = Vec_wpJET[1].Eta();
     gen_Subleading_WpJets_Phi_  = Vec_wpJET[1].Phi();
     gen_Subleading_WpJets_M_  = Vec_wpJET[1].M();
-    
+
     gen_leading_WmJets_Pt_  = Vec_wmJET[0].Pt();
     gen_leading_WmJets_Eta_  = Vec_wmJET[0].Eta();
     gen_leading_WmJets_Phi_  = Vec_wmJET[0].Phi();
     gen_leading_WmJets_M_  = Vec_wmJET[0].M();
-    
+
     gen_Subleading_WmJets_Pt_  = Vec_wmJET[1].Pt();
     gen_Subleading_WmJets_Eta_  = Vec_wmJET[1].Eta();
     gen_Subleading_WmJets_Phi_  = Vec_wmJET[1].Phi();
     gen_Subleading_WmJets_M_  = Vec_wmJET[1].M();
-    
+
     gen_leading_WBoson_Pt_  = Vec_Wboson[0].Pt();
     gen_leading_WBoson_Eta_  = Vec_Wboson[0].Eta();
     gen_leading_WBoson_Phi_  = Vec_Wboson[0].Phi();
     gen_leading_WBoson_M_  = Vec_Wboson[0].M();
-    
+
     gen_Subleading_WBoson_Pt_  = Vec_Wboson[1].Pt();
     gen_Subleading_WBoson_Eta_  = Vec_Wboson[1].Eta();
     gen_Subleading_WBoson_Phi_  = Vec_Wboson[1].Phi();
     gen_Subleading_WBoson_M_  = Vec_Wboson[1].M();
-    
+
     gen_leading_Higgs_Pt_  = Vec_Higgs[0].Pt();
     gen_leading_Higgs_Eta_  = Vec_Higgs[0].Eta();
     gen_leading_Higgs_Phi_  = Vec_Higgs[0].Phi();
     gen_leading_Higgs_M_  = Vec_Higgs[0].M();
-    
+
     gen_Subleading_Higgs_Pt_  = Vec_Higgs[1].Pt();
     gen_Subleading_Higgs_Eta_  = Vec_Higgs[1].Eta();
     gen_Subleading_Higgs_Phi_  = Vec_Higgs[1].Phi();
     gen_Subleading_Higgs_M_  = Vec_Higgs[1].M();
-    
-    
+
+
     /************************************************************************
      **
      **         Get Delta-R between each stage particles
      **
      *************************************************************************/
     gen_deltaR_Photon0_Photon1_ = deltaR(Vec_Photons[0].Eta(),Vec_Photons[0].Phi(), Vec_Photons[1].Eta(),Vec_Photons[1].Phi());
-    
+
     gen_deltaR_Photon0_WmJ0_ = deltaR(Vec_Photons[0].Eta(),Vec_Photons[0].Phi(), Vec_wmJET[0].Eta(),Vec_wmJET[0].Phi());
     gen_deltaR_Photon0_WmJ1_ = deltaR(Vec_Photons[0].Eta(),Vec_Photons[0].Phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi());
     gen_deltaR_Photon0_WpJ0_ = deltaR(Vec_Photons[0].Eta(),Vec_Photons[0].Phi(), Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi());
     gen_deltaR_Photon0_WpJ1_ = deltaR(Vec_Photons[0].Eta(),Vec_Photons[0].Phi(), Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi());
-    
+
     gen_deltaR_Photon1_WmJ0_ = deltaR(Vec_Photons[1].Eta(),Vec_Photons[1].Phi(), Vec_wmJET[0].Eta(),Vec_wmJET[0].Phi());
     gen_deltaR_Photon1_WmJ1_ = deltaR(Vec_Photons[1].Eta(),Vec_Photons[1].Phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi());
     gen_deltaR_Photon1_WpJ0_ = deltaR(Vec_Photons[1].Eta(),Vec_Photons[1].Phi(), Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi());
     gen_deltaR_Photon1_WpJ1_ = deltaR(Vec_Photons[1].Eta(),Vec_Photons[1].Phi(), Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi());
-    
+
     gen_deltaR_WpJ0_WpJ1_    = deltaR(Vec_wpJET[0].Eta(),Vec_wpJET[0].Phi(), Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi());
     gen_deltaR_WpJ0_WmJ0_    = deltaR(Vec_wpJET[0].Eta(),Vec_wpJET[0].Phi(), Vec_wmJET[0].Eta(),Vec_wmJET[0].Phi());
     gen_deltaR_WpJ0_WmJ1_    = deltaR(Vec_wpJET[0].Eta(),Vec_wpJET[0].Phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi());
     gen_deltaR_WpJ1_WmJ0_    = deltaR(Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi(), Vec_wmJET[0].Eta(),Vec_wmJET[0].Phi());
     gen_deltaR_WpJ1_WmJ1_    = deltaR(Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi());
     gen_deltaR_WmJ0_WmJ1_    = deltaR(Vec_wmJET[0].Eta(),Vec_wmJET[0].Phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi());
-    
+
     gen_deltaR_Wp_Wm_    = deltaR(Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
     gen_deltaR_H1_H2_    = deltaR(Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
     //gen_dPhijj_ = (float) deltaPhi(vJET[0].Phi(),vJET[1].Phi());
-    
+
   } else {
     std::cout << "WARNING:: the condition 2 photons and 2 jets from each w's are not satisfied...." << std::endl;
   }
-  
+
   /************************************************************************
    *
    *  Good AK4 jet selection
@@ -244,7 +246,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    *                        combined with selected onshell AK4 jets and gives
    *                        the minimum delta mass wrt the Higgs boson.
    *
-   *************************************************************************/  
+   *************************************************************************/
 
   /**
    * This function return the sorted vector having cleaned AK4 jets.
@@ -254,10 +256,10 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   SortedCleanedJetVector( genAK4_coll,  genAK8_coll, Vec_Photons, Vec_genJetAK4);
   genJetAK4_njets_ = Vec_genJetAK4.size();
 
-  if (Vec_genJetAK4.size()>4) 
+  if (Vec_genJetAK4.size()>4)
   {
    /**
-    * Loop over all AK4 jets and selects a pair of jets having 
+    * Loop over all AK4 jets and selects a pair of jets having
     * minimum delta mass wrt w-boson mass.
     */
     int onshell_WBoson_index1 = -1;
@@ -266,7 +268,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
     /**
     *  Select another pair of AK4 jets that when combined with
-    *  the selected on-shell AK4 jets gives min delta M wrt the 
+    *  the selected on-shell AK4 jets gives min delta M wrt the
     *  Higgs boson.
     */
     int offshell_WBoson_index1 = -1;
@@ -311,7 +313,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     AK4GEN_AllResolved_onShellWboson_dR_W0PID_ = tempDeltaR;
     tempDeltaR = deltaR ((Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Eta(),
                          (Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi(),
-                         Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());  
+                         Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
     AK4GEN_AllResolved_onShellWboson_dR_W1PID_ = tempDeltaR;
 
     AK4GEN_AllResolved_offShellJet1_Pt_ = Vec_genJetAK4[offshell_WBoson_index1].Pt();
@@ -353,7 +355,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     AK4GEN_AllResolved_offShellWboson_dR_W0PID_ = tempDeltaR;
     tempDeltaR = deltaR ((Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Eta(),
                          (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Phi(),
-                         Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());  
+                         Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
     AK4GEN_AllResolved_offShellWboson_dR_W1PID_ = tempDeltaR;
 
     AK4GEN_AllResolved_Higgs_Pt_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
@@ -378,9 +380,9 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   }
 
   /**********************************************************
-   * 
+   *
    *              ak8 jet selection
-   * 
+   *
    **********************************************************/
   std::vector<TLorentzVector> Vec_genJetAK8;
   SortedCleanedJetVector(genAK8_coll, genAK4_coll, Vec_Photons, Vec_genJetAK8);
@@ -394,15 +396,15 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   AK8Gen_HiggsJet_MaxPt_M_ = AK8Gen_HiggsJet_MaxPt.M();
   AK8Gen_HiggsJet_MaxPt_deltaR_H1_ = deltaR(AK8Gen_HiggsJet_MaxPt.Eta(),AK8Gen_HiggsJet_MaxPt.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
   AK8Gen_HiggsJet_MaxPt_deltaR_H2_ = deltaR(AK8Gen_HiggsJet_MaxPt.Eta(),AK8Gen_HiggsJet_MaxPt.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
-  
+
   AK8Gen_HiggsJet_minDMass_Pt_ = AK8Gen_HiggsJet_minDMass.Pt();
   AK8Gen_HiggsJet_minDMass_Eta_ = AK8Gen_HiggsJet_minDMass.Eta();
   AK8Gen_HiggsJet_minDMass_Phi_ = AK8Gen_HiggsJet_minDMass.Phi();
   AK8Gen_HiggsJet_minDMass_M_ = AK8Gen_HiggsJet_minDMass.M();
   AK8Gen_HiggsJet_minDMass_deltaR_H1_ = deltaR(AK8Gen_HiggsJet_minDMass.Eta(),AK8Gen_HiggsJet_minDMass.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
   AK8Gen_HiggsJet_minDMass_deltaR_H2_ = deltaR(AK8Gen_HiggsJet_minDMass.Eta(),AK8Gen_HiggsJet_minDMass.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
-  
-  
+
+
   /************************************************************************
    *
    *  Two AK8 jet selection
@@ -425,7 +427,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     AK8Gen_MergedWjets_MaxPt_Leading_M_ = Vec_AK8Gen_MergedWjets[0].M();
     AK8Gen_MergedWjets_MaxPt_Leading_deltaR_H1_ = deltaR(Vec_AK8Gen_MergedWjets[0].Eta(),Vec_AK8Gen_MergedWjets[0].Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
     AK8Gen_MergedWjets_MaxPt_Leading_deltaR_H2_ = deltaR(Vec_AK8Gen_MergedWjets[0].Eta(),Vec_AK8Gen_MergedWjets[0].Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
-    
+
     AK8Gen_MergedWjets_MaxPt_SubLeading_Pt_ = Vec_AK8Gen_MergedWjets[1].Pt();
     AK8Gen_MergedWjets_MaxPt_SubLeading_Eta_ = Vec_AK8Gen_MergedWjets[1].Eta();
     AK8Gen_MergedWjets_MaxPt_SubLeading_Phi_ = Vec_AK8Gen_MergedWjets[1].Phi();
@@ -438,19 +440,19 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     AK8Gen_MergedWjets_MaxPt_Higgs_Eta_ = (Vec_AK8Gen_MergedWjets[0]+Vec_AK8Gen_MergedWjets[1]).Eta();
     AK8Gen_MergedWjets_MaxPt_Higgs_Phi_ = (Vec_AK8Gen_MergedWjets[0]+Vec_AK8Gen_MergedWjets[1]).Phi();
     AK8Gen_MergedWjets_MaxPt_Higgs_M_ = (Vec_AK8Gen_MergedWjets[0]+Vec_AK8Gen_MergedWjets[1]).M();
-  
+
     AK8Gen_MergedWjets_MaxPt_Higgs_deltaR_H1_ = deltaR((Vec_AK8Gen_MergedWjets[0]+Vec_AK8Gen_MergedWjets[1]).Eta(),(Vec_AK8Gen_MergedWjets[0]+Vec_AK8Gen_MergedWjets[1]).Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
     AK8Gen_MergedWjets_MaxPt_Higgs_deltaR_H2_ = deltaR((Vec_AK8Gen_MergedWjets[0]+Vec_AK8Gen_MergedWjets[1]).Eta(),(Vec_AK8Gen_MergedWjets[0]+Vec_AK8Gen_MergedWjets[1]).Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
 
   }
-  
+
   /************************************************************************
    *
    *  Two AK8 jet selection
    *  The case where Higgs will be selected as two FAT jets
    *  CASE: 2: Two jets with min delta mass wrt Higgs are selected.
    *
-   *************************************************************************/  
+   *************************************************************************/
   TLorentzVector LV_leadingWjet, LV_SubleadingWjet;
   minMassLorentzVector(Vec_genJetAK8, 125.0, LV_leadingWjet, LV_SubleadingWjet);
 
@@ -461,7 +463,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   AK8Gen_MergedWjets_minDMass_Leading_M_ = LV_leadingWjet.M();
   AK8Gen_MergedWjets_minDMass_Leading_deltaR_H1_ = deltaR(LV_leadingWjet.Eta(),LV_leadingWjet.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
   AK8Gen_MergedWjets_minDMass_Leading_deltaR_H2_ = deltaR(LV_leadingWjet.Eta(),LV_leadingWjet.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
-  
+
   AK8Gen_MergedWjets_minDMass_SubLeading_Pt_ = LV_SubleadingWjet.Pt();
   AK8Gen_MergedWjets_minDMass_SubLeading_Eta_ = LV_SubleadingWjet.Eta();
   AK8Gen_MergedWjets_minDMass_SubLeading_Phi_ = LV_SubleadingWjet.Phi();
@@ -474,7 +476,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   AK8Gen_MergedWjets_minDMass_Higgs_Eta_ = (LV_leadingWjet+LV_SubleadingWjet).Eta();
   AK8Gen_MergedWjets_minDMass_Higgs_Phi_ = (LV_leadingWjet+LV_SubleadingWjet).Phi();
   AK8Gen_MergedWjets_minDMass_Higgs_M_ = (LV_leadingWjet+LV_SubleadingWjet).M();
-  
+
   AK8Gen_MergedWjets_minDMass_Higgs_deltaR_H1_ = deltaR((LV_leadingWjet+LV_SubleadingWjet).Eta(),(LV_leadingWjet+LV_SubleadingWjet).Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
   AK8Gen_MergedWjets_minDMass_Higgs_deltaR_H2_ = deltaR((LV_leadingWjet+LV_SubleadingWjet).Eta(),(LV_leadingWjet+LV_SubleadingWjet).Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
   }
@@ -487,9 +489,9 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    *            out of remaning another one is selected that forms min Higgs
    *            mass with the one selected for w-boson.
    *
-   *************************************************************************/  
+   *************************************************************************/
 
-  
+
   /**
    * Select on-shell W-boson
    */
@@ -517,7 +519,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   AK8Gen_MergedWjets_minWminHmass_Leading_M_ = LV_leadingWjet.M();
   AK8Gen_MergedWjets_minWminHmass_Leading_deltaR_H1_ = deltaR(LV_leadingWjet.Eta(),LV_leadingWjet.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
   AK8Gen_MergedWjets_minWminHmass_Leading_deltaR_H2_ = deltaR(LV_leadingWjet.Eta(),LV_leadingWjet.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
-  
+
   AK8Gen_MergedWjets_minWminHmass_SubLeading_Pt_ = LV_SubleadingWjet.Pt();
   AK8Gen_MergedWjets_minWminHmass_SubLeading_Eta_ = LV_SubleadingWjet.Eta();
   AK8Gen_MergedWjets_minWminHmass_SubLeading_Phi_ = LV_SubleadingWjet.Phi();
@@ -530,7 +532,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   AK8Gen_MergedWjets_minWminHmass_Higgs_Eta_ = (LV_leadingWjet+LV_SubleadingWjet).Eta();
   AK8Gen_MergedWjets_minWminHmass_Higgs_Phi_ = (LV_leadingWjet+LV_SubleadingWjet).Phi();
   AK8Gen_MergedWjets_minWminHmass_Higgs_M_ = (LV_leadingWjet+LV_SubleadingWjet).M();
-  
+
   AK8Gen_MergedWjets_minWminHmass_Higgs_deltaR_H1_ = deltaR((LV_leadingWjet+LV_SubleadingWjet).Eta(),(LV_leadingWjet+LV_SubleadingWjet).Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
   AK8Gen_MergedWjets_minWminHmass_Higgs_deltaR_H2_ = deltaR((LV_leadingWjet+LV_SubleadingWjet).Eta(),(LV_leadingWjet+LV_SubleadingWjet).Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
   }
@@ -541,9 +543,9 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    *    - One AK8 jet and two AK4 jets.
    *    - Select one highest pT AK8 jets and two highest pT AK4 jets.
    */
-  
+
   /* AK4 jets */
-  // Vec_genJetAK4: sorted vector of TLorentzVector 
+  // Vec_genJetAK4: sorted vector of TLorentzVector
   /* AK8 jet */
   // AK8Gen_HiggsJet_MaxPt: highest pT AK8 jet of type TLorentzVector
   OneAK8TwoAK4_pTMax_AK8_Pt_ = AK8Gen_HiggsJet_MaxPt.Pt();
@@ -593,9 +595,9 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   OneAK8TwoAK4_pTMax_ReconsH_dR_H2_ = deltaR((AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
 
   /**
-   * Selection of two AK4 jet and a AK8 jet. 
+   * Selection of two AK4 jet and a AK8 jet.
    */
-  
+
   std::vector<TLorentzVector> jetsss = minMassLorentzVector(Vec_genJetAK4, Vec_genJetAK8);
 
   OneAK8TwoAK4_minMass_AK8_Pt_ = jetsss[2].Pt();
@@ -641,31 +643,31 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 
   tree->Fill();
-  
+
   Vec_Wboson.clear();
   Vec_Higgs.clear();
   Vec_wmJET.clear();
   Vec_wpJET.clear();
   Vec_Photons.clear();
-  
+
   Clear();
 }
 
 // ------------ method called once each job just before starting event loop  ------------
-void 
+void
 GenAnalyzer::beginJob()
 {
   std::cout<<"Inside beginJob()"<<std::endl;
   outputFile_ = new TFile(OutPutFileName_,"RECREATE");
   outputFile_->SetCompressionLevel(2);
   tree = new TTree("otree","GenParticles Basic Info");
-  
+
   SetBranches();
 }
 
 // ------------ method called once each job just after ending the event loop  ------------
-void 
-GenAnalyzer::endJob() 
+void
+GenAnalyzer::endJob()
 {
   outputFile_->Write();
   outputFile_->Close();

@@ -71,10 +71,15 @@ variables =  [
 # ['AK4GEN_AllResolved_onShellWboson_M','AK4GEN_AllResolved_offShellWboson_M','AK4GEN_AllResolved_Higgs_M'],
 
 
-['OneAK8TwoAK4_pTMax_AK8_Pt','OneAK8TwoAK4_pTMax_leadingAK4_Pt','OneAK8TwoAK4_pTMax_subleadingAK4_Pt','OneAK8TwoAK4_pTMax_ReconsW_AK4_Pt','OneAK8TwoAK4_pTMax_ReconsH_Pt'],
+# ['OneAK8TwoAK4_pTMax_AK8_Pt','OneAK8TwoAK4_pTMax_leadingAK4_Pt','OneAK8TwoAK4_pTMax_subleadingAK4_Pt','OneAK8TwoAK4_pTMax_ReconsW_AK4_Pt','OneAK8TwoAK4_pTMax_ReconsH_Pt'],
+['OneAK8TwoAK4_pTMax_AK8_Pt','OneAK8TwoAK4_pTMax_ReconsW_AK4_Pt','OneAK8TwoAK4_pTMax_ReconsH_Pt'],
 ['OneAK8TwoAK4_pTMax_AK8_Eta','OneAK8TwoAK4_pTMax_leadingAK4_Eta','OneAK8TwoAK4_pTMax_subleadingAK4_Eta','OneAK8TwoAK4_pTMax_ReconsW_AK4_Eta','OneAK8TwoAK4_pTMax_ReconsH_Eta'],
 ['OneAK8TwoAK4_pTMax_AK8_Phi','OneAK8TwoAK4_pTMax_leadingAK4_Phi','OneAK8TwoAK4_pTMax_subleadingAK4_Phi','OneAK8TwoAK4_pTMax_ReconsW_AK4_Phi','OneAK8TwoAK4_pTMax_ReconsH_Phi'],
 ['OneAK8TwoAK4_pTMax_AK8_M','OneAK8TwoAK4_pTMax_ReconsW_AK4_M','OneAK8TwoAK4_pTMax_ReconsH_M'],
 
+# ['OneAK8TwoAK4_minMass_AK8_Pt','OneAK8TwoAK4_minMass_ReconsW_AK4_Pt','OneAK8TwoAK4_minMass_ReconsH_Pt'],
+# ['OneAK8TwoAK4_minMass_AK8_Eta','OneAK8TwoAK4_minMass_leadingAK4_Eta','OneAK8TwoAK4_minMass_subleadingAK4_Eta','OneAK8TwoAK4_minMass_ReconsW_AK4_Eta','OneAK8TwoAK4_minMass_ReconsH_Eta'],
+# ['OneAK8TwoAK4_minMass_AK8_Phi','OneAK8TwoAK4_minMass_leadingAK4_Phi','OneAK8TwoAK4_minMass_subleadingAK4_Phi','OneAK8TwoAK4_minMass_ReconsW_AK4_Phi','OneAK8TwoAK4_minMass_ReconsH_Phi'],
+# ['OneAK8TwoAK4_minMass_AK8_M','OneAK8TwoAK4_minMass_ReconsW_AK4_M','OneAK8TwoAK4_minMass_ReconsH_M'],
 
 ]
