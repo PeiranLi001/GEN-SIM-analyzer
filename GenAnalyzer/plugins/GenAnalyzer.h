@@ -120,6 +120,11 @@ private:
   double gen_Subleading_photon_Eta_   = -999.0;
   double gen_Subleading_photon_Phi_   = -999.0;
   double gen_Subleading_photon_M_     = -999.0;
+  double gen_HiggsGG_Pt_  = -999.0;
+  double gen_HiggsGG_Eta_  = -999.0;
+  double gen_HiggsGG_Phi_  = -999.0;
+  double gen_HiggsGG_M_  = -999.0;
+
   double gen_leading_WpJets_Pt_   = -999.0;
   double gen_leading_WpJets_Eta_  = -999.0;
   double gen_leading_WpJets_Phi_  = -999.0;
@@ -322,6 +327,11 @@ private:
   double AK4GEN_AllResolved_Higgs_M_  = -999.0;
   double AK4GEN_AllResolved_Higgs_DR_Higgs0PID_ = -999.0;
   double AK4GEN_AllResolved_Higgs_DR_Higgs1PID_ = -999.0;
+
+  double AK4GEN_AllResolved_HH_Pt_  = -999.;
+  double AK4GEN_AllResolved_HH_Eta_ = -999.;
+  double AK4GEN_AllResolved_HH_Phi_ = -999.;
+  double AK4GEN_AllResolved_HH_M_ = -999.;
 
   double OneAK8TwoAK4_pTMax_AK8_Pt_ = -999.0;
   double OneAK8TwoAK4_pTMax_AK8_Eta_  = -999.0;
@@ -575,6 +585,11 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&gen_Subleading_photon_Eta_, "gen_Subleading_photon_Eta");
   AddBranch(&gen_Subleading_photon_Phi_, "gen_Subleading_photon_Phi");
   AddBranch(&gen_Subleading_photon_M_, "gen_Subleading_photon_M");
+  AddBranch(&gen_HiggsGG_Pt_,"gen_HiggsGG_Pt");
+  AddBranch(&gen_HiggsGG_Eta_,"gen_HiggsGG_Eta");
+  AddBranch(&gen_HiggsGG_Phi_,"gen_HiggsGG_Phi");
+  AddBranch(&gen_HiggsGG_M_,"gen_HiggsGG_M");
+
   AddBranch(&gen_leading_WpJets_Pt_, "gen_leading_WpJets_Pt");
   AddBranch(&gen_leading_WpJets_Eta_, "gen_leading_WpJets_Eta");
   AddBranch(&gen_leading_WpJets_Phi_, "gen_leading_WpJets_Phi");
@@ -779,6 +794,10 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&AK4GEN_AllResolved_Higgs_M_,"AK4GEN_AllResolved_Higgs_M");
   AddBranch(&AK4GEN_AllResolved_Higgs_DR_Higgs0PID_,"AK4GEN_AllResolved_Higgs_DR_Higgs0PID");
   AddBranch(&AK4GEN_AllResolved_Higgs_DR_Higgs1PID_,"AK4GEN_AllResolved_Higgs_DR_Higgs1PID");
+  AddBranch(&AK4GEN_AllResolved_HH_Pt_,"AK4GEN_AllResolved_HH_Pt");
+  AddBranch(&AK4GEN_AllResolved_HH_Eta_,"AK4GEN_AllResolved_HH_Eta");
+  AddBranch(&AK4GEN_AllResolved_HH_Phi_,"AK4GEN_AllResolved_HH_Phi");
+  AddBranch(&AK4GEN_AllResolved_HH_M_,"AK4GEN_AllResolved_HH_M");
 
   AddBranch(&OneAK8TwoAK4_pTMax_AK8_Pt_,"OneAK8TwoAK4_pTMax_AK8_Pt");
   AddBranch(&OneAK8TwoAK4_pTMax_AK8_Eta_,"OneAK8TwoAK4_pTMax_AK8_Eta");
@@ -877,6 +896,11 @@ void GenAnalyzer::Clear(){
   gen_Subleading_photon_Eta_ = -999.0;
   gen_Subleading_photon_Phi_ = -999.0;
   gen_Subleading_photon_M_ = -999.0;
+  gen_HiggsGG_Pt_ = -999.0;
+  gen_HiggsGG_Eta_ = -999.0;
+  gen_HiggsGG_Phi_ = -999.0;
+  gen_HiggsGG_M_ = -999.0;
+
   gen_leading_WpJets_Pt_ = -999.0;
   gen_leading_WpJets_Eta_ = -999.0;
   gen_leading_WpJets_Phi_ = -999.0;
@@ -1081,6 +1105,10 @@ void GenAnalyzer::Clear(){
   AK4GEN_AllResolved_Higgs_M_ = -999.0;
   AK4GEN_AllResolved_Higgs_DR_Higgs0PID_  = -999.0;
   AK4GEN_AllResolved_Higgs_DR_Higgs1PID_  = -999.0;
+  AK4GEN_AllResolved_HH_Pt_ = -999.0;
+  AK4GEN_AllResolved_HH_Eta_ = -999.0;
+  AK4GEN_AllResolved_HH_Phi_ = -999.0;
+  AK4GEN_AllResolved_HH_M_ = -999.0;
 
   OneAK8TwoAK4_pTMax_AK8_Pt_  = -999.0;
   OneAK8TwoAK4_pTMax_AK8_Eta_ = -999.0;

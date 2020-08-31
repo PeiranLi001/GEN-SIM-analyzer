@@ -35,7 +35,7 @@ print dirName
 # InputFileList = ['GF_HH_Benchmark1', 'GF_HH_Benchmark7', 'GF_HH_Benchmark11', 'GF_HH_BenchmarkSM']
 
 input_root_file = '../'
-InputFileList = ['Radion_hh_narrow_M500_bqrk']
+InputFileList = ['Radion_hh_narrow_M270_LHEBqrk']
 # InputFileList = ['Radion_hh_narrow_M500']
 
 singleVariable = True
@@ -54,8 +54,8 @@ multipleVariableDifferentFiles = False
 # CutToApply = 'OneAK8TwoAK4_minMass_AK8_M<120 && OneAK8TwoAK4_minMass_ReconsW_AK4_M<120 && OneAK8TwoAK4_minMass_AK8_Pt > 200 '
 # CutToApply = 'OneAK8TwoAK4_pTMax_AK8_M<120 && OneAK8TwoAK4_pTMax_ReconsW_AK4_M<120  && OneAK8TwoAK4_pTMax_AK8_Pt<300 && OneAK8TwoAK4_pTMax_ReconsH_M>100'
 CutToApply = ''
-keyToUse = 'all'
-# keyToUse = 'ak8higgs_minDmass'
+# keyToUse = 'all'
+keyToUse = 'ak8higgs_minDmass'
 # keyToUse = 'oneAK8twoAK4_minMass'
 # keyToUse = 'oneAK8twoAK4_pTmax'
 

@@ -13,10 +13,11 @@ process.options = cms.untracked.PSet(
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 import FWCore.Utilities.FileUtils as FileUtils
-# inputTxtFile="Radion_hh_narrow_M260"
-# inputTxtFile="Radion_hh_narrow_M260_Bqrk"
-# inputTxtFile="Radion_hh_narrow_M260_LHEBqrk"
-inputTxtFile="Radion_hh_narrow_M270_LHEBqrk"
+#inputTxtFile="Radion_hh_narrow_M260_LHEBqrk"
+#inputTxtFile="Radion_hh_narrow_M270_LHEBqrk"
+inputTxtFile="Radion_hh_narrow_M500_LHEBqrk"
+#inputTxtFile="Radion_hh_narrow_M1000_LHEBqrk"
+#inputTxtFile="Radion_hh_narrow_M1500_LHEBqrk"
 readFiles = cms.untracked.vstring(FileUtils.loadListFromFile('inputTxtFiles/'+inputTxtFile+'.txt'))
 #readFiles = cms.untracked.vstring(FileUtils.loadListFromFile('GF_HH_Benchmark3.txt'))
 #readFiles = cms.untracked.vstring(FileUtils.loadListFromFile('TEMP_NAME.txt'))
