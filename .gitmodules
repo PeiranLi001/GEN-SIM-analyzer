@@ -1,0 +1,3 @@
+[submodule "GenAnalyzer/Plotting-Macro"]
+	path = GenAnalyzer/Plotting-Macro
+	url = git@github.com:ram1123/Plotting-Macro.git

@@ -175,6 +175,17 @@ private:
   double gen_deltaR_Wp_Wm_     = -999.0;
   double gen_deltaR_H1_H2_     = -999.0;
 
+  double gen_deltaPhi_Photon0_Photon1_  = -999.0;
+  double gen_deltaPhi_Wp_Wm_  = -999.0;
+  double gen_deltaPhi_H1_H2_  = -999.0;
+  double gen_deltaPhi_WpJ0_WpJ1_  = -999.0;
+  double gen_deltaPhi_WmJ0_WmJ1_  = -999.0;
+  double gen_deltaEta_Photon0_Photon1_  = -999.0;
+  double gen_deltaEta_Wp_Wm_  = -999.0;
+  double gen_deltaEta_H1_H2_  = -999.0;
+  double gen_deltaEta_WpJ0_WpJ1_  = -999.0;
+  double gen_deltaEta_WmJ0_WmJ1_    = -999.0;
+
   double genJetAK4_njets_ = -999.0;
   double genJetAK4_leading_Pt_ = -999.0;
   double genJetAK4_leading_Eta_ = -999.0;
@@ -640,6 +651,17 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&gen_deltaR_Wp_Wm_, "gen_deltaR_Wp_Wm");
   AddBranch(&gen_deltaR_H1_H2_  , "gen_deltaR_H1_H2");
 
+  AddBranch(&gen_deltaPhi_Photon0_Photon1_, "gen_deltaPhi_Photon0_Photon1");
+  AddBranch(&gen_deltaPhi_Wp_Wm_, "gen_deltaPhi_Wp_Wm");
+  AddBranch(&gen_deltaPhi_H1_H2_, "gen_deltaPhi_H1_H2");
+  AddBranch(&gen_deltaPhi_WpJ0_WpJ1_, "gen_deltaPhi_WpJ0_WpJ1");
+  AddBranch(&gen_deltaPhi_WmJ0_WmJ1_, "gen_deltaPhi_WmJ0_WmJ1");
+  AddBranch(&gen_deltaEta_Photon0_Photon1_, "gen_deltaEta_Photon0_Photon1");
+  AddBranch(&gen_deltaEta_Wp_Wm_, "gen_deltaEta_Wp_Wm");
+  AddBranch(&gen_deltaEta_H1_H2_, "gen_deltaEta_H1_H2");
+  AddBranch(&gen_deltaEta_WpJ0_WpJ1_, "gen_deltaEta_WpJ0_WpJ1");
+  AddBranch(&gen_deltaEta_WmJ0_WmJ1_  , "gen_deltaEta_WmJ0_WmJ1");
+
   AddBranch(&genJetAK4_njets_, "genJetAK4_njets");
   AddBranch(&genJetAK4_leading_Pt_, "genJetAK4_leading_Pt");
   AddBranch(&genJetAK4_leading_Eta_, "genJetAK4_leading_Eta");
@@ -950,6 +972,17 @@ void GenAnalyzer::Clear(){
   gen_deltaR_WmJ0_WmJ1_ = -999.0;
   gen_deltaR_Wp_Wm_ = -999.0;
   gen_deltaR_H1_H2_ = -999.0;
+
+  gen_deltaPhi_Photon0_Photon1_ = -999.0;
+  gen_deltaPhi_Wp_Wm_ = -999.0;
+  gen_deltaPhi_H1_H2_ = -999.0;
+  gen_deltaPhi_WpJ0_WpJ1_ = -999.0;
+  gen_deltaPhi_WmJ0_WmJ1_ = -999.0;
+  gen_deltaEta_Photon0_Photon1_ = -999.0;
+  gen_deltaEta_Wp_Wm_ = -999.0;
+  gen_deltaEta_H1_H2_ = -999.0;
+  gen_deltaEta_WpJ0_WpJ1_ = -999.0;
+  gen_deltaEta_WmJ0_WmJ1_   = -999.0;
 
   genJetAK4_njets_ = -999.0;
   genJetAK4_leading_Pt_ = -999.0;

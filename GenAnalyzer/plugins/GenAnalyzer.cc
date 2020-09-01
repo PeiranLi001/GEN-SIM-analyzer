@@ -41,6 +41,7 @@
 #include "DataFormats/METReco/interface/GenMET.h"
 
 #include "DataFormats/Math/interface/deltaR.h"
+#include "DataFormats/Math/interface/deltaPhi.h"
 
 #include <vector>
 #include "TMath.h"
@@ -237,6 +238,18 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     gen_deltaR_Wp_Wm_    = deltaR(Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
     gen_deltaR_H1_H2_    = deltaR(Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
     //gen_dPhijj_ = (float) deltaPhi(vJET[0].Phi(),vJET[1].Phi());
+
+    gen_deltaPhi_Photon0_Photon1_ = deltaPhi(Vec_Photons[0].Phi(),Vec_Photons[1].Phi());
+    gen_deltaPhi_Wp_Wm_    = deltaPhi(Vec_Wboson[0].Phi(), Vec_Wboson[1].Phi());
+    gen_deltaPhi_H1_H2_    = deltaPhi(Vec_Higgs[0].Phi(), Vec_Higgs[1].Phi());
+    gen_deltaPhi_WpJ0_WpJ1_    = deltaPhi(Vec_wpJET[0].Phi(), Vec_wpJET[1].Phi());
+    gen_deltaPhi_WmJ0_WmJ1_    = deltaPhi(Vec_wmJET[0].Phi(), Vec_wmJET[1].Phi());
+
+    gen_deltaEta_Photon0_Photon1_ = Vec_Photons[0].Eta() - Vec_Photons[1].Eta();
+    gen_deltaEta_Wp_Wm_    = Vec_Wboson[0].Eta() - Vec_Wboson[1].Eta();
+    gen_deltaEta_H1_H2_    = Vec_Higgs[0].Eta() - Vec_Higgs[1].Eta();
+    gen_deltaEta_WpJ0_WpJ1_    = Vec_wpJET[0].Eta()- Vec_wpJET[1].Eta();
+    gen_deltaEta_WmJ0_WmJ1_    = Vec_wmJET[0].Eta(), Vec_wmJET[1].Eta();
 
   } else {
     std::cout << "WARNING:: the condition 2 photons and 2 jets from each w's are not satisfied...." << std::endl;
