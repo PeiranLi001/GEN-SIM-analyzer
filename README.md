@@ -12,7 +12,7 @@
 	cmsRun python/ConfFile_cfg.py
 
 
-# Submit job with [condor job](condor_jobs)
+# Submit job with [condor job](GenAnalyzer/condor_jobs)
 
 1. To set proxy and create tarfile for your CMSSW directory:
 
@@ -20,7 +20,7 @@
 	python create_cmssw_tarfile.py  
    ```
 
-2. Then modify output root file name (or output directory) in script [RunGENSIM_condor.sh](condor_jobs/RunGENSIM_condor.sh) and output log file name in script [RunGENSIM_condor.jdl](condor_jobs/RunGENSIM_condor.jdl)
+2. Then modify output root file name (or output directory) in script [RunGENSIM_condor.sh](GenAnalyzer/condor_jobs/RunGENSIM_condor.sh) and output log file name in script [RunGENSIM_condor.jdl](GenAnalyzer/condor_jobs/RunGENSIM_condor.jdl)
 
 3. Then submit condor job using command:
 
@@ -31,12 +31,12 @@
 	
 # Some General Script
 
-1. Move crab files from crab directory hierchy to top directory : [Move_FileToTopDirFromCrab.py](Move_FileToTopDirFromCrab.py)
-2. To run cmsRun over more then 255 files: [GetListOfFile_More250files.py](GetListOfFile_More250files.py)
+1. Move crab files from crab directory hierchy to top directory : [Move_FileToTopDirFromCrab.py](GenAnalyzer/Move_FileToTopDirFromCrab.py)
+2. To run cmsRun over more then 255 files: [GetListOfFile_More250files.py](GenAnalyzer/GetListOfFile_More250files.py)
 
 # Plotting Macro
 
-For instructions check the README inside the [plotting macro](Plotting-Macro) directory.
+For instructions check the README inside the [plotting macro](GenAnalyzer/Plotting-Macro) directory.
 
 
 # Plotting Macros (OLD):
@@ -44,4 +44,4 @@ For instructions check the README inside the [plotting macro](Plotting-Macro) di
 You can find plotting macro [here](https://github.com/ram1123/GEN-SIM-analyzer/tree/LHEonlyMiniAOD/GenAnalyzer/PlottingCodes).
 
 1. See the list of nevents, cross-section for all MiniAOD sampels: [DataMCInfo.ini](https://github.com/ram1123/GEN-SIM-analyzer/blob/LHEonlyMiniAOD/GenAnalyzer/PlottingCodes/DataMCInfo.ini)
-2. To print the list of available branches: run script [getBranchList.py](PlottingCodes_Old/getBranchList.py)
+2. To print the list of available branches: run script [getBranchList.py](GenAnalyzer/PlottingCodes_Old/getBranchList.py)
