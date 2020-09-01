@@ -34,6 +34,9 @@
 1. Move crab files from crab directory hierchy to top directory : [Move_FileToTopDirFromCrab.py](Move_FileToTopDirFromCrab.py)
 2. To run cmsRun over more then 255 files: [GetListOfFile_More250files.py](GetListOfFile_More250files.py)
 
+# Plotting Macro
+
+For instructions check the README inside the [plotting macro](Plotting-Macro) directory.
 
 
 # Plotting Macros (OLD):
