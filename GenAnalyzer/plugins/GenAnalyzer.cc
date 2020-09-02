@@ -113,7 +113,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     } /* End if conditon for photon selection */
 
     /*	Quarks from W-boson	*/
-    if ( abs(genps_it->pdgId())<7 && (genps_it->mother()->pdgId()==24) && genps_it->status()==23 && genps_it->isHardProcess() ) {
+    if ( abs(genps_it->pdgId())<7 && (genps_it->mother()->pdgId()==24 || genps_it->mother()->pdgId()==23) && genps_it->status()==23 && genps_it->isHardProcess() ) {
       if (Verbose_) std::cout << "In W+ loop... " << std::endl;
       Wpquarks.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
       Vec_wpJET.push_back(Wpquarks);
@@ -121,7 +121,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     } /* END if condition of wjETs */
 
     /*  Quarks from W- boson  */
-    if ( abs(genps_it->pdgId())<7 && (genps_it->mother()->pdgId()==-24) && genps_it->status()==23 && genps_it->isHardProcess() ) {
+    if ( abs(genps_it->pdgId())<7 && (genps_it->mother()->pdgId()==-24 || genps_it->mother()->pdgId()==23) && genps_it->status()==23 && genps_it->isHardProcess() ) {
       if (Verbose_) std::cout << "In W- loop... " << std::endl;
       Wmquarks.SetPtEtaPhiE(genps_it->pt(), genps_it->eta(), genps_it->phi(), genps_it->energy());
       Vec_wmJET.push_back(Wmquarks);
