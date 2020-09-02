@@ -84,9 +84,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">How To Use </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>cmsrel CMSSW_10_2_22 cd CMSSW_10_2_22/src cmsenv git clone <a href="#" onclick="location.href='mai'+'lto:'+'git'+'@g'+'ith'+'ub'+'.co'+'m'; return false;">git@g<span style="display: none;">.nosp@m.</span>ithu<span style="display: none;">.nosp@m.</span>b.com</a>:ram1123/GEN-SIM-analyzer.git scramv1 b -j 8 cd GEN-SIM-analyzer git submodule update &ndash;init cd GenAnalyzer </p><h1>Befor running, check the config file and comment/uncomment line for MINIAOD/LHE-GEN</h1>
-<p>cmsRun python/ConfFile_cfg.py</p>
-<h1>Submit job with <a href="GenAnalyzer/condor_jobs">condor job</a></h1>
+<div class="textblock"><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;cmsrel CMSSW_10_2_22</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;cd CMSSW_10_2_22/src</div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;cmsenv</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;git clone git@github.com:ram1123/GEN-SIM-analyzer.git</div><div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;scramv1 b -j 8</div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;cd GEN-SIM-analyzer</div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;git submodule update --init</div><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;cd GenAnalyzer</div><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;# Befor running, check the config file and comment/uncomment line for MINIAOD/LHE-GEN</div><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;cmsRun python/ConfFile_cfg.py</div></div><!-- fragment --><h1>Submit job with <a href="GenAnalyzer/condor_jobs">condor job</a></h1>
 <ol type="1">
 <li>To set proxy and create tarfile for your CMSSW directory:</li>
 </ol>

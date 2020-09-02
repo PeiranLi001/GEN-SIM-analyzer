@@ -1,16 +1,17 @@
 # How To Use
 
-	cmsrel CMSSW_10_2_22
-	cd CMSSW_10_2_22/src
-	cmsenv
-	git clone git@github.com:ram1123/GEN-SIM-analyzer.git
-	scramv1 b -j 8
-	cd GEN-SIM-analyzer
-	git submodule update --init
-	cd GenAnalyzer
-	# Befor running, check the config file and comment/uncomment line for MINIAOD/LHE-GEN
-	cmsRun python/ConfFile_cfg.py
-
+```bash
+cmsrel CMSSW_10_2_22
+cd CMSSW_10_2_22/src
+cmsenv
+git clone git@github.com:ram1123/GEN-SIM-analyzer.git
+scramv1 b -j 8
+cd GEN-SIM-analyzer
+git submodule update --init
+cd GenAnalyzer
+# Befor running, check the config file and comment/uncomment line for MINIAOD/LHE-GEN
+cmsRun python/ConfFile_cfg.py
+```
 
 # Submit job with [condor job](GenAnalyzer/condor_jobs)
 
