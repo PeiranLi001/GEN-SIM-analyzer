@@ -200,6 +200,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     gen_Subleading_WBoson_Phi_  = Vec_Wboson[1].Phi();
     gen_Subleading_WBoson_M_  = Vec_Wboson[1].M();
 
+    std::sort(Vec_Higgs.begin(), Vec_Higgs.end(), GenAnalyzer::reorder);
     gen_leading_Higgs_Pt_  = Vec_Higgs[0].Pt();
     gen_leading_Higgs_Eta_  = Vec_Higgs[0].Eta();
     gen_leading_Higgs_Phi_  = Vec_Higgs[0].Phi();
@@ -375,7 +376,14 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                          (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]).Phi(),
                          Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
     AK4GEN_AllResolved_offShellWboson_dR_W1PID_ = tempDeltaR;
-
+    if (AK4GEN_AllResolved_onShellWboson_Pt_ > AK4GEN_AllResolved_offShellWboson_Pt_){
+      AK4GEN_AllResolved_leadingWboson_M_ = AK4GEN_AllResolved_onShellWboson_M_;
+      AK4GEN_AllResolved_SubleadingWboson_M_ = AK4GEN_AllResolved_offShellWboson_M_;
+    }
+    if (AK4GEN_AllResolved_onShellWboson_Pt_ < AK4GEN_AllResolved_offShellWboson_Pt_){
+      AK4GEN_AllResolved_leadingWboson_M_ = AK4GEN_AllResolved_offShellWboson_M_;
+      AK4GEN_AllResolved_SubleadingWboson_M_ = AK4GEN_AllResolved_onShellWboson_M_;
+    }
     AK4GEN_AllResolved_Higgs_Pt_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
                                     Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Pt();
     AK4GEN_AllResolved_Higgs_Eta_ = (Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
@@ -403,10 +411,12 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                                      Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).Phi();
     AK4GEN_AllResolved_HH_M_ = (Vec_Photons[0]+Vec_Photons[1]+Vec_genJetAK4[offshell_WBoson_index1]+Vec_genJetAK4[offshell_WBoson_index2]+
                                    Vec_genJetAK4[onshell_WBoson_index1]+Vec_genJetAK4[onshell_WBoson_index2]).M();
+    
 
     }
   }
-
+  
+  
   /**********************************************************
    *
    *              ak8 jet selection

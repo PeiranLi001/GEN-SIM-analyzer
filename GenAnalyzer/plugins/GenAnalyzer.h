@@ -213,6 +213,7 @@ private:
   double AK8Gen_HiggsJet_minDMass_deltaR_H1_ = -999.0;
   double AK8Gen_HiggsJet_minDMass_deltaR_H2_ = -999.0;
 
+
   double AK8Gen_MergedWjets_MaxPt_Leading_Pt_ = -999.0;
   double AK8Gen_MergedWjets_MaxPt_Leading_Eta_ = -999.0;
   double AK8Gen_MergedWjets_MaxPt_Leading_Phi_ = -999.0;
@@ -332,6 +333,11 @@ private:
   double AK4GEN_AllResolved_offShellWboson_M_ = -999.0;
   double AK4GEN_AllResolved_offShellWboson_dR_W0PID_  = -999.0;
   double AK4GEN_AllResolved_offShellWboson_dR_W1PID_  = -999.0;
+
+  //added
+  double AK4GEN_AllResolved_leadingWboson_M_   = -999.0;
+  double AK4GEN_AllResolved_SubleadingWboson_M_   = -999.0;
+
   double AK4GEN_AllResolved_Higgs_Pt_ = -999.0;
   double AK4GEN_AllResolved_Higgs_Eta_  = -999.0;
   double AK4GEN_AllResolved_Higgs_Phi_  = -999.0;
@@ -810,6 +816,8 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&AK4GEN_AllResolved_offShellWboson_M_,"AK4GEN_AllResolved_offShellWboson_M");
   AddBranch(&AK4GEN_AllResolved_offShellWboson_dR_W0PID_,"AK4GEN_AllResolved_offShellWboson_dR_W0PID");
   AddBranch(&AK4GEN_AllResolved_offShellWboson_dR_W1PID_,"AK4GEN_AllResolved_offShellWboson_dR_W1PID");
+  AddBranch(&AK4GEN_AllResolved_leadingWboson_M_,"AK4GEN_AllResolved_leadingWboson_M");
+  AddBranch(&AK4GEN_AllResolved_SubleadingWboson_M_,"AK4GEN_AllResolved_SubleadingWboson_M");
   AddBranch(&AK4GEN_AllResolved_Higgs_Pt_,"AK4GEN_AllResolved_Higgs_Pt");
   AddBranch(&AK4GEN_AllResolved_Higgs_Eta_,"AK4GEN_AllResolved_Higgs_Eta");
   AddBranch(&AK4GEN_AllResolved_Higgs_Phi_,"AK4GEN_AllResolved_Higgs_Phi");
@@ -1132,6 +1140,8 @@ void GenAnalyzer::Clear(){
   AK4GEN_AllResolved_offShellWboson_M_  = -999.0;
   AK4GEN_AllResolved_offShellWboson_dR_W0PID_ = -999.0;
   AK4GEN_AllResolved_offShellWboson_dR_W1PID_ = -999.0;
+  AK4GEN_AllResolved_leadingWboson_M_  = -999.0;
+  AK4GEN_AllResolved_SubleadingWboson_M_  = -999.0;
   AK4GEN_AllResolved_Higgs_Pt_  = -999.0;
   AK4GEN_AllResolved_Higgs_Eta_ = -999.0;
   AK4GEN_AllResolved_Higgs_Phi_ = -999.0;
