@@ -170,6 +170,11 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     gen_HiggsGG_Phi_    = (Vec_Photons[0]+Vec_Photons[1]).Phi();
     gen_HiggsGG_M_    = (Vec_Photons[0]+Vec_Photons[1]).M();
 
+    gen_HiggsWW_Pt_   = (Vec_Wboson[0]+Vec_Wboson[1]).Pt();
+    gen_HiggsWW_Eta_    = (Vec_Wboson[0]+Vec_Wboson[1]).Eta();
+    gen_HiggsWW_Phi_    = (Vec_Wboson[0]+Vec_Wboson[1]).Phi();
+    gen_HiggsWW_M_    = (Vec_Wboson[0]+Vec_Wboson[1]).M();
+
     gen_leading_WpJets_Pt_  = Vec_wpJET[0].Pt();
     gen_leading_WpJets_Eta_  = Vec_wpJET[0].Eta();
     gen_leading_WpJets_Phi_  = Vec_wpJET[0].Phi();
@@ -251,6 +256,8 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     gen_deltaEta_H1_H2_    = Vec_Higgs[0].Eta() - Vec_Higgs[1].Eta();
     gen_deltaEta_WpJ0_WpJ1_    = Vec_wpJET[0].Eta()- Vec_wpJET[1].Eta();
     gen_deltaEta_WmJ0_WmJ1_    = Vec_wmJET[0].Eta(), Vec_wmJET[1].Eta();
+    
+   
 
   } else {
     std::cout << "WARNING:: the condition 2 photons and 2 jets from each w's are not satisfied...." << std::endl;
@@ -299,6 +306,63 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     {
     // std::cout << "onshell: " << onshell_WBoson_index1 << "\t" << onshell_WBoson_index2 << std::endl;
     // std::cout << "offshell: " << offshell_WBoson_index1 << "\t" << offshell_WBoson_index2 << std::endl;
+
+      //J1 J2 J3 J4: onshell leading first, offshell subleading last
+      if (abs((Vec_wpJET[0]+Vec_wpJET[1]).M()-80) < abs((Vec_wmJET[0]+Vec_wmJET[1]).M()-80)) {
+	double dR_J1_onShell_q1=deltaR(Vec_genJetAK4[onshell_WBoson_index1].Eta(),Vec_genJetAK4[onshell_WBoson_index1].Phi(), Vec_wpJET[0].Eta(),Vec_wpJET[0].Phi());
+	double dR_J1_onShell_q2=deltaR(Vec_genJetAK4[onshell_WBoson_index1].Eta(),Vec_genJetAK4[onshell_WBoson_index1].Phi(), Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi());
+	double dR_J2_onShell_q1=deltaR(Vec_genJetAK4[onshell_WBoson_index2].Eta(),Vec_genJetAK4[onshell_WBoson_index2].Phi(), Vec_wpJET[0].Eta(),Vec_wpJET[0].Phi());
+	double dR_J2_onShell_q2=deltaR(Vec_genJetAK4[onshell_WBoson_index2].Eta(),Vec_genJetAK4[onshell_WBoson_index2].Phi(), Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi());
+	if (dR_J1_onShell_q1 < dR_J1_onShell_q2) {
+	  AK4GEN_AllResolved_dR_J1_onShell_q_ = dR_J1_onShell_q1;
+	  AK4GEN_AllResolved_dR_J2_onShell_q_ = dR_J2_onShell_q2;
+	}
+	if (dR_J1_onShell_q1 > dR_J1_onShell_q2) {
+	  AK4GEN_AllResolved_dR_J1_onShell_q_ = dR_J1_onShell_q2;
+	  AK4GEN_AllResolved_dR_J2_onShell_q_ = dR_J2_onShell_q1;
+	}
+
+	double dR_J3_offShell_q3=deltaR(Vec_genJetAK4[offshell_WBoson_index1].Eta(),Vec_genJetAK4[offshell_WBoson_index1].Phi(), Vec_wmJET[0].Eta(),Vec_wmJET[0].Phi());
+	double dR_J3_offShell_q4=deltaR(Vec_genJetAK4[offshell_WBoson_index1].Eta(),Vec_genJetAK4[offshell_WBoson_index1].Phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi());
+	double dR_J4_offShell_q3=deltaR(Vec_genJetAK4[offshell_WBoson_index2].Eta(),Vec_genJetAK4[offshell_WBoson_index2].Phi(), Vec_wmJET[0].Eta(),Vec_wmJET[0].Phi());
+	double dR_J4_offShell_q4=deltaR(Vec_genJetAK4[offshell_WBoson_index2].Eta(),Vec_genJetAK4[offshell_WBoson_index2].Phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi());
+	if (dR_J3_offShell_q3 < dR_J3_offShell_q4) {
+	  AK4GEN_AllResolved_dR_J3_offShell_q_ = dR_J3_offShell_q3;
+	  AK4GEN_AllResolved_dR_J4_offShell_q_ = dR_J4_offShell_q4;
+	}
+	if (dR_J3_offShell_q3 > dR_J3_offShell_q4) {
+	  AK4GEN_AllResolved_dR_J3_offShell_q_ = dR_J3_offShell_q4;
+	  AK4GEN_AllResolved_dR_J4_offShell_q_ = dR_J4_offShell_q3;
+	}
+      }
+      if (abs((Vec_wpJET[0]+Vec_wpJET[1]).M()-80) > abs((Vec_wmJET[0]+Vec_wmJET[1]).M()-80)) {
+	double dR_J1_onShell_q1=deltaR(Vec_genJetAK4[onshell_WBoson_index1].Eta(),Vec_genJetAK4[onshell_WBoson_index1].Phi(), Vec_wmJET[0].Eta(),Vec_wmJET[0].Phi());
+	double dR_J1_onShell_q2=deltaR(Vec_genJetAK4[onshell_WBoson_index1].Eta(),Vec_genJetAK4[onshell_WBoson_index1].Phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi());
+	double dR_J2_onShell_q1=deltaR(Vec_genJetAK4[onshell_WBoson_index2].Eta(),Vec_genJetAK4[onshell_WBoson_index2].Phi(), Vec_wmJET[0].Eta(),Vec_wmJET[0].Phi());
+	double dR_J2_onShell_q2=deltaR(Vec_genJetAK4[onshell_WBoson_index2].Eta(),Vec_genJetAK4[onshell_WBoson_index2].Phi(), Vec_wmJET[1].Eta(),Vec_wmJET[1].Phi());
+	if (dR_J1_onShell_q1 < dR_J1_onShell_q2) {
+	  AK4GEN_AllResolved_dR_J1_onShell_q_ = dR_J1_onShell_q1;
+	  AK4GEN_AllResolved_dR_J2_onShell_q_ = dR_J2_onShell_q2;
+	}
+	if (dR_J1_onShell_q1 > dR_J1_onShell_q2) {
+	  AK4GEN_AllResolved_dR_J1_onShell_q_ = dR_J1_onShell_q2;
+	  AK4GEN_AllResolved_dR_J2_onShell_q_ = dR_J2_onShell_q1;
+	}
+
+	double dR_J3_offShell_q3=deltaR(Vec_genJetAK4[offshell_WBoson_index1].Eta(),Vec_genJetAK4[offshell_WBoson_index1].Phi(), Vec_wpJET[0].Eta(),Vec_wpJET[0].Phi());
+	double dR_J3_offShell_q4=deltaR(Vec_genJetAK4[offshell_WBoson_index1].Eta(),Vec_genJetAK4[offshell_WBoson_index1].Phi(), Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi());
+	double dR_J4_offShell_q3=deltaR(Vec_genJetAK4[offshell_WBoson_index2].Eta(),Vec_genJetAK4[offshell_WBoson_index2].Phi(), Vec_wpJET[0].Eta(),Vec_wpJET[0].Phi());
+	double dR_J4_offShell_q4=deltaR(Vec_genJetAK4[offshell_WBoson_index2].Eta(),Vec_genJetAK4[offshell_WBoson_index2].Phi(), Vec_wpJET[1].Eta(),Vec_wpJET[1].Phi());
+	if (dR_J3_offShell_q3 < dR_J3_offShell_q4) {
+	  AK4GEN_AllResolved_dR_J3_offShell_q_ = dR_J3_offShell_q3;
+	  AK4GEN_AllResolved_dR_J4_offShell_q_ = dR_J4_offShell_q4;
+	}
+	if (dR_J3_offShell_q3 > dR_J3_offShell_q4) {
+	  AK4GEN_AllResolved_dR_J3_offShell_q_ = dR_J3_offShell_q4;
+	  AK4GEN_AllResolved_dR_J4_offShell_q_ = dR_J4_offShell_q3;
+	}
+      }
+      
     AK4GEN_AllResolved_onShellJet1_Pt_ = Vec_genJetAK4[onshell_WBoson_index1].Pt();
     AK4GEN_AllResolved_onShellJet1_Eta_ = Vec_genJetAK4[onshell_WBoson_index1].Eta();
     AK4GEN_AllResolved_onShellJet1_Phi_ = Vec_genJetAK4[onshell_WBoson_index1].Phi();
@@ -441,6 +505,8 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   AK8Gen_HiggsJet_minDMass_M_ = AK8Gen_HiggsJet_minDMass.M();
   AK8Gen_HiggsJet_minDMass_deltaR_H1_ = deltaR(AK8Gen_HiggsJet_minDMass.Eta(),AK8Gen_HiggsJet_minDMass.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
   AK8Gen_HiggsJet_minDMass_deltaR_H2_ = deltaR(AK8Gen_HiggsJet_minDMass.Eta(),AK8Gen_HiggsJet_minDMass.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
+  AK8Gen_HiggsJet_minDMass_deltaR_HWW_ = deltaR(AK8Gen_HiggsJet_minDMass.Eta(),AK8Gen_HiggsJet_minDMass.Phi(), gen_HiggsWW_Eta_, gen_HiggsWW_Phi_);
+
 
 
   /************************************************************************
@@ -473,6 +539,14 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H1_ = deltaR(Vec_AK8Gen_MergedWjets[1].Eta(),Vec_AK8Gen_MergedWjets[1].Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
     AK8Gen_MergedWjets_MaxPt_SubLeading_deltaR_H2_ = deltaR(Vec_AK8Gen_MergedWjets[1].Eta(),Vec_AK8Gen_MergedWjets[1].Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
     AK8Gen_MergedWjets_MaxPt_LeadingSubLeading_DR_ = deltaR(Vec_AK8Gen_MergedWjets[1].Eta(),Vec_AK8Gen_MergedWjets[1].Phi(),Vec_AK8Gen_MergedWjets[0].Eta(),Vec_AK8Gen_MergedWjets[0].Phi());
+    if (deltaR(AK8Gen_MergedWjets_MaxPt_Leading_Eta_,AK8Gen_MergedWjets_MaxPt_Leading_Phi_,Vec_Wboson[0].Eta(),Vec_Wboson[0].Phi()) < deltaR(AK8Gen_MergedWjets_MaxPt_Leading_Eta_,AK8Gen_MergedWjets_MaxPt_Leading_Phi_,Vec_Wboson[1].Eta(),Vec_Wboson[1].Phi())) {
+      AK8Gen_MergedWjets_dR_MaxPt_Leading_W_ = deltaR(AK8Gen_MergedWjets_MaxPt_Leading_Eta_,AK8Gen_MergedWjets_MaxPt_Leading_Phi_,Vec_Wboson[0].Eta(),Vec_Wboson[0].Phi());
+      AK8Gen_MergedWjets_dR_MaxPt_SubLeading_W_ = deltaR(AK8Gen_MergedWjets_MaxPt_SubLeading_Eta_,AK8Gen_MergedWjets_MaxPt_SubLeading_Phi_,Vec_Wboson[1].Eta(),Vec_Wboson[1].Phi());
+      }
+    if (deltaR(AK8Gen_MergedWjets_MaxPt_Leading_Eta_,AK8Gen_MergedWjets_MaxPt_Leading_Phi_,Vec_Wboson[0].Eta(),Vec_Wboson[0].Phi()) > deltaR(AK8Gen_MergedWjets_MaxPt_Leading_Eta_,AK8Gen_MergedWjets_MaxPt_Leading_Phi_,Vec_Wboson[1].Eta(),Vec_Wboson[1].Phi())) {
+      AK8Gen_MergedWjets_dR_MaxPt_Leading_W_ = deltaR(AK8Gen_MergedWjets_MaxPt_Leading_Eta_,AK8Gen_MergedWjets_MaxPt_Leading_Phi_,Vec_Wboson[1].Eta(),Vec_Wboson[1].Phi());
+      AK8Gen_MergedWjets_dR_MaxPt_SubLeading_W_ = deltaR(AK8Gen_MergedWjets_MaxPt_SubLeading_Eta_,AK8Gen_MergedWjets_MaxPt_SubLeading_Phi_,Vec_Wboson[0].Eta(),Vec_Wboson[0].Phi());
+    }
 
     AK8Gen_MergedWjets_MaxPt_Higgs_Pt_ = (Vec_AK8Gen_MergedWjets[0]+Vec_AK8Gen_MergedWjets[1]).Pt();
     AK8Gen_MergedWjets_MaxPt_Higgs_Eta_ = (Vec_AK8Gen_MergedWjets[0]+Vec_AK8Gen_MergedWjets[1]).Eta();
@@ -509,6 +583,14 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H1_ = deltaR(LV_SubleadingWjet.Eta(),LV_SubleadingWjet.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
   AK8Gen_MergedWjets_minDMass_SubLeading_deltaR_H2_ = deltaR(LV_SubleadingWjet.Eta(),LV_SubleadingWjet.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
   AK8Gen_MergedWjets_minDMass_LeadingSubLeading_DR_ = deltaR(LV_SubleadingWjet.Eta(),LV_SubleadingWjet.Phi(),LV_leadingWjet.Eta(),LV_leadingWjet.Phi());
+  if (deltaR(AK8Gen_MergedWjets_minDMass_Leading_Eta_,AK8Gen_MergedWjets_minDMass_Leading_Phi_,Vec_Wboson[0].Eta(),Vec_Wboson[0].Phi()) < deltaR(AK8Gen_MergedWjets_minDMass_Leading_Eta_,AK8Gen_MergedWjets_minDMass_Leading_Phi_,Vec_Wboson[1].Eta(),Vec_Wboson[1].Phi())) {
+    AK8Gen_MergedWjets_dR_minDMass_Leading_W_ = deltaR(AK8Gen_MergedWjets_minDMass_Leading_Eta_,AK8Gen_MergedWjets_minDMass_Leading_Phi_,Vec_Wboson[0].Eta(),Vec_Wboson[0].Phi());
+	AK8Gen_MergedWjets_dR_minDMass_SubLeading_W_ = deltaR(AK8Gen_MergedWjets_minDMass_SubLeading_Eta_,AK8Gen_MergedWjets_minDMass_SubLeading_Phi_,Vec_Wboson[1].Eta(),Vec_Wboson[1].Phi());
+      }
+  if (deltaR(AK8Gen_MergedWjets_minDMass_Leading_Eta_,AK8Gen_MergedWjets_minDMass_Leading_Phi_,Vec_Wboson[0].Eta(),Vec_Wboson[0].Phi()) > deltaR(AK8Gen_MergedWjets_minDMass_Leading_Eta_,AK8Gen_MergedWjets_minDMass_Leading_Phi_,Vec_Wboson[1].Eta(),Vec_Wboson[1].Phi())) {
+    AK8Gen_MergedWjets_dR_minDMass_Leading_W_ = deltaR(AK8Gen_MergedWjets_minDMass_Leading_Eta_,AK8Gen_MergedWjets_minDMass_Leading_Phi_,Vec_Wboson[1].Eta(),Vec_Wboson[1].Phi());
+	AK8Gen_MergedWjets_dR_minDMass_SubLeading_W_ = deltaR(AK8Gen_MergedWjets_minDMass_SubLeading_Eta_,AK8Gen_MergedWjets_minDMass_SubLeading_Phi_,Vec_Wboson[0].Eta(),Vec_Wboson[0].Phi());
+  }
 
   AK8Gen_MergedWjets_minDMass_Higgs_Pt_ = (LV_leadingWjet+LV_SubleadingWjet).Pt();
   AK8Gen_MergedWjets_minDMass_Higgs_Eta_ = (LV_leadingWjet+LV_SubleadingWjet).Eta();
@@ -565,6 +647,14 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H1_ = deltaR(LV_SubleadingWjet.Eta(),LV_SubleadingWjet.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
   AK8Gen_MergedWjets_minWminHmass_SubLeading_deltaR_H2_ = deltaR(LV_SubleadingWjet.Eta(),LV_SubleadingWjet.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
   AK8Gen_MergedWjets_minWminHmass_LeadingSubLeading_DR_ = deltaR(LV_SubleadingWjet.Eta(),LV_SubleadingWjet.Phi(),LV_leadingWjet.Eta(),LV_leadingWjet.Phi());
+  if (deltaR(AK8Gen_MergedWjets_minWminHmass_Leading_Eta_,AK8Gen_MergedWjets_minWminHmass_Leading_Phi_,Vec_Wboson[0].Eta(),Vec_Wboson[0].Phi()) < deltaR(AK8Gen_MergedWjets_minWminHmass_Leading_Eta_,AK8Gen_MergedWjets_minWminHmass_Leading_Phi_,Vec_Wboson[1].Eta(),Vec_Wboson[1].Phi())) {
+    AK8Gen_MergedWjets_dR_minWminHmass_Leading_W_ = deltaR(AK8Gen_MergedWjets_minWminHmass_Leading_Eta_,AK8Gen_MergedWjets_minWminHmass_Leading_Phi_,Vec_Wboson[0].Eta(),Vec_Wboson[0].Phi());
+    AK8Gen_MergedWjets_dR_minWminHmass_SubLeading_W_ = deltaR(AK8Gen_MergedWjets_minWminHmass_SubLeading_Eta_,AK8Gen_MergedWjets_minWminHmass_SubLeading_Phi_,Vec_Wboson[1].Eta(),Vec_Wboson[1].Phi());
+      }
+  if (deltaR(AK8Gen_MergedWjets_minWminHmass_Leading_Eta_,AK8Gen_MergedWjets_minWminHmass_Leading_Phi_,Vec_Wboson[0].Eta(),Vec_Wboson[0].Phi()) > deltaR(AK8Gen_MergedWjets_minWminHmass_Leading_Eta_,AK8Gen_MergedWjets_minWminHmass_Leading_Phi_,Vec_Wboson[1].Eta(),Vec_Wboson[1].Phi())) {
+    AK8Gen_MergedWjets_dR_minWminHmass_Leading_W_ = deltaR(AK8Gen_MergedWjets_minWminHmass_Leading_Eta_,AK8Gen_MergedWjets_minWminHmass_Leading_Phi_,Vec_Wboson[1].Eta(),Vec_Wboson[1].Phi());
+    AK8Gen_MergedWjets_dR_minWminHmass_SubLeading_W_ = deltaR(AK8Gen_MergedWjets_minWminHmass_SubLeading_Eta_,AK8Gen_MergedWjets_minWminHmass_SubLeading_Phi_,Vec_Wboson[0].Eta(),Vec_Wboson[0].Phi());
+  }
 
   AK8Gen_MergedWjets_minWminHmass_Higgs_Pt_ = (LV_leadingWjet+LV_SubleadingWjet).Pt();
   AK8Gen_MergedWjets_minWminHmass_Higgs_Eta_ = (LV_leadingWjet+LV_SubleadingWjet).Eta();
@@ -620,6 +710,8 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   OneAK8TwoAK4_pTMax_ReconsW_AK4_M_ = (Vec_genJetAK4[0] + Vec_genJetAK4[1]).M();
   OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_W1_ = deltaR((Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
   OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_W2_ = deltaR((Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
+    ///////////////////////  
+
   OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_H1_ = deltaR((Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
   OneAK8TwoAK4_pTMax_ReconsW_AK4_dR_H2_ = deltaR((Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
 
@@ -668,6 +760,14 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   OneAK8TwoAK4_minMass_ReconsW_AK4_M_ = (jetsss[0] + jetsss[1]).M();
   OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W1_ = deltaR((jetsss[1] + jetsss[0]).Eta(), (jetsss[1] + jetsss[0]).Phi(), Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi());
   OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W2_ = deltaR((jetsss[1] + jetsss[0]).Eta(), (jetsss[1] + jetsss[0]).Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
+    if (OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W1_ < OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W2_) {
+      OneAK8TwoAK4_minMass_dR_ReconsW_AK4_W_ = OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W1_;
+      OneAK8TwoAK4_minMass_dR_AK8_W_ = OneAK8TwoAK4_minMass_AK8_dR_W2_;
+    }
+    if (OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W1_ > OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W2_) {
+      OneAK8TwoAK4_minMass_dR_ReconsW_AK4_W_ = OneAK8TwoAK4_minMass_ReconsW_AK4_dR_W2_;
+      OneAK8TwoAK4_minMass_dR_AK8_W_ = OneAK8TwoAK4_minMass_AK8_dR_W1_;
+    }
   OneAK8TwoAK4_minMass_ReconsW_AK4_dR_H1_ = deltaR((jetsss[1] + jetsss[0]).Eta(), (jetsss[1] + jetsss[0]).Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
   OneAK8TwoAK4_minMass_ReconsW_AK4_dR_H2_ = deltaR((jetsss[1] + jetsss[0]).Eta(), (jetsss[1] + jetsss[0]).Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
   OneAK8TwoAK4_minMass_ReconsH_Pt_ = (jetsss[2] + jetsss[0] + jetsss[1]).Pt();
