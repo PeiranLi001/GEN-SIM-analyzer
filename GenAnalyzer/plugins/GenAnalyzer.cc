@@ -685,6 +685,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   OneAK8TwoAK4_pTMax_AK8_dR_H1_ = deltaR(AK8Gen_HiggsJet_MaxPt.Eta(), AK8Gen_HiggsJet_MaxPt.Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
   OneAK8TwoAK4_pTMax_AK8_dR_H2_ = deltaR(AK8Gen_HiggsJet_MaxPt.Eta(), AK8Gen_HiggsJet_MaxPt.Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
     // gen_deltaR_Wp_Wm_    = deltaR(Vec_Wboson[0].Eta(), Vec_Wboson[0].Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
+	
 
   OneAK8TwoAK4_pTMax_leadingAK4_Pt_ = Vec_genJetAK4[0].Pt();
   OneAK8TwoAK4_pTMax_leadingAK4_Eta_ = Vec_genJetAK4[0].Eta();
@@ -694,7 +695,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   OneAK8TwoAK4_pTMax_leadingAK4_dR_W2_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
   OneAK8TwoAK4_pTMax_leadingAK4_dR_H1_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
   OneAK8TwoAK4_pTMax_leadingAK4_dR_H2_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
-
+  
   OneAK8TwoAK4_pTMax_subleadingAK4_Pt_ = Vec_genJetAK4[1].Pt();
   OneAK8TwoAK4_pTMax_subleadingAK4_Eta_ = Vec_genJetAK4[1].Eta();
   OneAK8TwoAK4_pTMax_subleadingAK4_Phi_ = Vec_genJetAK4[1].Phi();
@@ -703,7 +704,68 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   OneAK8TwoAK4_pTMax_subleadingAK4_dR_W2_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
   OneAK8TwoAK4_pTMax_subleadingAK4_dR_H1_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
   OneAK8TwoAK4_pTMax_subleadingAK4_dR_H2_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
-
+	
+  double OneAK8TwoAK4_pTMax_leadingAK4_dR_Wp_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), (Vec_wpJET[0]+Vec_wpJET[1]).Eta(), (Vec_wpJET[0]+Vec_wpJET[1]).Phi());
+  double OneAK8TwoAK4_pTMax_leadingAK4_dR_Wm_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), (Vec_wmJET[0]+Vec_wmJET[1]).Eta(), (Vec_wmJET[0]+Vec_wmJET[1]).Phi());
+  double OneAK8TwoAK4_pTMax_subleadingAK4_dR_Wp_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), (Vec_wpJET[0]+Vec_wpJET[1]).Eta(), (Vec_wpJET[0]+Vec_wpJET[1]).Phi());
+  double OneAK8TwoAK4_pTMax_subleadingAK4_dR_Wm_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), (Vec_wmJET[0]+Vec_wmJET[1]).Eta(), (Vec_wmJET[0]+Vec_wmJET[1]).Phi());
+  if (OneAK8TwoAK4_pTMax_leadingAK4_dR_Wp_ > OneAK8TwoAK4_pTMax_leadingAK4_dR_Wm_ && OneAK8TwoAK4_pTMax_leadingAK4_dR_Wp_ > OneAK8TwoAK4_pTMax_subleadingAK4_dR_Wp_ && OneAK8TwoAK4_pTMax_leadingAK4_dR_Wp_ > OneAK8TwoAK4_pTMax_subleadingAK4_dR_Wm_) {
+	if (deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi()) < deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_leadingAK4_dR_q_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi());
+	}
+	if (deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi()) > deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_leadingAK4_dR_q_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi());
+	}
+	if (deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi()) < deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_subleadingAK4_dR_q_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi());
+	}
+	if (deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi()) > deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_subleadingAK4_dR_q_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi());
+	}
+  }
+  if (OneAK8TwoAK4_pTMax_leadingAK4_dR_Wm_ > OneAK8TwoAK4_pTMax_leadingAK4_dR_Wp_ && OneAK8TwoAK4_pTMax_leadingAK4_dR_Wm_ > OneAK8TwoAK4_pTMax_subleadingAK4_dR_Wp_ && OneAK8TwoAK4_pTMax_leadingAK4_dR_Wm_ > OneAK8TwoAK4_pTMax_subleadingAK4_dR_Wm_) {
+	if (deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi()) < deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_leadingAK4_dR_q_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi());
+	}
+	if (deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi()) > deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_leadingAK4_dR_q_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi());
+	}
+	if (deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi()) < deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_subleadingAK4_dR_q_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi());
+	}
+	if (deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi()) > deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_subleadingAK4_dR_q_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi());
+	}
+  }
+  if (OneAK8TwoAK4_pTMax_subleadingAK4_dR_Wp_ > OneAK8TwoAK4_pTMax_subleadingAK4_dR_Wm_ && OneAK8TwoAK4_pTMax_subleadingAK4_dR_Wp_ > OneAK8TwoAK4_pTMax_leadingAK4_dR_Wp_ && OneAK8TwoAK4_pTMax_subleadingAK4_dR_Wp_ > OneAK8TwoAK4_pTMax_leadingAK4_dR_Wm_) {
+	if (deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi()) < deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_subleadingAK4_dR_q_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi());
+	}
+	if (deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi()) > deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_subleadingAK4_dR_q_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi());
+	}
+	if (deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi()) < deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_leadingAK4_dR_q_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi());
+	}
+	if (deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi()) > deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_leadingAK4_dR_q_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi());
+	}
+  }
+  if (OneAK8TwoAK4_pTMax_subleadingAK4_dR_Wm_ > OneAK8TwoAK4_pTMax_subleadingAK4_dR_Wp_ && OneAK8TwoAK4_pTMax_subleadingAK4_dR_Wm_ > OneAK8TwoAK4_pTMax_leadingAK4_dR_Wp_ && OneAK8TwoAK4_pTMax_subleadingAK4_dR_Wm_ > OneAK8TwoAK4_pTMax_leadingAK4_dR_Wm_) {
+	if (deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi()) < deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_subleadingAK4_dR_q_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi());
+	}
+	if (deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wpJET[0].Eta(), Vec_wpJET[0].Phi()) > deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_subleadingAK4_dR_q_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wpJET[1].Eta(), Vec_wpJET[1].Phi());
+	}
+	if (deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi()) < deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_leadingAK4_dR_q_ = deltaR(Vec_genJetAK4[1].Eta(), Vec_genJetAK4[1].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi());
+	}
+	if (deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wmJET[0].Eta(), Vec_wmJET[0].Phi()) > deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi())) {
+		OneAK8TwoAK4_pTMax_leadingAK4_dR_q_ = deltaR(Vec_genJetAK4[0].Eta(), Vec_genJetAK4[0].Phi(), Vec_wmJET[1].Eta(), Vec_wmJET[1].Phi());
+	}
+  }
+	
   OneAK8TwoAK4_pTMax_ReconsW_AK4_Pt_ = (Vec_genJetAK4[0] + Vec_genJetAK4[1]).Pt();
   OneAK8TwoAK4_pTMax_ReconsW_AK4_Eta_ = (Vec_genJetAK4[0] + Vec_genJetAK4[1]).Eta();
   OneAK8TwoAK4_pTMax_ReconsW_AK4_Phi_ = (Vec_genJetAK4[0] + Vec_genJetAK4[1]).Phi();
@@ -723,7 +785,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   OneAK8TwoAK4_pTMax_ReconsH_dR_W2_ = deltaR((AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Wboson[1].Eta(), Vec_Wboson[1].Phi());
   OneAK8TwoAK4_pTMax_ReconsH_dR_H1_ = deltaR((AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Higgs[0].Eta(), Vec_Higgs[0].Phi());
   OneAK8TwoAK4_pTMax_ReconsH_dR_H2_ = deltaR((AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Eta(), (AK8Gen_HiggsJet_MaxPt + Vec_genJetAK4[1] + Vec_genJetAK4[0]).Phi(), Vec_Higgs[1].Eta(), Vec_Higgs[1].Phi());
-
+	
   /**
    * Selection of two AK4 jet and a AK8 jet.
    */
