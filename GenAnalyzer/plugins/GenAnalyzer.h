@@ -389,6 +389,8 @@ private:
   double OneAK8TwoAK4_pTMax_subleadingAK4_dR_W2_  = -999.0;
   double OneAK8TwoAK4_pTMax_subleadingAK4_dR_H1_  = -999.0;
   double OneAK8TwoAK4_pTMax_subleadingAK4_dR_H2_  = -999.0;
+  double OneAK8TwoAK4_pTMax_leadingAK4_dR_q_  = -999.0;
+  double OneAK8TwoAK4_pTMax_subleadingAK4_dR_q_  = -999.0;
   double OneAK8TwoAK4_pTMax_ReconsW_AK4_Pt_ = -999.0;
   double OneAK8TwoAK4_pTMax_ReconsW_AK4_Eta_  = -999.0;
   double OneAK8TwoAK4_pTMax_ReconsW_AK4_Phi_  = -999.0;
@@ -888,6 +890,8 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&OneAK8TwoAK4_pTMax_subleadingAK4_dR_W2_,"OneAK8TwoAK4_pTMax_subleadingAK4_dR_W2");
   AddBranch(&OneAK8TwoAK4_pTMax_subleadingAK4_dR_H1_,"OneAK8TwoAK4_pTMax_subleadingAK4_dR_H1");
   AddBranch(&OneAK8TwoAK4_pTMax_subleadingAK4_dR_H2_,"OneAK8TwoAK4_pTMax_subleadingAK4_dR_H2");
+  AddBranch(&OneAK8TwoAK4_pTMax_leadingAK4_dR_q_,"OneAK8TwoAK4_pTMax_leadingAK4_dR_q");
+  AddBranch(&OneAK8TwoAK4_pTMax_subleadingAK4_dR_q_,"OneAK8TwoAK4_pTMax_subleadingAK4_dR_q");
   AddBranch(&OneAK8TwoAK4_pTMax_ReconsW_AK4_Pt_,"OneAK8TwoAK4_pTMax_ReconsW_AK4_Pt");
   AddBranch(&OneAK8TwoAK4_pTMax_ReconsW_AK4_Eta_,"OneAK8TwoAK4_pTMax_ReconsW_AK4_Eta");
   AddBranch(&OneAK8TwoAK4_pTMax_ReconsW_AK4_Phi_,"OneAK8TwoAK4_pTMax_ReconsW_AK4_Phi");
@@ -1230,6 +1234,8 @@ void GenAnalyzer::Clear(){
   OneAK8TwoAK4_pTMax_subleadingAK4_dR_W2_ = -999.0;
   OneAK8TwoAK4_pTMax_subleadingAK4_dR_H1_ = -999.0;
   OneAK8TwoAK4_pTMax_subleadingAK4_dR_H2_ = -999.0;
+  OneAK8TwoAK4_pTMax_leadingAK4_dR_q_     = -999.0;
+  OneAK8TwoAK4_pTMax_subleadingAK4_dR_q_  = -999.0;
   OneAK8TwoAK4_pTMax_ReconsW_AK4_Pt_  = -999.0;
   OneAK8TwoAK4_pTMax_ReconsW_AK4_Eta_ = -999.0;
   OneAK8TwoAK4_pTMax_ReconsW_AK4_Phi_ = -999.0;
