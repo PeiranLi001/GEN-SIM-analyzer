@@ -111,7 +111,8 @@ private:
   //  double 	LHELeptM_ = -999.0;
   //  double 	LHELeptE_ = -999.0;
 
-
+  //--------------------------------------------------------------
+  //  Photon variables
   double gen_leading_photon_Pt_   = -999.0;
   double gen_leading_photon_Eta_  = -999.0;
   double gen_leading_photon_Phi_  = -999.0;
@@ -157,6 +158,11 @@ private:
   double gen_Subleading_Higgs_Eta_    = -999.0;
   double gen_Subleading_Higgs_Phi_    = -999.0;
   double gen_Subleading_Higgs_M_  = -999.0;
+  double gen_HH_Pt_   = -999.0;
+  double gen_HH_Eta_  = -999.0;
+  double gen_HH_Phi_  = -999.0;
+  double gen_HH_M_    = -999.0;
+
   double gen_deltaR_Photon0_Photon1_  = -999.0;
   double gen_deltaR_Photon0_WmJ0_     = -999.0;
   double gen_deltaR_Photon0_WmJ1_     = -999.0;
@@ -633,6 +639,10 @@ void GenAnalyzer::SetBranches(){
   AddBranch(&gen_Subleading_Higgs_Eta_, "gen_Subleading_Higgs_Eta");
   AddBranch(&gen_Subleading_Higgs_Phi_, "gen_Subleading_Higgs_Phi");
   AddBranch(&gen_Subleading_Higgs_M_, "gen_Subleading_Higgs_M");
+  AddBranch(&gen_HH_Pt_, "gen_HH_Pt");
+  AddBranch(&gen_HH_Eta_, "gen_HH_Eta");
+  AddBranch(&gen_HH_Phi_, "gen_HH_Phi");
+  AddBranch(&gen_HH_M_  , "gen_HH_M");
   AddBranch(&gen_deltaR_Photon0_Photon1_, "gen_deltaR_Photon0_Photon1");
   AddBranch(&gen_deltaR_Photon0_WmJ0_, "gen_deltaR_Photon0_WmJ0");
   AddBranch(&gen_deltaR_Photon0_WmJ1_, "gen_deltaR_Photon0_WmJ1");
@@ -955,6 +965,10 @@ void GenAnalyzer::Clear(){
   gen_Subleading_Higgs_Eta_ = -999.0;
   gen_Subleading_Higgs_Phi_ = -999.0;
   gen_Subleading_Higgs_M_ = -999.0;
+  gen_HH_Pt_ = -999.0;
+  gen_HH_Eta_ = -999.0;
+  gen_HH_Phi_ = -999.0;
+  gen_HH_M_   = -999.0;
   gen_deltaR_Photon0_Photon1_ = -999.0;
   gen_deltaR_Photon0_WmJ0_ = -999.0;
   gen_deltaR_Photon0_WmJ1_ = -999.0;
@@ -1269,13 +1283,17 @@ void GenAnalyzer::SortedCleanedJetVector(const std::vector<reco::GenJet>* firstJ
 {
   // int nAK4jets = 0;
   TLorentzVector temp_genJetAK4;
-  for(vector<reco::GenJet>::const_iterator genjet = firstJetCollection->begin(); genjet != firstJetCollection->end(); genjet++) {
-    if (deltaR(genjet->eta(),genjet->phi(), Vec_Photons[0].Eta(),Vec_Photons[0].Phi())>0.4 && deltaR(genjet->eta(),genjet->phi(), Vec_Photons[1].Eta(),Vec_Photons[1].Phi())>0.4) {
-      if ( GenAnalyzer::jetCleaning(&(*genjet), secondJetCollection, r_seperation ) ) {
+  for(vector<reco::GenJet>::const_iterator genjet = firstJetCollection->begin(); genjet != firstJetCollection->end(); genjet++)
+  {
+    if (genjet->pt()<20) continue;
+    if (deltaR(genjet->eta(),genjet->phi(), Vec_Photons[0].Eta(),Vec_Photons[0].Phi())>0.4 && deltaR(genjet->eta(),genjet->phi(), Vec_Photons[1].Eta(),Vec_Photons[1].Phi())>0.4) 
+    {
+      // if ( GenAnalyzer::jetCleaning(&(*genjet), secondJetCollection, r_seperation ) )
+      // {
         temp_genJetAK4.SetPtEtaPhiE(genjet->pt(), genjet->eta(), genjet->phi(), genjet->energy());
         local_Vec_genJetAK4.push_back(temp_genJetAK4);
         // std::cout << "**> " << genjet->pt() << "\t" << genjet->eta() << "\t" << genjet->phi() << "\t" << genjet->energy()<< std::endl;
-      }
+      // }
     }
   }
   std::sort(local_Vec_genJetAK4.begin(), local_Vec_genJetAK4.end(), GenAnalyzer::reorder);
@@ -1489,9 +1507,9 @@ std::vector<TLorentzVector> GenAnalyzer::minMassLorentzVector(const std::vector<
       }
     }
   }
-  if (outputLorentzVector.size()>3)
+  if (outputLorentzVector.size()!=3)
   {
-    std::cout << "size of output vector seems more than three... please check the code." << std::endl;
+    std::cout << "size of output vector seems not equal to three... please check the code. " << outputLorentzVector.size() << std::endl;
     exit(EXIT_FAILURE);
   }
   return outputLorentzVector;
