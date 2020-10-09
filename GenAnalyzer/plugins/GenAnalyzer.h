@@ -1285,7 +1285,7 @@ void GenAnalyzer::SortedCleanedJetVector(const std::vector<reco::GenJet>* firstJ
   TLorentzVector temp_genJetAK4;
   for(vector<reco::GenJet>::const_iterator genjet = firstJetCollection->begin(); genjet != firstJetCollection->end(); genjet++)
   {
-    if (genjet->pt()<20) continue;
+    if (genjet->pt()<15) continue;
     if (deltaR(genjet->eta(),genjet->phi(), Vec_Photons[0].Eta(),Vec_Photons[0].Phi())>0.4 && deltaR(genjet->eta(),genjet->phi(), Vec_Photons[1].Eta(),Vec_Photons[1].Phi())>0.4) 
     {
       // if ( GenAnalyzer::jetCleaning(&(*genjet), secondJetCollection, r_seperation ) )
