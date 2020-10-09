@@ -1494,7 +1494,7 @@ std::vector<TLorentzVector> GenAnalyzer::minMassLorentzVector(const std::vector<
       for (std::vector<TLorentzVector>::const_iterator k = input_AK8LorentzVector.begin(); k != input_AK8LorentzVector.end(); ++k)
       {
         double mass = (*i + *j + *k).M();
-        if ((*i).Pt()<20 || (*j).Pt()<20) continue;
+        if ((*i).Pt()<15 || (*j).Pt()<15) continue;
         if ((*k).Pt()<30) continue;
         if (abs(mass - 125.0) < tempMass1)
         {

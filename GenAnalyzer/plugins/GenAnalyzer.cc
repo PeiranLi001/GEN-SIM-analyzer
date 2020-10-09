@@ -285,7 +285,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
   if (DEBUG) std::cout << "Size of good AK4 candidates: " << genJetAK4_njets_ << std::endl;
 
-  if (Vec_genJetAK4.size()>4)
+  if (Vec_genJetAK4.size()>=4)
   {
    /**
     * Loop over all AK4 jets and selects a pair of jets having
