@@ -59,6 +59,7 @@ public:
   //https://stackoverflow.com/a/26230635/2302094
   static bool jetCleaning(const reco::GenJet  * genAK8jet,const vector<reco::GenJet>* firstJetCollection, const double r_seperation=0.8);
   static void SortedCleanedJetVector(const std::vector<reco::GenJet>* jetCollection1, const std::vector<reco::GenJet>* jetCollection2, const std::vector<TLorentzVector> &photons, std::vector<TLorentzVector> &outputLorentzVector, const double r_seperation=0.8);
+  static void SortedCleanedJetVectorAK8(const std::vector<reco::GenJet>* jetCollection1, const std::vector<reco::GenJet>* jetCollection2, const std::vector<TLorentzVector> &photons, std::vector<TLorentzVector> &outputLorentzVector, const double r_seperation=0.8);
   static void indexOfSelectedJet(const std::vector<TLorentzVector> &inputLorentzVector, int &index1, int &index2);
   static void indexOfSelectedJet(const std::vector<TLorentzVector> &inputLorentzVector, double massComp, int &index1, int &index2, int in_index1=-1, int in_index2=-1);
   static TLorentzVector maxPtLorentzVector(const std::vector<TLorentzVector> &inputLorentzVector);
@@ -1368,6 +1369,26 @@ void GenAnalyzer::SortedCleanedJetVector(const std::vector<reco::GenJet>* firstJ
     }
   }
   std::sort(local_Vec_genJetAK4.begin(), local_Vec_genJetAK4.end(), GenAnalyzer::reorder);
+}
+
+void GenAnalyzer::SortedCleanedJetVectorAK8(const std::vector<reco::GenJet>* firstJetCollection, const std::vector<reco::GenJet>* secondJetCollection, const std::vector<TLorentzVector> &Vec_Photons, std::vector<TLorentzVector> &local_Vec_genJetAK8, const double r_seperation)
+{
+  // int nAK8jets = 0;
+  TLorentzVector temp_genJetAK8;
+  for(vector<reco::GenJet>::const_iterator genjet = firstJetCollection->begin(); genjet != firstJetCollection->end(); genjet++)
+  {
+    if (genjet->pt()<30) continue;
+    if (deltaR(genjet->eta(),genjet->phi(), Vec_Photons[0].Eta(),Vec_Photons[0].Phi())>0.8 && deltaR(genjet->eta(),genjet->phi(), Vec_Photons[1].Eta(),Vec_Photons[1].Phi())>0.8) 
+    {
+      // if ( GenAnalyzer::jetCleaning(&(*genjet), secondJetCollection, r_seperation ) )
+      // {
+        temp_genJetAK8.SetPtEtaPhiE(genjet->pt(), genjet->eta(), genjet->phi(), genjet->energy());
+        local_Vec_genJetAK8.push_back(temp_genJetAK8);
+        // std::cout << "**> " << genjet->pt() << "\t" << genjet->eta() << "\t" << genjet->phi() << "\t" << genjet->energy()<< std::endl;
+      // }
+    }
+  }
+  std::sort(local_Vec_genJetAK8.begin(), local_Vec_genJetAK8.end(), GenAnalyzer::reorder);
 }
 
 /**
