@@ -35,8 +35,9 @@ print dirName
 # InputFileList = ['GF_HH_Benchmark1', 'GF_HH_Benchmark7', 'GF_HH_Benchmark11', 'GF_HH_BenchmarkSM']
 
 input_root_file = '../'
-InputFileList = ['Radion_hh_narrow_M270_LHEBqrk']
+# InputFileList = ['Radion_hh_narrow_M500_bqrk']
 # InputFileList = ['Radion_hh_narrow_M500']
+InputFileList = ['Radion_hh_narrow_M270_LHEBqrk']
 
 singleVariable = True
 multipleVariable = False
@@ -53,7 +54,14 @@ multipleVariableDifferentFiles = False
 # CutToApply = 'OneAK8TwoAK4_minMass_ReconsH_M>100 && OneAK8TwoAK4_minMass_ReconsH_M<160 && OneAK8TwoAK4_minMass_ReconsW_AK4_M<100 && OneAK8TwoAK4_minMass_AK8_M<100 && OneAK8TwoAK4_minMass_AK8_Pt>40 && OneAK8TwoAK4_minMass_leadingAK4_Pt>30 && OneAK8TwoAK4_minMass_subleadingAK4_Pt>20'
 # CutToApply = 'OneAK8TwoAK4_minMass_AK8_M<120 && OneAK8TwoAK4_minMass_ReconsW_AK4_M<120 && OneAK8TwoAK4_minMass_AK8_Pt > 200 '
 # CutToApply = 'OneAK8TwoAK4_pTMax_AK8_M<120 && OneAK8TwoAK4_pTMax_ReconsW_AK4_M<120  && OneAK8TwoAK4_pTMax_AK8_Pt<300 && OneAK8TwoAK4_pTMax_ReconsH_M>100'
+
 CutToApply = ''
+<<<<<<< Updated upstream:GenAnalyzer/PlottingCodes_Old/plotting_script.py
+=======
+
+#########################################
+
+>>>>>>> Stashed changes:GenAnalyzer/PlottingCodes/plotting_script.py
 # keyToUse = 'all'
 keyToUse = 'ak8higgs_minDmass'
 # keyToUse = 'oneAK8twoAK4_minMass'
