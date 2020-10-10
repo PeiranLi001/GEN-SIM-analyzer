@@ -424,7 +424,7 @@ GenAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    *
    **********************************************************/
   std::vector<TLorentzVector> Vec_genJetAK8;
-  SortedCleanedJetVector(genAK8_coll, genAK4_coll, Vec_Photons, Vec_genJetAK8);
+  SortedCleanedJetVectorAK8(genAK8_coll, genAK4_coll, Vec_Photons, Vec_genJetAK8);
 
   if (DEBUG) std::cout << "Size of AK8 jets " << Vec_genJetAK8.size() << std::endl;
   if (Vec_genJetAK8.size() >= 1)
