@@ -1300,7 +1300,7 @@ void GenAnalyzer::SortedCleanedJetVector(const std::vector<reco::GenJet>* firstJ
   std::sort(local_Vec_genJetAK4.begin(), local_Vec_genJetAK4.end(), GenAnalyzer::reorder);
 }
 
-void GenAnalyzer::SortedCleanedJetVectorAK8(const std::vector<reco::GenJet>* firstJetCollection, const std::vector<reco::GenJet>* secondJetCollection, const std::vector<TLorentzVector> &Vec_Photons, std::vector<TLorentzVector> &local_Vec_genJetAK4, const double r_seperation)
+void GenAnalyzer::SortedCleanedJetVectorAK8(const std::vector<reco::GenJet>* firstJetCollection, const std::vector<reco::GenJet>* secondJetCollection, const std::vector<TLorentzVector> &Vec_Photons, std::vector<TLorentzVector> &local_Vec_genJetAK8, const double r_seperation)
 {
   // int nAK8jets = 0;
   TLorentzVector temp_genJetAK8;
